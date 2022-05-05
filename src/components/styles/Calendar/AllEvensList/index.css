@@ -1,0 +1,44 @@
+.allEventsBox {
+  width: 370px;
+  padding: 5px 5px 30px 5px;
+  transform: translateX(-50%);
+  background-color: rgb(150, 150, 150);
+  border-radius: 10px;
+  left: 38%;
+  top: 7%;
+  transition: 0.4s;
+  z-index: 30;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.allEventsBox .eventDetailTitle {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin: 10px 0px;
+}
+.allEventsBox .allEventDetail {
+  width: 300px;
+  display: grid;
+  background-color: rgb(170, 170, 170);
+  cursor: pointer;
+  margin: 5px auto;
+  padding: 5px;
+  font-size: 1.2rem;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+.allEventsBox .allEventDetail:hover {
+  background-color: rgb(190, 190, 190);
+}
+.allEventsBox .allEventDetail h4 {
+  width: 240px;
+}
+.allEventsBox .allEventDetail p {
+  width: 60px;
+}
+.allEventsBox .backToLaunch {
+  margin-bottom: 10px;
+  margin-top: auto;
+}/*# sourceMappingURL=index.css.map */

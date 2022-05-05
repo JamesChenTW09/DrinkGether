@@ -1,3 +1,8 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Disallow:
+
+src\components\Membership\index.js
+  Line 100:6:  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array
+src\components\Membership\MemberInfo\index.js
+  Line 56:6:  React Hook useEffect has a missing dependency: 'memberUpdateData'. Either include it or remove the dependency array. You can also do a functional update 'setMemberUpdateDate(m => ...)' if you only need 'memberUpdateData' in the 'setMemberUpdateDate' call

@@ -1,0 +1,7 @@
+.calendarMainArea {
+  display: grid;
+  width: 95%;
+  margin: 0px auto;
+  grid-template-columns: 250px auto;
+  position: relative;
+}/*# sourceMappingURL=index.css.map */

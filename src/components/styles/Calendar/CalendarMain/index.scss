@@ -1,0 +1,42 @@
+.calendarMain {
+  outline: 1px solid rgb(180, 180, 180);
+  width: 100%;
+  grid-column: 2/3;
+  position: relative;
+  ul {
+    position: absolute;
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    top: 3px;
+    width: 100%;
+  }
+  .bigRowMap {
+    display: flex;
+    outline: 1px solid rgb(180, 180, 180);
+    justify-content: space-around;
+    height: 100px;
+    cursor: pointer;
+  }
+  .bigDayMap {
+    width: 100%;
+    outline: 1px solid rgb(180, 180, 180);
+    font-size: 16px;
+    padding: 3px;
+    text-align: right;
+    transition: 0.3s;
+    &:hover {
+      background-color: rgb(252, 252, 189);
+    }
+    .eventListDetail {
+      font-size: 12px;
+      text-align: center;
+      background-color: rgb(1, 82, 1);
+      color: white;
+      width: 95%;
+      margin: 3px auto;
+      border-radius: 10px;
+      padding: 1px;
+    }
+  }
+}

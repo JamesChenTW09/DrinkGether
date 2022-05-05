@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Features from "./components/Features";
+import FAQ from "./components/FAQ";
+import Footer from "./components/Footer";
+import Calender from "./components/Calender";
+import Membership from "./components/Membership";
+import { Provider } from "react-redux";
+import Tryjs from "./redux/try";
+import store from "./redux/store";
 
+import "./firebase.js";
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <Navbar />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <Features />
+              <FAQ />
+            </>
+          }
+        ></Route>
+        <Route path="/member/:name" element={<Membership />}></Route>
+        <Route path="/activity" element={<Calender />}></Route>
+      </Routes>
+      <Footer />
+      <Tryjs />
+    </Provider>
   );
 }
 

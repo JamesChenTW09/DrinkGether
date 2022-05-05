@@ -1,0 +1,123 @@
+.eventDetail {
+  width: 300px;
+}
+.eventDetail .detailBar {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 10px 0px;
+}
+.eventDetail .detailBar h4 {
+  width: 90px;
+}
+.eventDetail .detailBar p {
+  width: 210px;
+}
+.eventDetail .detailBar p span {
+  margin-left: 10px;
+  color: red;
+  font-size: 14px;
+  text-decoration: underline;
+  font-weight: bold;
+}
+.eventDetail .detailBtn {
+  margin: 0px auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+.eventDetail .detailBtn button {
+  padding: 5px 10px;
+  font-size: 18px;
+  margin: 5px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+.eventDetail .detailBtn .eventAttendCancelBtn {
+  width: 200px;
+}
+.eventDetail .detailBtn .eventDeleteBtn {
+  width: 200px;
+}
+.eventDetail .detailBackToList {
+  width: 200px;
+  margin: 5px auto;
+  cursor: pointer;
+  padding: 5px 10px;
+  font-size: 18px;
+  border-radius: 10px;
+  background-color: rgb(239, 239, 239);
+  text-align: center;
+}
+.eventDetail .detailBackToList:hover {
+  color: rgb(66, 66, 66);
+}
+.eventDetail .eventDetailDiscuss {
+  border-top: 1px solid #000;
+  padding: 15px 0px 0px 0px;
+  margin: 15px 0px 0px 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.eventDetail .eventDetailDiscuss h4 {
+  width: 200px;
+  cursor: pointer;
+  padding: 5px 10px;
+  font-size: 18px;
+  border-radius: 10px;
+  background-color: rgb(239, 239, 239);
+  text-align: center;
+  letter-spacing: 3px;
+}
+.eventDetail .eventDetailDiscuss .discussDetailContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.eventDetail .eventDetailDiscuss .discussDetailContainer textarea {
+  resize: none;
+  width: 250px;
+  height: 100px;
+  margin: 10px 0px;
+  border-radius: 10px;
+  padding: 5px;
+}
+.eventDetail .eventDetailDiscuss .discussDetailContainer button {
+  border: none;
+  width: 100px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  padding: 5px 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  background-color: rgb(239, 239, 239);
+  text-align: center;
+  letter-spacing: 3px;
+}
+.eventDetail .eventDetailDiscuss .discussDetailContainer .discussItemContainer {
+  max-height: 300px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+}
+.eventDetail .eventDetailDiscuss .discussDetailContainer .discussItemContainer .discussDetailList {
+  width: 250px;
+  background-color: rgb(187, 187, 187);
+  border-radius: 15px;
+  padding: 3px 7px;
+  margin: 7px 0px 3px 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.EventDetailCross {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 8px;
+  cursor: pointer;
+}/*# sourceMappingURL=index.css.map */

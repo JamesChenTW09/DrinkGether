@@ -1,0 +1,89 @@
+.calendarFeatures {
+  outline: 1px solid rgb(180, 180, 180);
+  grid-column: 1/2;
+  height: 500px;
+  .launchEventBtn {
+    width: 210px;
+    letter-spacing: 5px;
+    font-weight: bolder;
+    padding: 7px 5px;
+    margin: 20px auto;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 10px;
+    border: 1px solid gray;
+    font-size: 1.2rem;
+    transition: 0.3s;
+    &:hover {
+      background-color: rgb(212, 212, 119);
+    }
+  }
+  //repeat
+  .changeMonthDayBtn {
+    width: 210px;
+    letter-spacing: 5px;
+    font-weight: bolder;
+    padding: 7px 5px;
+    margin: 20px auto;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 10px;
+    border: 1px solid gray;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    h3 {
+      font-size: 1.2rem;
+    }
+    p {
+      font-size: 1.2rem;
+    }
+  }
+  .smallCalendarDay {
+    .smallCalendarSelect {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0px auto 15px auto;
+      h4 {
+        letter-spacing: 3px;
+        margin: 0px 15px;
+        font-size: 18px;
+      }
+      p {
+        cursor: pointer;
+        font-size: 20px;
+      }
+    }
+    ul {
+      display: flex;
+      justify-content: space-around;
+      list-style: none;
+      font-size: 10px;
+      margin-bottom: 7px;
+      padding: 0px 5px;
+    }
+  }
+  .smallCalendar {
+    margin: 0px auto;
+    width: 240px;
+    height: 160px;
+  }
+}
+
+.rowMap {
+  display: grid;
+  justify-content: space-around;
+  align-items: center;
+  height: 28px;
+  grid-template-columns: repeat(auto-fill, 32px);
+}
+.dayMap {
+  padding: 1px;
+  height: 24px;
+  text-align: center;
+}
+
+.colorBlue {
+  color: blue;
+}

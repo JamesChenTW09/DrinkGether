@@ -1,0 +1,74 @@
+.launchEventBox {
+  width: 370px;
+  height: 550px;
+  transform: translateX(-50%);
+  background-color: rgb(220, 220, 220);
+  border-radius: 10px;
+  box-shadow: 2px 2px 3px gray;
+  left: 38%;
+  top: 7%;
+  z-index: 30;
+  position: fixed;
+  transition: 0.4s;
+  .handleCancelEventBox {
+    position: absolute;
+    right: 0;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bolder;
+    cursor: pointer;
+  }
+  .newEventBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    h3 {
+      margin-top: 10px;
+      font-size: 1.5rem;
+    }
+    .eventInputTitle {
+      font-size: 14px;
+      letter-spacing: 2px;
+      margin: 10px 0px 5px 0px;
+      span {
+        color: red;
+      }
+    }
+    input {
+      width: 250px;
+      border-radius: 10px;
+      padding: 5px 8px;
+      border: none;
+      text-align: center;
+      font-size: 16px;
+      &:focus {
+        outline: 2px solid gray;
+      }
+    }
+    textarea {
+      width: 250px;
+      height: 130px;
+      padding: 5px 8px;
+      resize: none;
+    }
+    .eventErrorMessage {
+      font-weight: bolder;
+      color: red;
+    }
+    button {
+      width: 250px;
+      border-radius: 10px;
+      padding: 5px 8px;
+      border: none;
+      text-align: center;
+      font-size: 18px;
+      margin-top: 12px;
+      cursor: pointer;
+      background-color: rgb(145, 143, 143);
+      transition: 0.3s;
+      &:hover {
+        background-color: rgb(160, 160, 160);
+      }
+    }
+  }
+}
