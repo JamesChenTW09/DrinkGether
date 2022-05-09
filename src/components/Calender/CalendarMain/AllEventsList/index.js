@@ -1,50 +1,43 @@
 import React, { useEffect, useState } from "react";
 import EventDetail from "./EventDetail";
-import { ref, getDatabase, child, get } from "firebase/database";
+import { dbRef, auth } from "../../../../firebase";
+import { dailyEventSort } from "../../../../utils/utilities";
+import { child, get } from "firebase/database";
 import "../../../styles/Calendar/AllEvensList/index.css";
 
 const Index = ({
   showAllEventsBox,
-  testList,
+  allEventList,
   keepDay,
   setShowAllEventsBox,
+  setBigDateEventList,
+  bigDateEventList,
 }) => {
-  const [eventList, setEventList] = useState([]);
+  const [dailyEventList, setDailyEventList] = useState([]);
   const [showEventDetail, setShowEventDetail] = useState(false);
+  const [discussList, setDiscussList] = useState([]);
+  const [eventDetail, setEventDetail] = useState({});
+
+  //handle event list
+  const handleSendDetailData = (e, item) => {
+    setEventDetail(item);
+    setShowEventDetail(!showEventDetail);
+    loadDiscussItems(item);
+    console.log(item);
+    console.log(auth.currentUser);
+  };
+
+  // fetch initial data
   useEffect(() => {
-    //organize by the time
-    function test() {
-      if (testList && keepDay) {
-        let dayArr;
-        let timeArr;
-        let finalArr = [];
-        dayArr = testList.filter((item) => {
-          return item["eventDate"] === keepDay;
-        });
-        timeArr = dayArr.map((item) => {
-          return item["eventTime"];
-        });
-        timeArr = timeArr.sort();
-        for (let i = 0; i < timeArr.length; i++) {
-          for (let j = 0; j < dayArr.length; j++) {
-            if (timeArr[i] === dayArr[j]["eventTime"]) {
-              finalArr.push(dayArr[j]);
-              dayArr.splice(j, 1);
-              break;
-            }
-          }
-        }
-        setEventList(finalArr);
-      }
+    //destruct allEventList to daily event by the time
+    if (allEventList && keepDay) {
+      const dailyEventListArr = dailyEventSort(allEventList, keepDay);
+      setDailyEventList(dailyEventListArr);
     }
-    if (testList && keepDay) {
-      test();
-    }
-  }, [testList, keepDay]);
+  }, [allEventList, keepDay]);
 
   //send data to eventDeatil
   const loadDiscussItems = (eventItem) => {
-    const dbRef = ref(getDatabase());
     get(child(dbRef, "discuss/" + eventItem["eventId"])).then((snapshot) => {
       if (snapshot.exists()) {
         const discussListId = Object.keys(snapshot.val());
@@ -68,13 +61,6 @@ const Index = ({
       }
     });
   };
-  const [discussList, setDiscussList] = useState([]);
-  const [eventDetail, setEventDetail] = useState({});
-  const handleSendDetailData = (e, item) => {
-    setEventDetail(item);
-    setShowEventDetail(!showEventDetail);
-    loadDiscussItems(item);
-  };
 
   return (
     <div
@@ -85,7 +71,7 @@ const Index = ({
     >
       <div className="eventDetailTitle">{keepDay}</div>
       <EventDetail
-        eventList={eventList}
+        dailyEventList={dailyEventList}
         setShowAllEventsBox={setShowAllEventsBox}
         showEventDetail={showEventDetail}
         setShowEventDetail={setShowEventDetail}
@@ -93,9 +79,11 @@ const Index = ({
         showAllEventsBox={showAllEventsBox}
         discussList={discussList}
         setDiscussList={setDiscussList}
+        setBigDateEventList={setBigDateEventList}
+        setDailyEventList={setDailyEventList}
       />
 
-      {eventList.map((item) => {
+      {dailyEventList.map((item) => {
         return (
           <div
             className="allEventDetail"

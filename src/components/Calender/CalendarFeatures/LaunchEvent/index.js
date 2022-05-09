@@ -6,19 +6,22 @@ import {
   writeMemberHoldEvent,
 } from "../../../../firebase.js";
 import { v4 as uuidv4 } from "uuid";
+import dayjs from "dayjs";
 import "../../../styles/Calendar/LaunchEvent/index.css";
 
 const Index = ({
-  scaleAnimation,
-  setScaleAnimation,
+  showStartEventBox,
+  setShowStartEventBox,
   eventInputValue,
   setEventInputValue,
-  list,
-  setList,
+  bigDateEventList,
+  setBigDateEventList,
+  allEventList,
+  setAllEventList,
 }) => {
   // handle event box cancel by clicking cross
   const handleCloseLaunch = () => {
-    setScaleAnimation(0);
+    setShowStartEventBox(0);
     setEventInputValue({
       eventPlace: "",
       eventDate: "",
@@ -42,18 +45,26 @@ const Index = ({
     } else if (!auth.currentUser) {
       setEventErrorMessage("Please log in first");
       return;
+    } else if (eventDate < dayjs().format("YYYY-MM-DD")) {
+      setEventErrorMessage("Wrong Date");
+      return;
     }
     const uuid = uuidv4();
-    setList([...list, eventInputValue]);
-    writeNewEvent(
-      uuid,
-      eventPlace,
-      eventDate,
-      eventTime,
-      eventMaxPal,
-      eventDescription,
-      auth.currentUser.displayName
-    );
+    const { displayName } = auth.currentUser;
+
+    const checkLengthArr = allEventList.filter((item) => {
+      return item["eventDate"] === eventDate;
+    });
+    if (checkLengthArr.length < 2) {
+      setBigDateEventList([...bigDateEventList, eventInputValue]);
+    } else if (checkLengthArr.length === 2) {
+      setBigDateEventList([
+        ...bigDateEventList,
+        { eventPlace: "還有...", eventDate },
+      ]);
+    }
+    setAllEventList([...allEventList, eventInputValue]);
+    writeNewEvent(uuid, eventInputValue, displayName);
     setEventInputValue({
       eventPlace: "",
       eventDate: "",
@@ -61,26 +72,14 @@ const Index = ({
       eventMaxPal: "",
       eventDescription: "",
     });
-    writeMemberHoldEvent(
-      auth.currentUser.displayName,
-      uuid,
-      eventPlace,
-      eventDate,
-      eventTime,
-      eventMaxPal
-    );
-    writeNewParticipant(
-      eventDate,
-      uuid,
-      "eventParticipants",
-      auth.currentUser.displayName
-    );
-    setScaleAnimation(0);
+    writeMemberHoldEvent(displayName, uuid, eventInputValue);
+    writeNewParticipant(eventDate, uuid, "eventParticipants", displayName);
+    setShowStartEventBox(0);
   };
   return (
     <>
       <section
-        style={{ transform: "scale(" + scaleAnimation + ")" }}
+        style={{ transform: "scale(" + showStartEventBox + ")" }}
         className="launchEventBox"
       >
         <p className="handleCancelEventBox" onClick={handleCloseLaunch}>

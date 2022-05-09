@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import SmallCalendarDay from "../SmallCalendarDay";
 import LaunchEvent from "./LaunchEvent";
 import dayjs from "dayjs";
@@ -6,34 +6,29 @@ import dayjs from "dayjs";
 import "../../styles/Calendar/CalendarFeatures/index.css";
 const Index = ({
   showAllEventsBox,
-  currentMonth,
-  setCurrentMonth,
+  smallDateBox,
   getMonth,
-  countNum,
-  setCountNum,
-  setCurrentMonth2,
-  setNowMonth,
+  smallNowMonth,
+  setSmallNowMonth,
+  setBigDateBox,
+  setBigNowMonth,
   eventInputValue,
   setEventInputValue,
-  scaleAnimation,
-  setScaleAnimation,
-  list,
-  setList,
+  showStartEventBox,
+  setShowStartEventBox,
+  bigDateEventList,
+  setBigDateEventList,
+  allEventList,
+  setAllEventList,
 }) => {
-  useEffect(() => {
-    setCurrentMonth(getMonth(countNum));
-  }, [countNum, getMonth, setCurrentMonth]);
-  const handleRight = () => {
-    setCountNum((pre) => pre + 1);
+  // useEffect(() => {
+  //   setSmallDateBox(getMonth(smallNowMonth));
+  // }, [smallNowMonth, getMonth, setSmallDateBox]);
+  const handleAddOneMonth = () => {
+    setSmallNowMonth((pre) => pre + 1);
   };
-  const handleLeft = () => {
-    setCountNum((pre) => pre - 1);
-  };
-
-  //change from month or day ui
-  const [monthOrDay, setMonthOrDay] = useState(true);
-  const handleChangeMonthDay = () => {
-    setMonthOrDay(!monthOrDay);
+  const handleMinusOneMonth = () => {
+    setSmallNowMonth((pre) => pre - 1);
   };
 
   //handle launch a new event
@@ -41,40 +36,39 @@ const Index = ({
     if (showAllEventsBox) {
       return;
     }
-    setScaleAnimation(1);
+    setShowStartEventBox(1);
   };
   //change big calendar same month with small calendar
   const handleChangeBigCalendar = (e) => {
-    setCurrentMonth2(getMonth(countNum));
-    setNowMonth(countNum);
+    setBigDateBox(getMonth(smallNowMonth));
+    setBigNowMonth(smallNowMonth);
   };
 
   return (
     <>
       <LaunchEvent
-        list={list}
-        setList={setList}
-        setScaleAnimation={setScaleAnimation}
-        scaleAnimation={scaleAnimation}
+        bigDateEventList={bigDateEventList}
+        setBigDateEventList={setBigDateEventList}
+        showStartEventBox={showStartEventBox}
+        setShowStartEventBox={setShowStartEventBox}
         eventInputValue={eventInputValue}
         setEventInputValue={setEventInputValue}
+        allEventList={allEventList}
+        setAllEventList={setAllEventList}
       />
       <section className="calendarFeatures">
         <div onClick={handleLaunchEvent} className="launchEventBtn">
           發起活動
         </div>
-        <div className="changeMonthDayBtn">
-          <p onClick={handleChangeMonthDay}>＜</p>
-          <h3>{monthOrDay ? "月" : "日"}</h3>
-          <p onClick={handleChangeMonthDay}>＞</p>
-        </div>
         <div className="smallCalendarDay">
           <div className="smallCalendarSelect">
-            <p onClick={handleLeft}>＜</p>
+            <p onClick={handleMinusOneMonth}>＜</p>
             <h4>
-              {dayjs(new Date(dayjs().year(), countNum)).format("MMM YYYY")}
+              {dayjs(new Date(dayjs().year(), smallNowMonth)).format(
+                "MMM YYYY"
+              )}
             </h4>
-            <p onClick={handleRight}>＞</p>
+            <p onClick={handleAddOneMonth}>＞</p>
           </div>
 
           <ul>
@@ -89,7 +83,7 @@ const Index = ({
         </div>
 
         <div className="smallCalendar">
-          {currentMonth.map((row, i) => {
+          {smallDateBox.map((row, i) => {
             return (
               <div className="rowMap" key={i}>
                 {row.map((day, idx) => (

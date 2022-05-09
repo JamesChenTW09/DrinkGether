@@ -1,20 +1,18 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  getDatabase,
-  ref,
-  update,
-  remove,
-  get,
-  child,
-} from "firebase/database";
+import { ref, update, remove, get, child, onValue } from "firebase/database";
 import DiscussBox from "./DiscussBox";
 import { v4 as uuidv4 } from "uuid";
 import dayjs from "dayjs";
 import {
+  fetchData,
   auth,
   writeNewParticipant,
   writeNewNotification,
   writeMemberJoinEvent,
+  db,
+  dbRef,
+  deleteMemberEventData,
+  sendNotificationMessage,
 } from "../../../../../firebase.js";
 import "../../../../styles/Calendar/EventDetail/index.css";
 
@@ -23,10 +21,24 @@ const Index = ({
   showEventDetail,
   setShowEventDetail,
   setShowAllEventsBox,
-  eventList,
+  dailyEventList,
   discussList,
   setDiscussList,
+  setDailyEventList,
+  setBigDateEventList,
 }) => {
+  let {
+    eventDate,
+    eventId,
+    userId,
+    eventPlace,
+    eventMaxPal,
+    eventCurrentPal,
+    eventParticipants,
+    eventTime,
+  } = eventDetail;
+
+  //handle event list
   const handleBackToEventList = () => {
     setShowEventDetail(!showEventDetail);
     setShowDiscussArea((preState) => (preState = false));
@@ -34,265 +46,149 @@ const Index = ({
   };
   //delete event
   const handleDeleteEvent = () => {
-    const db = getDatabase();
-    const dbRef = ref(getDatabase());
-    get(
-      child(
-        dbRef,
-        "event/" +
-          eventDetail["eventDate"] +
-          "/" +
-          eventDetail["eventId"] +
-          "/eventParticipants/"
-      )
-    ).then((snapshot) => {
-      if (snapshot.exists()) {
-        const participantList = Object.keys(snapshot.val());
-        let participantWithoutJoin = participantList.filter((item) => {
-          return item !== auth.currentUser.displayName;
-        });
-        for (let i = 0; i < participantList.length; i++) {
-          remove(
-            ref(
-              db,
-              "user/" +
-                participantList[i] +
-                "/info/joinEvents/" +
-                eventDetail["eventId"]
-            )
-          );
-        }
-        const message = `您在${eventDetail["eventDate"]}所參加的${eventDetail["eventPlace"]}活動，已被刪除`;
-        participantWithoutJoin.map((item) => {
-          writeNewNotification(
-            item,
-            uuidv4(),
-            message,
-            eventDetail["eventDate"] + "." + eventDetail["eventTime"],
-            dayjs().format("YYYY-MM-DD.HH:mm:ss"),
-            eventDetail["eventId"]
-          );
-        });
-      }
-    });
+    const { displayName } = auth.currentUser;
+    const deleteRoute =
+      "event/" + eventDate + "/" + eventId + "/eventParticipants/";
+    fetchData(deleteRoute).then((data) => {
+      deleteMemberEventData(data, eventDetail);
 
-    remove(
-      ref(
-        db,
-        "event/" + eventDetail["eventDate"] + "/" + eventDetail["eventId"]
-      )
-    );
-    remove(
-      ref(
-        db,
-        "user/" +
-          auth.currentUser.displayName +
-          "/info/holdEvents/" +
-          eventDetail["eventId"]
-      )
-    );
-    if (eventList.length === 1) {
+      const message = `您在${eventDetail["eventDate"]}所參加的${eventDetail["eventPlace"]}活動，已被刪除`;
+      sendNotificationMessage(eventDetail, data, uuidv4(), message);
+    });
+    remove(ref(db, "event/" + eventDate + "/" + eventId));
+    remove(ref(db, "user/" + displayName + "/info/holdEvents/" + eventId));
+    if (dailyEventList.length === 1) {
       setShowAllEventsBox((preState) => (preState = false));
     }
-
+    setBigDateEventList((preState) =>
+      preState.filter((item) => {
+        return item["eventId"] !== eventId;
+      })
+    );
+    setDailyEventList((preState) =>
+      preState.filter((item) => {
+        return item["eventId"] !== eventId;
+      })
+    );
     setDiscussList([]);
+
     setShowEventDetail((preState) => (preState = false));
     setShowDiscussArea((preState) => (preState = false));
   };
   //cancel join event
   const handleCancelJoin = () => {
-    const db = getDatabase();
+    const { displayName } = auth.currentUser;
     remove(
       ref(
         db,
         "event/" +
-          eventDetail["eventDate"] +
+          eventDate +
           "/" +
-          eventDetail["eventId"] +
+          eventId +
           "/eventParticipants/" +
-          auth.currentUser.displayName
+          displayName
       )
     );
     let currentAttendant = Number(eventDetail["eventCurrentPal"]);
     currentAttendant -= 1;
-    update(
-      ref(
-        db,
-        "event/" + eventDetail["eventDate"] + "/" + eventDetail["eventId"]
-      ),
-      {
-        eventCurrentPal: currentAttendant,
-      }
-    );
-    remove(
-      ref(
-        db,
-        "user/" +
-          auth.currentUser.displayName +
-          "/info/joinEvents/" +
-          eventDetail["eventId"]
-      )
-    );
-    update(
-      ref(
-        db,
-        "user/" +
-          eventDetail["userId"] +
-          "/info/holdEvents/" +
-          eventDetail["eventId"]
-      ),
-      {
-        memberEventCurrentPal: currentAttendant,
-      }
-    );
-    const dbRef = ref(getDatabase());
+    update(ref(db, "event/" + eventDate + "/" + eventId), {
+      eventCurrentPal: currentAttendant,
+    });
+    remove(ref(db, "user/" + displayName + "/info/joinEvents/" + eventId));
+    update(ref(db, "user/" + userId + "/info/holdEvents/" + eventId), {
+      memberEventCurrentPal: currentAttendant,
+    });
+
     get(
-      child(
-        dbRef,
-        "event/" +
-          eventDetail["eventDate"] +
-          "/" +
-          eventDetail["eventId"] +
-          "/eventParticipants/"
-      )
+      child(dbRef, "event/" + eventDate + "/" + eventId + "/eventParticipants/")
     ).then((snapshot) => {
       let participantsList = Object.keys(snapshot.val());
-      let participantWithoutJoin = participantsList.filter((item) => {
-        return item !== auth.currentUser.displayName;
-      });
+
       participantsList = participantsList.filter((item) => {
-        return (
-          item !== eventDetail["userId"] &&
-          item !== auth.currentUser.displayName
-        );
+        return item !== userId && item !== displayName;
       });
-      participantsList.map((item) => {
-        update(
-          ref(
-            db,
-            "user/" + item + "/info/joinEvents/" + eventDetail["eventId"]
-          ),
-          {
-            memberEventCurrentPal: currentAttendant,
-          }
-        );
+      participantsList.forEach((item) => {
+        update(ref(db, "user/" + item + "/info/joinEvents/" + eventId), {
+          memberEventCurrentPal: currentAttendant,
+        });
       });
-      const message = `您在${eventDetail["eventDate"]}所參加的${eventDetail["eventPlace"]}活動，${auth.currentUser.displayName}取消參加`;
-      participantWithoutJoin.map((item) => {
-        writeNewNotification(
-          item,
-          uuidv4(),
-          message,
-          eventDetail["eventDate"] + "." + eventDetail["eventTime"],
-          dayjs().format("YYYY-MM-DD.HH:mm:ss"),
-          eventDetail["eventId"]
-        );
-      });
+
+      const message = `您在${eventDate}所參加的${eventPlace}活動，${displayName}取消參加`;
+      sendNotificationMessage(eventDetail, snapshot.val(), uuidv4(), message);
     });
     eventDetail["eventCurrentPal"] = currentAttendant;
     setShowEventDetail((preState) => !preState);
   };
   //one more attendent
   const handleAddOneAttend = () => {
-    const participantsIdList = Object.keys(eventDetail["eventParticipants"]);
+    const { displayName } = auth.currentUser;
+    const participantsIdList = Object.keys(eventParticipants);
     if (!auth.currentUser) {
       alert("log in first");
       return;
-    } else if (auth.currentUser.displayName === eventDetail["userId"]) {
+    } else if (displayName === userId) {
       alert("youre holder");
       return;
-    } else if (participantsIdList.includes(auth.currentUser.displayName)) {
+    } else if (participantsIdList.includes(displayName)) {
       alert("join already");
       return;
     }
-    let maxAttendant = Number(eventDetail["eventMaxPal"]);
-    let currentAttendant = Number(eventDetail["eventCurrentPal"]);
+    let maxAttendant = Number(eventMaxPal);
+    let currentAttendant = Number(eventCurrentPal);
     if (maxAttendant === currentAttendant) {
       alert("full");
       return;
     } else {
       currentAttendant += 1;
-      const db = getDatabase();
-      update(
-        ref(
-          db,
-          "event/" + eventDetail["eventDate"] + "/" + eventDetail["eventId"]
-        ),
-        {
-          eventCurrentPal: currentAttendant,
-        }
-      );
-      writeNewParticipant(
-        eventDetail["eventDate"],
-        eventDetail["eventId"],
-        "eventParticipants",
-        auth.currentUser.displayName
-      );
+      update(ref(db, "event/" + eventDate + "/" + eventId), {
+        eventCurrentPal: currentAttendant,
+      });
+      writeNewParticipant(eventDate, eventId, "eventParticipants", displayName);
 
-      eventDetail["eventCurrentPal"] = currentAttendant;
+      eventCurrentPal = currentAttendant;
       writeMemberJoinEvent(
         auth.currentUser.displayName,
-        eventDetail["eventId"],
-        eventDetail["eventPlace"],
-        eventDetail["eventDate"],
-        eventDetail["eventTime"],
+        eventId,
+        eventPlace,
+        eventDate,
+        eventTime,
         currentAttendant,
-        eventDetail["eventMaxPal"],
-        eventDetail["userId"]
+        eventMaxPal,
+        userId
       );
-      const dbRef = ref(getDatabase());
       get(
         child(
           dbRef,
-          "event/" +
-            eventDetail["eventDate"] +
-            "/" +
-            eventDetail["eventId"] +
-            "/eventParticipants/"
+          "event/" + eventDate + "/" + eventId + "/eventParticipants/"
         )
       ).then((snapshot) => {
         let participantsList = Object.keys(snapshot.val());
         let participantWithoutJoin = participantsList.filter((item) => {
-          return item !== auth.currentUser.displayName;
+          return item !== displayName;
         });
         participantsList = participantsList.filter((item) => {
-          return item !== eventDetail["userId"];
+          return item !== userId;
         });
-        participantsList.map((item) => {
-          update(
-            ref(
-              db,
-              "user/" + item + "/info/joinEvents/" + eventDetail["eventId"]
-            ),
-            {
-              memberEventCurrentPal: currentAttendant,
-            }
-          );
+        participantsList.forEach((item) => {
+          update(ref(db, "user/" + item + "/info/joinEvents/" + eventId), {
+            memberEventCurrentPal: currentAttendant,
+          });
         });
-        const message = `您在${eventDetail["eventDate"]}所參加的${eventDetail["eventPlace"]}活動，${auth.currentUser.displayName}加入活動`;
-        participantWithoutJoin.map((item) => {
+        const message = `您在${eventDate}所參加的${eventPlace}活動，${displayName}加入活動`;
+        participantWithoutJoin.forEach((item) => {
           writeNewNotification(
             item,
             uuidv4(),
             message,
-            eventDetail["eventDate"] + "." + eventDetail["eventTime"],
+            eventDate + "." + eventTime,
             dayjs().format("YYYY-MM-DD.HH:mm:ss"),
-            eventDetail["eventId"]
+            eventId
           );
         });
       });
-      update(
-        ref(
-          db,
-          "user/" +
-            eventDetail["userId"] +
-            "/info/holdEvents/" +
-            eventDetail["eventId"]
-        ),
-        {
-          memberEventCurrentPal: currentAttendant,
-        }
-      );
+      update(ref(db, "user/" + userId + "/info/holdEvents/" + eventId), {
+        memberEventCurrentPal: currentAttendant,
+      });
 
       setShowEventDetail((preState) => !preState);
     }
@@ -311,7 +207,7 @@ const Index = ({
   //set delete button
   const deleteBtnShow = useCallback(() => {
     if (auth.currentUser) {
-      if (auth.currentUser.displayName === eventDetail["userId"]) {
+      if (auth.currentUser.displayName === userId) {
         return "inline";
       } else {
         return "none";
@@ -319,7 +215,7 @@ const Index = ({
     } else {
       return "none";
     }
-  }, [eventDetail]);
+  }, [userId]);
   useEffect(() => {
     deleteBtnShow();
   }, [deleteBtnShow, eventDetail]);

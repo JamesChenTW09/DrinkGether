@@ -1,18 +1,16 @@
 import React from "react";
 
 const GlobalContext = React.createContext({
-  showLogIn1: 0,
-  setShowLogIn1: () => {},
+  showLogInBox: false,
+  setShowLogInBox: () => {},
   greetingName: "",
   setGreetingName: () => {},
   accountProcessing: {},
   setAccountProcessing: () => {},
   inputEmail: "",
   setInputEmail: () => {},
-  logInOrSignUp: true,
-  setlogInOrSignUp: () => {},
-  notificationMessage: "",
-  setNotificationMessage: () => {},
+  storeNotificationMessage: "",
+  setStoreNotificationMessage: () => {},
 });
 
 export default GlobalContext;

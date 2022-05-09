@@ -1,6 +1,6 @@
 import React from "react";
-import "./styles/index.css";
-import icon from "./beer.jpg";
+import "../styles/Features/index.css";
+import icon from "../styles/photos/beer.jpg";
 const Index = () => {
   return (
     <>

@@ -19,6 +19,7 @@
     cursor: pointer;
   }
   .bigDayMap {
+    overflow-x: hidden;
     width: 100%;
     outline: 1px solid rgb(180, 180, 180);
     font-size: 16px;
@@ -30,13 +31,13 @@
     }
     .eventListDetail {
       font-size: 12px;
-      text-align: center;
       background-color: rgb(1, 82, 1);
       color: white;
       width: 95%;
       margin: 3px auto;
       border-radius: 10px;
       padding: 1px;
+      text-align: center;
     }
   }
 }

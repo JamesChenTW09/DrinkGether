@@ -6,13 +6,15 @@ import dayjs from "dayjs";
 import "../styles/Calendar/index.css";
 
 const Index = () => {
-  //test
-
-  const [currentMonth2, setCurrentMonth2] = useState(getMonth());
+  const [bigDateBox, setBigDateBox] = useState(getMonth());
+  const [smallDateBox, setSmallDateBox] = useState(getMonth());
   const [showAllEventsBox, setShowAllEventsBox] = useState(false);
-  const [list, setList] = useState([]);
-  const [scaleAnimation, setScaleAnimation] = useState(0);
-  const [nowMonth, setNowMonth] = useState(dayjs().month());
+  const [bigNowMonth, setBigNowMonth] = useState(dayjs().month());
+  const [smallNowMonth, setSmallNowMonth] = useState(dayjs().month());
+  const [bigDateEventList, setBigDateEventList] = useState([]);
+  const [showStartEventBox, setShowStartEventBox] = useState(0);
+  const [allEventList, setAllEventList] = useState([]);
+
   const [eventInputValue, setEventInputValue] = useState({
     eventPlace: "",
     eventDate: "",
@@ -21,8 +23,6 @@ const Index = () => {
     eventDescription: "",
   });
   //
-  const [currentMonth, setCurrentMonth] = useState(getMonth());
-  const [countNum, setCountNum] = useState(dayjs().month());
 
   function getMonth(month = dayjs().month()) {
     const year = dayjs().year();
@@ -39,42 +39,46 @@ const Index = () => {
   return (
     <>
       <CalendarHeader
-        setCurrentMonth={setCurrentMonth}
+        setSmallDateBox={setSmallDateBox}
         getMonth={getMonth}
-        setCountNum={setCountNum}
-        currentMonth2={currentMonth2}
-        setCurrentMonth2={setCurrentMonth2}
-        nowMonth={nowMonth}
-        setNowMonth={setNowMonth}
+        setSmallNowMonth={setSmallNowMonth}
+        setBigDateBox={setBigDateBox}
+        bigNowMonth={bigNowMonth}
+        setBigNowMonth={setBigNowMonth}
       />
+
       <section className="calendarMainArea">
         <CalendarFeatures
-          currentMonth={currentMonth}
-          setCurrentMonth={setCurrentMonth}
+          smallDateBox={smallDateBox}
           getMonth={getMonth}
-          countNum={countNum}
-          setCountNum={setCountNum}
-          setCurrentMonth2={setCurrentMonth2}
-          setNowMonth={setNowMonth}
+          smallNowMonth={smallNowMonth}
+          setSmallNowMonth={setSmallNowMonth}
+          setBigDateBox={setBigDateBox}
+          setBigNowMonth={setBigNowMonth}
           eventInputValue={eventInputValue}
           setEventInputValue={setEventInputValue}
-          scaleAnimation={scaleAnimation}
-          setScaleAnimation={setScaleAnimation}
-          list={list}
-          setList={setList}
+          showStartEventBox={showStartEventBox}
+          setShowStartEventBox={setShowStartEventBox}
+          bigDateEventList={bigDateEventList}
+          setBigDateEventList={setBigDateEventList}
           showAllEventsBox={showAllEventsBox}
+          allEventList={allEventList}
+          setAllEventList={setAllEventList}
         />
+
         <CalendarMain
           showAllEventsBox={showAllEventsBox}
           setShowAllEventsBox={setShowAllEventsBox}
-          scaleAnimation={scaleAnimation}
-          countNum={countNum}
-          currentMonth2={currentMonth2}
+          showStartEventBox={showStartEventBox}
+          setShowStartEventBox={setShowStartEventBox}
+          smallNowMonth={smallNowMonth}
+          bigDateBox={bigDateBox}
           eventInputValue={eventInputValue}
           setEventInputValue={setEventInputValue}
-          setScaleAnimation={setScaleAnimation}
-          list={list}
-          setList={setList}
+          bigDateEventList={bigDateEventList}
+          setBigDateEventList={setBigDateEventList}
+          allEventList={allEventList}
+          setAllEventList={setAllEventList}
         />
       </section>
     </>

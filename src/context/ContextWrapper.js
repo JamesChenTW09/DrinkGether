@@ -4,7 +4,7 @@ import GlobalContext from "./GlobalContext";
 const ContextWrapper = (props) => {
   //below is login and signup part
   //set click login button to show or hide the login box **transform tranlate360px or 0px**
-  const [showLogIn1, setShowLogIn1] = useState("360px");
+  const [showLogInBox, setShowLogInBox] = useState(false);
   //set greeting name when login
   const [greetingName, setGreetingName] = useState("");
   // decide which page should show up , true means showing
@@ -19,23 +19,21 @@ const ContextWrapper = (props) => {
   //store the input email and pass to forgot password email input
   const [inputEmail, setInputEmail] = useState("");
   //
-  const [logInOrSignUp, setlogInOrSignUp] = useState(true);
-  const [notificationMessage, setNotificationMessage] = useState("");
+
+  const [storeNotificationMessage, setStoreNotificationMessage] = useState("");
   return (
     <GlobalContext.Provider
       value={{
-        showLogIn1,
-        setShowLogIn1,
+        showLogInBox,
+        setShowLogInBox,
         greetingName,
         setGreetingName,
         accountProcessing,
         setAccountProcessing,
         inputEmail,
         setInputEmail,
-        logInOrSignUp,
-        setlogInOrSignUp,
-        notificationMessage,
-        setNotificationMessage,
+        storeNotificationMessage,
+        setStoreNotificationMessage,
       }}
     >
       {props.children}

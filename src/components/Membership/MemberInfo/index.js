@@ -1,9 +1,19 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { getDatabase, ref, update, get, child } from "firebase/database";
+import React, { useState, useRef } from "react";
+import { getDatabase, update, ref } from "firebase/database";
+import { getStorage, uploadBytes, ref as sRef } from "firebase/storage";
 import { auth } from "../../../firebase.js";
 import "../../styles/Membership/index.css";
-import photo from "../../styles/photos/beer.jpg";
-const Index = ({ storeUserNameId }) => {
+const Index = ({
+  storeUserNameId,
+  memberUpdateData,
+  setMemberUpdateDate,
+  showLineId,
+  setShowLineId,
+  lineIdAllOption,
+  setLineIdAllOption,
+  storeImg,
+  setStoreImg,
+}) => {
   //handle info is editable or not
   const [textEditable, setTextEditable] = useState(true);
   const handleTextEditable = () => {
@@ -17,7 +27,6 @@ const Index = ({ storeUserNameId }) => {
   };
 
   //handle line id circel for everyone
-  const [lineIdAllOption, setLineIdAllOption] = useState(false);
   const handleMoveAllLineIdCircle = () => {
     if (textEditable) {
       return;
@@ -26,15 +35,7 @@ const Index = ({ storeUserNameId }) => {
   };
 
   //get the data user type
-  const [memberUpdateData, setMemberUpdateDate] = useState({
-    job: "",
-    passion: "",
-    sex: "",
-    about: "",
-    password: "",
-    phone: "",
-    lineId: "",
-  });
+
   const { name, email, job, passion, sex, about, password, phone, lineId } =
     memberUpdateData;
   const handleMemberUpdateData = (e) => {
@@ -65,47 +66,72 @@ const Index = ({ storeUserNameId }) => {
       setShowLineId((preState) => (preState = false));
     }
   };
-  const fetchUserData = useCallback(() => {
-    if (auth.currentUser && storeUserNameId) {
-      const dbRef = ref(getDatabase());
-      get(child(dbRef, "user/" + storeUserNameId)).then((snapshot) => {
-        const { lineIdForAll } = snapshot.val()["info"];
-        setLineIdAllOption(lineIdForAll);
-        if (lineIdForAll) {
-          setShowLineId((preState) => (preState = lineIdForAll));
-        }
-
-        setMemberUpdateDate(snapshot.val()["info"]);
-      });
-    } else {
-      setTimeout(() => {
-        fetchUserData();
-      }, 200);
-    }
-  }, [storeUserNameId]);
-
-  useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]);
-
   //handle show line id
-  const [showLineId, setShowLineId] = useState(false);
+
   const handleShowLineId = () => {
     setShowLineId(!showLineId);
+  };
+  //photo
+  const imgInput = useRef();
+  const finalImg = useRef();
+  const canvasPhoto = useRef();
+  const handleChangePhoto = () => {
+    imgInput.current.click();
+  };
+
+  const handleUploadImg = (e) => {
+    const file = e.target.files[0];
+    const blobURL = URL.createObjectURL(file);
+    const img = new Image();
+    img.src = blobURL;
+    img.onload = function () {
+      setStoreImg(null);
+      const canvas = canvasPhoto.current;
+      const ctx = canvas.getContext("2d");
+      canvas.width = 300;
+      canvas.height = 300;
+      ctx.drawImage(img, 0, 0, 300, 300);
+      console.log(img);
+      canvas.toBlob(
+        (blob) => {
+          const storage = getStorage();
+          const storageRef = sRef(storage, auth.currentUser.displayName);
+          uploadBytes(storageRef, blob).then((snapshot) => {});
+        },
+        "image/jpeg",
+        0.6
+      );
+    };
   };
 
   return (
     <>
       <div className="basicInfo">
         <div className="memberImg">
-          <img src={photo} alt="" />
+          <div className="headShot" ref={finalImg}>
+            {storeImg ? <img alt="headShot" src={storeImg}></img> : ""}
+            <canvas
+              style={storeImg ? { display: "none" } : { display: "block" }}
+              ref={canvasPhoto}
+            ></canvas>
+          </div>
+          <div className="cameraIconBox" onClick={handleChangePhoto}>
+            <i class="fa-solid fa-camera">
+              <input
+                onChange={(e) => handleUploadImg(e)}
+                ref={imgInput}
+                type="file"
+                hidden
+              />
+            </i>
+          </div>
         </div>
         <div className="memberProfile">
           <div className="memberInfoTitle">
             <h3>
               My Profile
               <i
-                onClick={handleTextEditable}
+                onMouseDown={handleTextEditable}
                 class="fa-solid fa-pen"
                 style={
                   (modifyInfo ? { display: "none" } : { display: "inline" },

@@ -1,42 +1,41 @@
-import React, { useEffect } from "react";
+import React from "react";
 import dayjs from "dayjs";
 import "../../styles/Calendar/CalendarHeader/index.css";
 
 const Index = ({
-  setCurrentMonth,
-  setCountNum,
+  setSmallDateBox,
+  setSmallNowMonth,
   getMonth,
-  currentMonth2,
-  setCurrentMonth2,
-  nowMonth,
-  setNowMonth,
+  setBigDateBox,
+  bigNowMonth,
+  setBigNowMonth,
 }) => {
   const handleBackToToday = () => {
-    setCurrentMonth(getMonth());
-    setCountNum(dayjs().month());
-    setCurrentMonth2(getMonth());
-    setNowMonth(dayjs().month());
+    setSmallDateBox(getMonth());
+    setBigDateBox(getMonth());
+    setSmallNowMonth(dayjs().month());
+    setBigNowMonth(dayjs().month());
   };
 
-  useEffect(() => {
-    setCurrentMonth2(getMonth(nowMonth));
-  }, [nowMonth, getMonth, setCurrentMonth2]);
-  const right = () => {
-    setNowMonth((pre) => pre + 1);
+  // useEffect(() => {
+  //   setCurrentMonth2(getMonth(nowMonth));
+  // }, [nowMonth, getMonth, setCurrentMonth2]);
+  const handleAddOneMonth = () => {
+    setBigNowMonth((pre) => pre + 1);
   };
-  const left = () => {
-    setNowMonth((pre) => pre - 1);
+  const handleMinusOneMonth = () => {
+    setBigNowMonth((pre) => pre - 1);
   };
   return (
     <div>
       <div className="calendarHeader">
         <h2>DrinkGether</h2>
         <div className="calendarMonthChange">
-          <p onClick={left}>＜</p>
+          <p onClick={handleMinusOneMonth}>＜</p>
           <h3>
-            {dayjs(new Date(dayjs().year(), nowMonth)).format("MMM YYYY")}
+            {dayjs(new Date(dayjs().year(), bigNowMonth)).format("MMM YYYY")}
           </h3>
-          <p onClick={right}>＞</p>
+          <p onClick={handleAddOneMonth}>＞</p>
           <button onClick={handleBackToToday}>Today</button>
         </div>
       </div>

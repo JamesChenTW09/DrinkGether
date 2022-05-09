@@ -5,10 +5,9 @@ import { v4 as uuidv4 } from "uuid";
 
 const Day = ({
   day,
-  list,
-  moreList,
+  bigDateEventList,
   setShowAllEventsBox,
-  scaleAnimation,
+  showStartEventBox,
   showAllEventsBox,
   setKeepDay,
 }) => {
@@ -21,7 +20,7 @@ const Day = ({
       : { color: "black", cursor: "pointer" };
   }
   const handleShowAllEvents = (e) => {
-    if (scaleAnimation) {
+    if (showStartEventBox) {
       return;
     }
     e.stopPropagation();
@@ -33,34 +32,36 @@ const Day = ({
     <>
       <p style={checkCurrentDay()}>{day.format("DD")}</p>
       <div>
-        {list.map((item) => {
-          return item.eventDate === day.format("YYYY-MM-DD") ? (
+        {bigDateEventList.map((item) => {
+          const { eventDate, eventPlace } = item;
+          return eventDate === day.format("YYYY-MM-DD") ? (
             <div
               onMouseDown={(e) => handleShowAllEvents(e)}
               key={uuidv4()}
               className="eventListDetail"
-              id={item.eventDate}
+              id={eventDate}
             >
-              {item.eventPlace + " " + item.eventTime}
+              {eventPlace}
             </div>
           ) : (
             ""
           );
         })}
-        {moreList.map((item) => {
-          return item.eventDate === day.format("YYYY-MM-DD") ? (
+        {/* {moreList.map((item) => {
+          const { eventDate, eventPlace } = item;
+          return eventDate === day.format("YYYY-MM-DD") ? (
             <div
               onClick={(e) => handleShowAllEvents(e)}
               key={uuidv4()}
               className="eventListDetail"
-              id={item.eventDate}
+              id={eventDate}
             >
-              {item.eventPlace + " " + item.eventTime}
+              {eventPlace}
             </div>
           ) : (
             ""
           );
-        })}
+        })} */}
       </div>
     </>
   );

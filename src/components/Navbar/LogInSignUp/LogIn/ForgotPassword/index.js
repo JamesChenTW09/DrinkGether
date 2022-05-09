@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
-import GlobalContext from "../../../context/GlobalContext.js";
+import GlobalContext from "../../../../../context/GlobalContext.js";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "../../../firebase.js";
-import "../../styles/Navbar/LogInSignUp/index.css";
+import { auth } from "../../../../../firebase.js";
+import "../../../../styles/Navbar/LogInSignUp/index.css";
 
 const ForgotPassword = () => {
   const { accountProcessing, setAccountProcessing, setInputEmail, inputEmail } =
@@ -10,6 +10,7 @@ const ForgotPassword = () => {
   const { forgotPasswordBox } = accountProcessing;
   const [forgorPasswordMessage, setForgorPasswordMessage] = useState("");
 
+  //handle event list
   const handleInputEmail = (e) => {
     setInputEmail(e.target.value);
   };

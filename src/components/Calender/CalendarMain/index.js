@@ -1,127 +1,116 @@
 import React, { useEffect, useState } from "react";
 import BigCalendarDay from "./BigCalendarDay";
 import AllEventsList from "./AllEventsList";
-import { ref, getDatabase, onValue } from "firebase/database";
+import dayjs from "dayjs";
+import { onValue, ref } from "firebase/database";
+import { showAllEventItemArr } from "../../../utils/utilities";
+import { db } from "../../../firebase";
 import "../../styles/Calendar/CalendarMain/index.css";
 
 const Index = ({
-  currentMonth2,
-  scaleAnimation,
+  bigDateBox,
+  showStartEventBox,
+  setShowStartEventBox,
   eventInputValue,
   setEventInputValue,
-  setScaleAnimation,
-  list,
-  setList,
+  bigDateEventList,
+  setBigDateEventList,
   showAllEventsBox,
   setShowAllEventsBox,
+  allEventList,
+  setAllEventList,
 }) => {
   const [keepDay, setKeepDay] = useState("");
-  const [testList, setTestList] = useState([]);
-  const [moreList, setMoreList] = useState([]);
+
+  // const [moreList, setMoreList] = useState([]);
   const handleDayClickShowEvent = (day) => {
     if (showAllEventsBox) {
+      return;
+    } else if (day.format("YYYY-MM-DD") < dayjs().format("YYYY-MM-DD")) {
       return;
     }
     setEventInputValue({
       ...eventInputValue,
       eventDate: day.format("YYYY-MM-DD"),
     });
-    setScaleAnimation(1);
+    setShowStartEventBox(1);
   };
 
   useEffect(() => {
-    const db = getDatabase();
     const starCountRef = ref(db, "event/");
     onValue(starCountRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const whichDayList = Object.keys(snapshot.val());
-        const idList = whichDayList.map((item) => {
-          return Object.keys(snapshot.val()[item]);
-        });
-        const flattern = (arr) => {
-          let result = [];
-          arr.forEach((item) => {
-            if (!item) {
-              return;
-            }
-            Array.isArray(item)
-              ? (result = result.concat(flattern(item)))
-              : result.push(item);
-          });
-          return result;
-        };
+      const whichDayList = Object.keys(snapshot.val());
+      const idList = whichDayList.map((item) => {
+        return Object.keys(snapshot.val()[item]);
+      });
 
-        //testing
-        const newIdList = idList.flat(Infinity);
-        const trytry = newIdList.map((item) => {
-          return whichDayList.map((item2) => {
-            return snapshot.val()[item2][item];
-          });
-        });
-        const finalTry = flattern(trytry);
-        setTestList(finalTry);
+      //keep all fetch list and send to AllEventList Component
+      const newIdList = idList.flat(Infinity);
 
-        //
-        const lessTwoEvents = idList.filter((item) => {
-          return item.length <= 2;
-        });
-        const overTwoEvents = idList.filter((item) => {
-          return item.length > 2;
-        });
-        const le = lessTwoEvents.flat(Infinity);
-        const mo = overTwoEvents.flat(Infinity);
+      const totalEventList = showAllEventItemArr(
+        snapshot.val(),
+        newIdList,
+        whichDayList
+      );
 
-        const less = le.map((item) => {
-          return whichDayList.map((item2) => {
-            return snapshot.val()[item2][item];
-          });
-        });
-        const more = mo.map((item) => {
-          return whichDayList.map((item2) => {
-            return snapshot.val()[item2][item];
-          });
-        });
+      setAllEventList(totalEventList);
 
-        const finalLess = flattern(less);
-        const finalMore = flattern(more);
+      //separate event >= 3 or < 3
+      const lessThreeEvents = idList.filter((item) => {
+        return item.length <= 2;
+      });
+      const overThreeEvents = idList.filter((item) => {
+        return item.length > 2;
+      });
+      const allLessThreeEvents = lessThreeEvents.flat(Infinity);
+      const allOverThreeEvents = overThreeEvents.flat(Infinity);
 
-        let result = {};
-        const trying = finalMore.map((item) => {
-          if (item["eventDate"] in result) {
-            result[item["eventDate"]]++;
-          } else {
-            result[item["eventDate"]] = 1;
-          }
-          if (result[item["eventDate"]] === 3) {
-            return {
-              eventPlace: "還有......",
-              eventTime: "",
-              eventDate: item["eventDate"],
-            };
-          } else if (result[item["eventDate"]] > 3) {
-            item["eventDate"]++;
-          } else {
-            return item;
-          }
-          return result;
-        });
-        const finalResult = trying.filter((item) => {
-          return item !== undefined;
-        });
+      const allLessItemList = showAllEventItemArr(
+        snapshot.val(),
+        allLessThreeEvents,
+        whichDayList
+      );
+      let allOverItemList = showAllEventItemArr(
+        snapshot.val(),
+        allOverThreeEvents,
+        whichDayList
+      );
 
-        setMoreList(finalResult);
-        setList(finalLess);
-      }
+      let result = {};
+      allOverItemList = allOverItemList.map((item) => {
+        if (item["eventDate"] in result) {
+          result[item["eventDate"]]++;
+        } else {
+          result[item["eventDate"]] = 1;
+        }
+        if (result[item["eventDate"]] === 3) {
+          return {
+            eventPlace: "還有......",
+            eventTime: "",
+            eventDate: item["eventDate"],
+          };
+        } else if (result[item["eventDate"]] > 3) {
+          item["eventDate"]++;
+        } else {
+          return item;
+        }
+        return result;
+      });
+
+      const finalEventArr = [...allOverItemList, ...allLessItemList];
+      setBigDateEventList(finalEventArr);
     });
-  }, [setList]);
+  }, [setBigDateEventList, setAllEventList]);
 
   return (
     <>
       <AllEventsList
+        bigDateEventList={bigDateEventList}
         keepDay={keepDay}
-        testList={testList}
+        allEventList={allEventList}
         showAllEventsBox={showAllEventsBox}
         setShowAllEventsBox={setShowAllEventsBox}
+        setBigDateEventList={setBigDateEventList}
       />
       <div className="calendarMain">
         <ul>
@@ -133,7 +122,7 @@ const Index = ({
           <li>五</li>
           <li>六</li>
         </ul>
-        {currentMonth2.map((row, i) => {
+        {bigDateBox.map((row, i) => {
           return (
             <div className="bigRowMap" key={i}>
               {row.map((day, idx) => (
@@ -143,12 +132,11 @@ const Index = ({
                   key={idx}
                 >
                   <BigCalendarDay
-                    scaleAnimation={scaleAnimation}
+                    showStartEventBox={showStartEventBox}
                     setKeepDay={setKeepDay}
                     setShowAllEventsBox={setShowAllEventsBox}
                     showAllEventsBox={showAllEventsBox}
-                    moreList={moreList}
-                    list={list}
+                    bigDateEventList={bigDateEventList}
                     day={day}
                   />
                 </div>
