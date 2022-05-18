@@ -42,6 +42,7 @@ export async function fetchData(route) {
 
 //yes
 export function deleteMemberEventData(participants, event) {
+  const { displayName } = auth.currentUser;
   const participantList = Object.keys(participants);
   participantList.filter((item) => {
     return item !== auth.currentUser.displayName;
@@ -54,43 +55,76 @@ export function deleteMemberEventData(participants, event) {
       )
     );
   }
+  remove(
+    ref(db, "user/" + displayName + "/info/holdEvents/" + event["eventId"])
+  );
 }
 //yes
-export function updateCurrentPal(participants, event) {
-  const { eventId, memberEventCurrentPal, holdUserId } = event;
+export function updateCurrentPal(participants, event, currentPal) {
   const participantsList = Object.keys(participants);
 
-  const participantForJoinEvent = participantsList.filter((item) => {
-    return item !== auth.currentUser.displayName && item !== holdUserId;
-  });
-  participantForJoinEvent.forEach((user) => {
-    update(ref(db, "user/" + user + "/info/joinEvents/" + eventId), {
-      memberEventCurrentPal: memberEventCurrentPal - 1,
+  if (event.holdUserId) {
+    const { eventId, holdUserId } = event;
+    const participantForJoinEvent = participantsList.filter((item) => {
+      return item !== auth.currentUser.displayName && item !== holdUserId;
     });
-  });
-  update(ref(db, "user/" + holdUserId + "/info/holdEvents/" + eventId), {
-    memberEventCurrentPal: memberEventCurrentPal - 1,
-  });
+    participantForJoinEvent.forEach((user) => {
+      update(ref(db, "user/" + user + "/info/joinEvents/" + eventId), {
+        memberEventCurrentPal: currentPal,
+      });
+    });
+    update(ref(db, "user/" + holdUserId + "/info/holdEvents/" + eventId), {
+      memberEventCurrentPal: currentPal,
+    });
+  } else {
+    const { eventId, userId } = event;
+    const participantForJoinEvent = participantsList.filter((item) => {
+      return item !== auth.currentUser.displayName && item !== userId;
+    });
+    participantForJoinEvent.forEach((user) => {
+      update(ref(db, "user/" + user + "/info/joinEvents/" + eventId), {
+        memberEventCurrentPal: currentPal,
+      });
+    });
+    update(ref(db, "user/" + userId + "/info/holdEvents/" + eventId), {
+      memberEventCurrentPal: currentPal,
+    });
+  }
 }
 //yes
 export function sendNotificationMessage(event, participants, uuid, message) {
-  const { memberEventDate, eventId, memberEventTime } = event;
-  const eventTime = memberEventDate + "." + memberEventTime;
   const notificationTime = dayjs().format("YYYY-MM-DD.HH:mm:ss");
   let participantsList = Object.keys(participants);
   let participantWithoutJoin = participantsList.filter((item) => {
     return item !== auth.currentUser.displayName;
   });
-  participantWithoutJoin.forEach((participant) => {
-    writeNewNotification(
-      participant,
-      uuid,
-      message,
-      eventTime,
-      notificationTime,
-      eventId
-    );
-  });
+  if (event.memberEventDate) {
+    const { memberEventDate, eventId, memberEventTime } = event;
+    const eventTime = memberEventDate + "." + memberEventTime;
+    participantWithoutJoin.forEach((participant) => {
+      writeNewNotification(
+        participant,
+        uuid,
+        message,
+        eventTime,
+        notificationTime,
+        eventId
+      );
+    });
+  } else {
+    const { eventDate, eventTime, eventId } = event;
+    const eventCompleteTime = eventDate + "." + eventTime;
+    participantWithoutJoin.forEach((participant) => {
+      writeNewNotification(
+        participant,
+        uuid,
+        message,
+        eventCompleteTime,
+        notificationTime,
+        eventId
+      );
+    });
+  }
 }
 
 export function writeDiscussData(name, textContent, imageUrl, date, count) {
@@ -128,9 +162,7 @@ export function writeUserData(
   lineIdForAll = false,
   notification = ""
 ) {
-  const db = getDatabase(app);
   const reference = ref(db, "user/" + name + "/info/");
-
   set(reference, {
     name,
     email,
@@ -150,7 +182,6 @@ export function writeUserData(
   });
 }
 export function writeMemberHoldEvent(userId, eventId, eventInputValue) {
-  const db = getDatabase(app);
   const { eventPlace, eventDate, eventTime, eventMaxPal } = eventInputValue;
   const reference = ref(db, "user/" + userId + "/info/holdEvents/" + eventId);
   set(reference, {
@@ -164,30 +195,28 @@ export function writeMemberHoldEvent(userId, eventId, eventInputValue) {
   });
 }
 export function writeMemberJoinEvent(
-  userId,
-  eventId,
-  memberEventName,
-  memberEventDate,
-  memberEventTime,
-  memberEventCurrentPal,
-  memberEventMaxPal,
-  holdUserId
+  displayName,
+  currentAttendant,
+  eventDetail
 ) {
-  const db = getDatabase(app);
-  const reference = ref(db, "user/" + userId + "/info/joinEvents/" + eventId);
+  const { eventId, eventPlace, eventDate, eventTime, eventMaxPal, userId } =
+    eventDetail;
+  const reference = ref(
+    db,
+    "user/" + displayName + "/info/joinEvents/" + eventId
+  );
   set(reference, {
-    memberEventName,
-    memberEventDate,
-    memberEventTime,
-    memberEventCurrentPal,
-    memberEventMaxPal,
-    eventId,
-    holdUserId,
+    memberEventName: eventPlace,
+    memberEventDate: eventDate,
+    memberEventTime: eventTime,
+    memberEventCurrentPal: currentAttendant,
+    memberEventMaxPal: eventMaxPal,
+    eventId: eventId,
+    holdUserId: userId,
   });
 }
 
 export function writeRecommendBar(userNameId, uuid, barName, barRceommendText) {
-  const db = getDatabase(app);
   const reference = ref(db, "user/" + userNameId + "/BarRecommend/" + uuid);
   set(reference, {
     barName,
@@ -197,7 +226,6 @@ export function writeRecommendBar(userNameId, uuid, barName, barRceommendText) {
 }
 
 export function writeNewEvent(eventId, eventInputValue, userId) {
-  const db = getDatabase(app);
   const { eventPlace, eventDate, eventTime, eventMaxPal, eventDescription } =
     eventInputValue;
   const reference = ref(db, "event/" + eventDate + "/" + eventId);
@@ -221,7 +249,6 @@ export function writeNewNotification(
   nowTime,
   eventId
 ) {
-  const db = getDatabase(app);
   const reference = ref(
     db,
     "user/" + userNameId + "/info/notification/" + uuid + "/"
@@ -241,7 +268,6 @@ export function writeNewParticipant(
   eventParticipants,
   userId
 ) {
-  const db = getDatabase(app);
   const reference = ref(
     db,
     "event/" +
@@ -267,7 +293,6 @@ export function writeDiscussItem(
   discussName,
   discussTime
 ) {
-  const db = getDatabase(app);
   const reference = ref(db, "discuss/" + eventId + "/" + discussId);
   set(reference, {
     userId,
@@ -287,7 +312,6 @@ export function writeDiscussReplyItem(
   discussTime,
   replyId
 ) {
-  const db = getDatabase(app);
   const reference = ref(
     db,
     "discuss/" + eventId + "/" + discussId + "/replyItem" + replyId

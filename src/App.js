@@ -6,8 +6,7 @@ import Footer from "./components/Footer";
 import Calender from "./components/Calender";
 import Membership from "./components/Membership";
 import { Provider } from "react-redux";
-import Tryjs from "./redux/try";
-import store from "./redux/store";
+import store from "./redux_toolkit/store";
 
 import "./firebase.js";
 function App() {
@@ -28,7 +27,6 @@ function App() {
         <Route path="/activity" element={<Calender />}></Route>
       </Routes>
       <Footer />
-      <Tryjs />
     </Provider>
   );
 }

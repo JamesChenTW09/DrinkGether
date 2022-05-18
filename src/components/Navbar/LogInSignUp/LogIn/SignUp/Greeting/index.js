@@ -86,6 +86,7 @@ const Index = ({ handleAccountBoxCross }) => {
             ? storeNotificationMessage.map((item) => {
                 return (
                   <div
+                    key={item["uuid"]}
                     className="notificationItem"
                     draggable={true}
                     onDragStart={(e) => drag(e, item)}

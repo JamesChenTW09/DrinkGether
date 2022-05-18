@@ -1,142 +1,161 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ref, update, remove, get, child, onValue } from "firebase/database";
+import { ref, update, remove } from "firebase/database";
 import DiscussBox from "./DiscussBox";
 import { v4 as uuidv4 } from "uuid";
-import dayjs from "dayjs";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  showAllEventsBox,
+  notShowAllEventsBox,
+  showEventDetailBox,
+  notShowEventDetailBox,
+  notShowDiscussAreaBox,
+  showDiscussAreaBox,
+} from "../../../../../redux_toolkit/slice/boolean";
+import {
+  filterCalendarEvent,
+  filterDailyEvent,
+  setEmptyDiscussList,
+} from "../../../../../redux_toolkit/slice/eventList";
 import {
   fetchData,
   auth,
   writeNewParticipant,
-  writeNewNotification,
   writeMemberJoinEvent,
   db,
-  dbRef,
   deleteMemberEventData,
   sendNotificationMessage,
+  updateCurrentPal,
 } from "../../../../../firebase.js";
 import "../../../../styles/Calendar/EventDetail/index.css";
 
-const Index = ({
-  eventDetail,
-  showEventDetail,
-  setShowEventDetail,
-  setShowAllEventsBox,
-  dailyEventList,
-  discussList,
-  setDiscussList,
-  setDailyEventList,
-  setBigDateEventList,
-}) => {
+const Index = () => {
+  const { allEventsBox, eventDetailBox, discussAreaBox } = useSelector(
+    (state) => state.boolean
+  );
+  const { calendarEventList, eventDetail, dailyEventList, discussList } =
+    useSelector((state) => state.eventList);
+  const dispatch = useDispatch();
   let {
     eventDate,
+    eventDescription,
     eventId,
     userId,
+    eventTime,
     eventPlace,
     eventMaxPal,
     eventCurrentPal,
     eventParticipants,
-    eventTime,
   } = eventDetail;
+  const [eventDetailMessage, setEventDetailMessage] = useState("");
+  const participantsRoute =
+    "event/" + eventDate + "/" + eventId + "/eventParticipants/";
 
   //handle event list
   const handleBackToEventList = () => {
-    setShowEventDetail(!showEventDetail);
-    setShowDiscussArea((preState) => (preState = false));
-    setDiscussList([]);
-  };
-  //delete event
-  const handleDeleteEvent = () => {
-    const { displayName } = auth.currentUser;
-    const deleteRoute =
-      "event/" + eventDate + "/" + eventId + "/eventParticipants/";
-    fetchData(deleteRoute).then((data) => {
-      deleteMemberEventData(data, eventDetail);
+    if (eventDetailBox) {
+      dispatch(notShowEventDetailBox());
+    } else {
+      dispatch(showEventDetailBox());
+    }
+    setEventDetailMessage("");
+    dispatch(notShowDiscussAreaBox());
 
-      const message = `您在${eventDetail["eventDate"]}所參加的${eventDetail["eventPlace"]}活動，已被刪除`;
+    dispatch(setEmptyDiscussList());
+  };
+
+  const handleShowDiscussArea = () => {
+    if (discussAreaBox) {
+      dispatch(notShowDiscussAreaBox());
+    } else {
+      dispatch(showDiscussAreaBox());
+    }
+  };
+  //delete an event
+  const handleDeleteEvent = () => {
+    fetchData(participantsRoute).then((data) => {
+      deleteMemberEventData(data, eventDetail);
+      const message = `您在${eventDate}所參加的${eventPlace}活動，已被刪除`;
       sendNotificationMessage(eventDetail, data, uuidv4(), message);
     });
     remove(ref(db, "event/" + eventDate + "/" + eventId));
-    remove(ref(db, "user/" + displayName + "/info/holdEvents/" + eventId));
-    if (dailyEventList.length === 1) {
-      setShowAllEventsBox((preState) => (preState = false));
-    }
-    setBigDateEventList((preState) =>
-      preState.filter((item) => {
-        return item["eventId"] !== eventId;
-      })
-    );
-    setDailyEventList((preState) =>
-      preState.filter((item) => {
-        return item["eventId"] !== eventId;
-      })
-    );
-    setDiscussList([]);
+    remove(ref(db, "discuss/" + eventId));
 
-    setShowEventDetail((preState) => (preState = false));
-    setShowDiscussArea((preState) => (preState = false));
+    // if no event today, back to calendar page
+    if (dailyEventList.length === 1) {
+      dispatch(notShowAllEventsBox());
+    }
+
+    //filter calendar list and daily event list
+    dispatch(
+      filterCalendarEvent(
+        calendarEventList.filter((item) => {
+          return item["eventId"] !== eventId;
+        })
+      )
+    );
+
+    dispatch(
+      filterDailyEvent(
+        dailyEventList.filter((item) => {
+          return item["eventId"] !== eventId;
+        })
+      )
+    );
+
+    dispatch(setEmptyDiscussList());
+    dispatch(notShowEventDetailBox());
+    dispatch(notShowDiscussAreaBox());
   };
   //cancel join event
   const handleCancelJoin = () => {
     const { displayName } = auth.currentUser;
-    remove(
-      ref(
-        db,
-        "event/" +
-          eventDate +
-          "/" +
-          eventId +
-          "/eventParticipants/" +
-          displayName
-      )
-    );
-    let currentAttendant = Number(eventDetail["eventCurrentPal"]);
-    currentAttendant -= 1;
+    let currentAttendant = Number(eventCurrentPal) - 1;
+    const removeParticipantRoute =
+      "event/" +
+      eventDate +
+      "/" +
+      eventId +
+      "/eventParticipants/" +
+      displayName;
+    if (displayName === userId) {
+      setEventDetailMessage("您是主辦人，如欲取消請直接刪除");
+      return;
+    }
+    remove(ref(db, removeParticipantRoute));
+    remove(ref(db, "user/" + displayName + "/info/joinEvents/" + eventId));
     update(ref(db, "event/" + eventDate + "/" + eventId), {
       eventCurrentPal: currentAttendant,
     });
-    remove(ref(db, "user/" + displayName + "/info/joinEvents/" + eventId));
-    update(ref(db, "user/" + userId + "/info/holdEvents/" + eventId), {
-      memberEventCurrentPal: currentAttendant,
-    });
 
-    get(
-      child(dbRef, "event/" + eventDate + "/" + eventId + "/eventParticipants/")
-    ).then((snapshot) => {
-      let participantsList = Object.keys(snapshot.val());
-
-      participantsList = participantsList.filter((item) => {
-        return item !== userId && item !== displayName;
-      });
-      participantsList.forEach((item) => {
-        update(ref(db, "user/" + item + "/info/joinEvents/" + eventId), {
-          memberEventCurrentPal: currentAttendant,
-        });
-      });
-
+    fetchData(participantsRoute).then((data) => {
+      updateCurrentPal(data, eventDetail, currentAttendant);
       const message = `您在${eventDate}所參加的${eventPlace}活動，${displayName}取消參加`;
-      sendNotificationMessage(eventDetail, snapshot.val(), uuidv4(), message);
+      sendNotificationMessage(eventDetail, data, uuidv4(), message);
     });
     eventDetail["eventCurrentPal"] = currentAttendant;
-    setShowEventDetail((preState) => !preState);
+    if (eventDetailBox) {
+      dispatch(notShowEventDetailBox());
+    } else {
+      dispatch(showEventDetailBox());
+    }
   };
   //one more attendent
   const handleAddOneAttend = () => {
     const { displayName } = auth.currentUser;
-    const participantsIdList = Object.keys(eventParticipants);
-    if (!auth.currentUser) {
-      alert("log in first");
-      return;
-    } else if (displayName === userId) {
-      alert("youre holder");
-      return;
-    } else if (participantsIdList.includes(displayName)) {
-      alert("join already");
-      return;
-    }
     let maxAttendant = Number(eventMaxPal);
     let currentAttendant = Number(eventCurrentPal);
-    if (maxAttendant === currentAttendant) {
-      alert("full");
+    const participantsIdList = Object.keys(eventParticipants);
+    if (!auth.currentUser) {
+      setEventDetailMessage("log in first");
+      return;
+    } else if (displayName === userId) {
+      setEventDetailMessage("youre holder");
+      return;
+    } else if (participantsIdList.includes(displayName)) {
+      setEventDetailMessage("join already");
+      return;
+    } else if (maxAttendant === currentAttendant) {
+      setEventDetailMessage("full");
       return;
     } else {
       currentAttendant += 1;
@@ -144,63 +163,33 @@ const Index = ({
         eventCurrentPal: currentAttendant,
       });
       writeNewParticipant(eventDate, eventId, "eventParticipants", displayName);
-
-      eventCurrentPal = currentAttendant;
-      writeMemberJoinEvent(
-        auth.currentUser.displayName,
-        eventId,
-        eventPlace,
-        eventDate,
-        eventTime,
-        currentAttendant,
-        eventMaxPal,
-        userId
-      );
-      get(
-        child(
-          dbRef,
-          "event/" + eventDate + "/" + eventId + "/eventParticipants/"
-        )
-      ).then((snapshot) => {
-        let participantsList = Object.keys(snapshot.val());
-        let participantWithoutJoin = participantsList.filter((item) => {
-          return item !== displayName;
-        });
-        participantsList = participantsList.filter((item) => {
-          return item !== userId;
-        });
-        participantsList.forEach((item) => {
-          update(ref(db, "user/" + item + "/info/joinEvents/" + eventId), {
-            memberEventCurrentPal: currentAttendant,
-          });
-        });
+      writeMemberJoinEvent(displayName, currentAttendant, eventDetail);
+      fetchData(participantsRoute).then((data) => {
+        updateCurrentPal(data, eventDetail, currentAttendant);
         const message = `您在${eventDate}所參加的${eventPlace}活動，${displayName}加入活動`;
-        participantWithoutJoin.forEach((item) => {
-          writeNewNotification(
-            item,
-            uuidv4(),
-            message,
-            eventDate + "." + eventTime,
-            dayjs().format("YYYY-MM-DD.HH:mm:ss"),
-            eventId
-          );
-        });
+        sendNotificationMessage(eventDetail, data, uuidv4(), message);
       });
-      update(ref(db, "user/" + userId + "/info/holdEvents/" + eventId), {
-        memberEventCurrentPal: currentAttendant,
-      });
-
-      setShowEventDetail((preState) => !preState);
+      eventCurrentPal = currentAttendant;
+      if (eventDetailBox) {
+        dispatch(notShowEventDetailBox());
+      } else {
+        dispatch(showEventDetailBox());
+      }
     }
   };
 
   // cross effect
   const handleEventDetailCross = () => {
-    setShowAllEventsBox((preState) => !preState);
+    if (allEventsBox) {
+      dispatch(notShowAllEventsBox());
+    } else {
+      dispatch(showAllEventsBox());
+    }
+    setEventDetailMessage("");
     setTimeout(() => {
-      setDiscussList([]);
-      setShowDiscussArea((preState) => (preState = false));
-      setShowEventDetail((preState) => (preState = false));
+      dispatch(setEmptyDiscussList());
+      dispatch(notShowDiscussAreaBox());
+      dispatch(notShowEventDetailBox());
     }, 400);
   };
 
@@ -220,36 +209,30 @@ const Index = ({
     deleteBtnShow();
   }, [deleteBtnShow, eventDetail]);
 
-  //handle show discuss area
-  const [showDiscussArea, setShowDiscussArea] = useState(false);
-  const handleShowDiscussArea = () => {
-    setShowDiscussArea(!showDiscussArea);
-  };
-
   return (
     <>
       <div onClick={handleEventDetailCross} className="EventDetailCross">
         Ｘ
       </div>
       <div
-        style={showEventDetail ? { display: "block" } : { display: "none" }}
+        style={eventDetailBox ? { display: "block" } : { display: "none" }}
         className="eventDetail"
       >
         <div className="detailBar">
           <h4>酒吧名稱：</h4>
-          <p>{eventDetail["eventPlace"]}</p>
+          <p>{eventPlace}</p>
         </div>
         <div className="detailBar">
           <h4>時間：</h4>
-          <p>{eventDetail["eventTime"]}</p>
+          <p>{eventTime}</p>
         </div>
         <div className="detailBar">
           <h4>目前人數：</h4>
           <p>
-            {eventDetail["eventCurrentPal"]} / {eventDetail["eventMaxPal"]}
+            {eventCurrentPal} / {eventMaxPal}
             <span>
-              {eventDetail["eventParticipants"] && auth.currentUser
-                ? Object.keys(eventDetail["eventParticipants"]).includes(
+              {eventParticipants && auth.currentUser
+                ? Object.keys(eventParticipants).includes(
                     auth.currentUser.displayName
                   )
                   ? "已加入"
@@ -260,11 +243,11 @@ const Index = ({
         </div>
         <div className="detailBar">
           <h4>活動描述：</h4>
-          <p>{eventDetail["eventDescription"]}</p>
+          <p>{eventDescription}</p>
         </div>
         <div className="detailBtn">
-          {eventDetail["eventParticipants"] && auth.currentUser ? (
-            Object.keys(eventDetail["eventParticipants"]).includes(
+          {eventParticipants && auth.currentUser ? (
+            Object.keys(eventParticipants).includes(
               auth.currentUser.displayName
             ) ? (
               <button
@@ -296,14 +279,10 @@ const Index = ({
         <p onClick={handleBackToEventList} className="detailBackToList">
           返回上頁
         </p>
+        <p className="eventDetailMessage">{eventDetailMessage}</p>
         <div className="eventDetailDiscuss">
           <h4 onClick={handleShowDiscussArea}>留言{discussList.length}</h4>{" "}
-          <DiscussBox
-            showDiscussArea={showDiscussArea}
-            eventDetail={eventDetail}
-            discussList={discussList}
-            setDiscussList={setDiscussList}
-          />
+          <DiscussBox setEventDetailMessage={setEventDetailMessage} />
         </div>
       </div>
     </>

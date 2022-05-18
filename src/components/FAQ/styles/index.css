@@ -1,9 +1,3 @@
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-
 .faqTitle {
   text-align: center;
 }
@@ -17,7 +11,7 @@
 }
 
 .faqContainer {
-  width: 900px;
+  width: 1000px;
   margin: auto;
 }
 .faqContainer .faqContent {
@@ -26,19 +20,45 @@
   margin: 10px;
   padding: 10px;
 }
-.faqContainer .faqContent h4 {
-  font-size: 1.4rem;
-  position: relative;
+.faqContainer .faqContent .faqItemTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.faqContainer .faqContent h4 span {
+.faqContainer .faqContent .faqItemTitle h4 {
+  font-size: 1.4rem;
+}
+.faqContainer .faqContent .faqItemTitle span {
   cursor: pointer;
-  right: 0;
-  bottom: -7px;
-  position: absolute;
   font-size: 2rem;
 }
 .faqContainer .faqContent p {
   margin: 10px 0px 1px 0px;
   padding-left: 20px;
   display: none;
+}
+
+@media (max-width: 1200px) {
+  .faqContainer {
+    width: 90%;
+  }
+  .faqContainer .faqContent .faqItemTitle h4 {
+    font-size: 1.4rem;
+  }
+  .faqContainer .faqContent .faqItemTitle span {
+    cursor: pointer;
+    font-size: 2rem;
+  }
+}
+@media (max-width: 500px) {
+  .faqContainer {
+    width: 90%;
+  }
+  .faqContainer .faqContent .faqItemTitle h4 {
+    font-size: 1rem;
+  }
+  .faqContainer .faqContent .faqItemTitle span {
+    cursor: pointer;
+    font-size: 1.6rem;
+  }
 }/*# sourceMappingURL=index.css.map */

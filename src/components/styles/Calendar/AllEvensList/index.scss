@@ -1,12 +1,10 @@
 .allEventsBox {
   width: 370px;
-  // height: 550px;
   padding: 5px 5px 30px 5px;
-  transform: translateX(-50%);
   background-color: rgb(150, 150, 150);
   border-radius: 10px;
   left: 38%;
-  top: 7%;
+  top: 10%;
   transition: 0.4s;
   z-index: 30;
   position: absolute;
@@ -43,5 +41,27 @@
   .backToLaunch {
     margin-bottom: 10px;
     margin-top: auto;
+  }
+}
+
+@media (max-width: 950px) {
+  .allEventsBox {
+    width: 330px;
+    left: 27%;
+  }
+}
+@media (max-width: 650px) {
+  .allEventsBox {
+    left: 20%;
+  }
+}
+
+@media (max-width: 500px) {
+  .allEventsBox {
+    width: 310px;
+    left: 5%;
+    .allEventDetail {
+      width: 290px;
+    }
   }
 }

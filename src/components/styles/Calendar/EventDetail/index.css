@@ -54,6 +54,12 @@
 .eventDetail .detailBackToList:hover {
   color: rgb(66, 66, 66);
 }
+.eventDetail .eventDetailMessage {
+  color: red;
+  font-weight: bolder;
+  text-align: center;
+  margin: 8px 0px;
+}
 .eventDetail .eventDetailDiscuss {
   border-top: 1px solid #000;
   padding: 15px 0px 0px 0px;

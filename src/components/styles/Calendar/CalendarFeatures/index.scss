@@ -87,3 +87,9 @@
 .colorBlue {
   color: blue;
 }
+
+@media (max-width: 950px) {
+  .calendarFeatures {
+    display: none;
+  }
+}

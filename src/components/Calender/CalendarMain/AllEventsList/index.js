@@ -1,40 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import EventDetail from "./EventDetail";
-import { dbRef, auth } from "../../../../firebase";
-import { dailyEventSort } from "../../../../utils/utilities";
+import { dbRef } from "../../../../firebase";
 import { child, get } from "firebase/database";
+import { dailyEventSort } from "../../../../utils/utilities";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  showEventDetailBox,
+  notShowEventDetailBox,
+} from "../../../../redux_toolkit/slice/boolean";
+import {
+  storeEventDetail,
+  setInitialDailyEventList,
+  setInitialDiscussList,
+} from "../../../../redux_toolkit/slice/eventList";
 import "../../../styles/Calendar/AllEvensList/index.css";
 
-const Index = ({
-  showAllEventsBox,
-  allEventList,
-  keepDay,
-  setShowAllEventsBox,
-  setBigDateEventList,
-  bigDateEventList,
-}) => {
-  const [dailyEventList, setDailyEventList] = useState([]);
-  const [showEventDetail, setShowEventDetail] = useState(false);
-  const [discussList, setDiscussList] = useState([]);
-  const [eventDetail, setEventDetail] = useState({});
+const Index = () => {
+  const { allEventsBox, eventDetailBox } = useSelector(
+    (state) => state.boolean
+  );
+  const { allEventList, dailyEventList, clickDate } = useSelector(
+    (state) => state.eventList
+  );
+  const dispatch = useDispatch();
 
   //handle event list
   const handleSendDetailData = (e, item) => {
-    setEventDetail(item);
-    setShowEventDetail(!showEventDetail);
+    dispatch(storeEventDetail(item));
+    if (eventDetailBox) {
+      dispatch(notShowEventDetailBox());
+    } else {
+      dispatch(showEventDetailBox());
+    }
     loadDiscussItems(item);
-    console.log(item);
-    console.log(auth.currentUser);
   };
 
   // fetch initial data
   useEffect(() => {
     //destruct allEventList to daily event by the time
-    if (allEventList && keepDay) {
-      const dailyEventListArr = dailyEventSort(allEventList, keepDay);
-      setDailyEventList(dailyEventListArr);
+    if (allEventList && clickDate) {
+      const dailyEventListArr = dailyEventSort(allEventList, clickDate);
+      dispatch(setInitialDailyEventList(dailyEventListArr));
     }
-  }, [allEventList, keepDay]);
+  }, [allEventList, clickDate, dispatch]);
 
   //send data to eventDeatil
   const loadDiscussItems = (eventItem) => {
@@ -57,7 +65,7 @@ const Index = ({
             }
           }
         }
-        setDiscussList(finalDiscussArr);
+        dispatch(setInitialDiscussList(finalDiscussArr));
       }
     });
   };
@@ -66,29 +74,19 @@ const Index = ({
     <div
       className="allEventsBox"
       style={
-        showAllEventsBox ? { transform: "scale(1)" } : { transform: "scale(0)" }
+        allEventsBox ? { transform: "scale(1)" } : { transform: "scale(0)" }
       }
     >
-      <div className="eventDetailTitle">{keepDay}</div>
-      <EventDetail
-        dailyEventList={dailyEventList}
-        setShowAllEventsBox={setShowAllEventsBox}
-        showEventDetail={showEventDetail}
-        setShowEventDetail={setShowEventDetail}
-        eventDetail={eventDetail}
-        showAllEventsBox={showAllEventsBox}
-        discussList={discussList}
-        setDiscussList={setDiscussList}
-        setBigDateEventList={setBigDateEventList}
-        setDailyEventList={setDailyEventList}
-      />
+      <div className="eventDetailTitle">{clickDate}</div>
+      <EventDetail />
 
       {dailyEventList.map((item) => {
         return (
           <div
+            key={item["eventId"]}
             className="allEventDetail"
             onClick={(e) => handleSendDetailData(e, item)}
-            style={showEventDetail ? { display: "none" } : { display: "flex" }}
+            style={eventDetailBox ? { display: "none" } : { display: "flex" }}
           >
             <h4>{item["eventPlace"]}</h4>
             <p>{item["eventTime"]}</p>

@@ -1,16 +1,15 @@
 import React from "react";
 import dayjs from "dayjs";
-import "../../../styles/Calendar/CalendarMain/index.css";
 import { v4 as uuidv4 } from "uuid";
+import { useSelector, useDispatch } from "react-redux";
+import { reserveClickDate } from "../../../../redux_toolkit/slice/eventList";
+import { showAllEventsBox } from "../../../../redux_toolkit/slice/boolean";
+import "../../../styles/Calendar/CalendarMain/index.css";
 
-const Day = ({
-  day,
-  bigDateEventList,
-  setShowAllEventsBox,
-  showStartEventBox,
-  showAllEventsBox,
-  setKeepDay,
-}) => {
+const Day = ({ day }) => {
+  const { allEventsBox, startEventBox } = useSelector((state) => state.boolean);
+  const { calendarEventList } = useSelector((state) => state.eventList);
+  const dispatch = useDispatch();
   function checkCurrentDay() {
     return dayjs().format("DD-MM-YY") === day.format("DD-MM-YY")
       ? {
@@ -19,24 +18,26 @@ const Day = ({
         }
       : { color: "black", cursor: "pointer" };
   }
-  const handleShowAllEvents = (e) => {
-    if (showStartEventBox) {
+  const handleShowAllDailyEvents = (e) => {
+    if (startEventBox || allEventsBox) {
       return;
     }
     e.stopPropagation();
-    setKeepDay(e.target.id);
-    setShowAllEventsBox(!showAllEventsBox);
+    dispatch(reserveClickDate(e.target.id));
+    if (!allEventsBox) {
+      dispatch(showAllEventsBox());
+    }
   };
 
   return (
     <>
       <p style={checkCurrentDay()}>{day.format("DD")}</p>
-      <div>
-        {bigDateEventList.map((item) => {
+      <div className="eventListDetailBox">
+        {calendarEventList.map((item) => {
           const { eventDate, eventPlace } = item;
           return eventDate === day.format("YYYY-MM-DD") ? (
             <div
-              onMouseDown={(e) => handleShowAllEvents(e)}
+              onMouseDown={(e) => handleShowAllDailyEvents(e)}
               key={uuidv4()}
               className="eventListDetail"
               id={eventDate}
@@ -47,21 +48,6 @@ const Day = ({
             ""
           );
         })}
-        {/* {moreList.map((item) => {
-          const { eventDate, eventPlace } = item;
-          return eventDate === day.format("YYYY-MM-DD") ? (
-            <div
-              onClick={(e) => handleShowAllEvents(e)}
-              key={uuidv4()}
-              className="eventListDetail"
-              id={eventDate}
-            >
-              {eventPlace}
-            </div>
-          ) : (
-            ""
-          );
-        })} */}
       </div>
     </>
   );

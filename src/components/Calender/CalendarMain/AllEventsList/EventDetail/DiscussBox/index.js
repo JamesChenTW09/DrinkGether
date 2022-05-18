@@ -1,22 +1,27 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { auth, writeDiscussItem } from "../../../../../../firebase.js";
+import { useDispatch, useSelector } from "react-redux";
+import { addDiscussList } from "../../../../../../redux_toolkit/slice/eventList.js";
 import dayjs from "dayjs";
+import {
+  auth,
+  writeDiscussItem,
+  sendNotificationMessage,
+  fetchData,
+} from "../../../../../../firebase.js";
+
 import "../../../../../styles/Calendar/EventDetail/index.css";
 
-const Index = ({
-  eventDetail,
-  discussList,
-  setDiscussList,
-  showDiscussArea,
-}) => {
-  const testing = useRef();
-  // const [replyList, setReplyList] = useState(["真的假的", "一定要來"]);
+const Index = ({ setEventDetailMessage }) => {
+  const { discussAreaBox } = useSelector((state) => state.boolean);
+  const { eventDetail, discussList } = useSelector((state) => state.eventList);
+  const dispatch = useDispatch();
+  const { eventDate, eventId, eventPlace } = eventDetail;
   const [discussData, setDiscussData] = useState({
     discussContent: "",
     discussName: "",
   });
-  // const [discussList, setDiscussList] = useState([]);
+  const { discussContent, discussName } = discussData;
   const handleDiscussInput = (e) => {
     if (auth.currentUser) {
       setDiscussData({
@@ -25,44 +30,48 @@ const Index = ({
         discussName: auth.currentUser.displayName,
       });
     } else {
-      alert("please log in first");
+      setEventDetailMessage("please log in first");
     }
   };
   const handleSendNewDiscuss = () => {
     if (auth.currentUser) {
-      setDiscussList([...discussList, discussData]);
+      const { displayName } = auth.currentUser;
+      dispatch(addDiscussList(discussData));
       writeDiscussItem(
-        eventDetail["eventId"],
+        eventId,
         uuidv4(),
-        auth.currentUser.displayName,
-        discussData["discussContent"],
-        discussData["discussName"],
+        displayName,
+        discussContent,
+        discussName,
         dayjs().format("YYYY.MM.DD.H.mm.ss")
       );
+      const participantsRoute =
+        "event/" + eventDate + "/" + eventId + "/eventParticipants/";
+      fetchData(participantsRoute).then((data) => {
+        const message = `${displayName}在您所參加的${eventDate},${eventPlace}活動中留言`;
+        sendNotificationMessage(eventDetail, data, uuidv4(), message);
+      });
       setDiscussData({ discussContent: "", discussName: "" });
     } else {
-      alert("please log in first");
+      setEventDetailMessage("please log in first");
     }
   };
 
   return (
     <div
-      style={showDiscussArea ? { display: "flex" } : { display: "none" }}
+      style={discussAreaBox ? { display: "flex" } : { display: "none" }}
       className="discussDetailContainer"
     >
-      <textarea
-        value={discussData["discussContent"]}
-        onChange={handleDiscussInput}
-      ></textarea>
+      <textarea value={discussContent} onChange={handleDiscussInput}></textarea>
       <button onClick={handleSendNewDiscuss}>Confirm</button>
-      <div ref={testing} className="discussItemContainer">
+      <div className="discussItemContainer">
         {discussList
           ? discussList.map((item) => {
               return (
                 <div>
                   <div className="discussDetailList">
                     <h5>{item.discussName}</h5>
-                    <p>{item.discussContent}</p>{" "}
+                    <p>{item.discussContent}</p>
                   </div>
                 </div>
               );
@@ -70,7 +79,6 @@ const Index = ({
           : ""}
       </div>
     </div>
-    // </div>
   );
 };
 

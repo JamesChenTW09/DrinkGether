@@ -2,7 +2,8 @@ import React, { useState, useRef } from "react";
 import { getDatabase, update, ref } from "firebase/database";
 import { getStorage, uploadBytes, ref as sRef } from "firebase/storage";
 import { auth } from "../../../firebase.js";
-import "../../styles/Membership/index.css";
+// import "../../styles/Membership/index.css";
+import "../../styles/Membership/MemberInfo/index.css";
 const Index = ({
   storeUserNameId,
   memberUpdateData,
@@ -26,7 +27,12 @@ const Index = ({
     setInfoPrivateOrPublic((preState) => !preState);
   };
 
-  //handle line id circel for everyone
+  const [showPassword, setShowPassword] = useState(false);
+  const handleShowPassword = () => {
+    setShowPassword((preState) => !preState);
+  };
+
+  //handle line id circle for everyone
   const handleMoveAllLineIdCircle = () => {
     if (textEditable) {
       return;
@@ -91,7 +97,6 @@ const Index = ({
       canvas.width = 300;
       canvas.height = 300;
       ctx.drawImage(img, 0, 0, 300, 300);
-      console.log(img);
       canvas.toBlob(
         (blob) => {
           const storage = getStorage();
@@ -115,7 +120,17 @@ const Index = ({
               ref={canvasPhoto}
             ></canvas>
           </div>
-          <div className="cameraIconBox" onClick={handleChangePhoto}>
+          <div
+            className="cameraIconBox"
+            onClick={handleChangePhoto}
+            style={
+              auth.currentUser
+                ? storeUserNameId === auth.currentUser.displayName
+                  ? { display: "flex" }
+                  : { display: "none" }
+                : { display: "none" }
+            }
+          >
             <i class="fa-solid fa-camera">
               <input
                 onChange={(e) => handleUploadImg(e)}
@@ -173,18 +188,35 @@ const Index = ({
             }
           >
             <div className="memberEmail">
-              <h4>Email</h4>
-              <textarea value={email} maxLength={10} readOnly></textarea>
+              <h4 className="memberInputTitle">Email</h4>
+              <textarea
+                className="memberInput"
+                value={email}
+                maxLength={10}
+                readOnly
+              ></textarea>
             </div>
             <div className="memberPassword">
-              <h4>Password</h4>
-              <textarea
+              <h4 className="memberInputTitle">Password</h4>
+              <input
+                className="memberInput"
                 value={password}
                 name="password"
                 onChange={handleMemberUpdateData}
                 maxLength={10}
+                type={showPassword ? "text" : "password"}
                 readOnly={textEditable}
-              ></textarea>
+              ></input>
+              <img
+                onClick={handleShowPassword}
+                className=" memberTogglePassword"
+                src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/000000/external-transparency-marketing-agency-flaticons-lineal-color-flat-icons-2.png"
+                alt=""
+              />
+              <div
+                onClick={handleShowPassword}
+                className="memberPasswordLine"
+              ></div>
             </div>
             <div className="memberOption">
               <h4>是否公開以下資訊給所有訪客</h4>
@@ -226,8 +258,9 @@ const Index = ({
               </div>
             </div>
             <div className="memberLineId">
-              <h4>Line ID</h4>
+              <h4 className="memberInputTitle">Line ID</h4>
               <input
+                className="memberInput"
                 value={lineId}
                 name="lineId"
                 onChange={handleMemberUpdateData}
@@ -262,8 +295,9 @@ const Index = ({
               ></div>
             </div>
             <div className="memberJob">
-              <h4>Job</h4>
+              <h4 className="memberInputTitle">Job</h4>
               <textarea
+                className="memberInput"
                 value={job}
                 name="job"
                 onChange={handleMemberUpdateData}
@@ -271,8 +305,9 @@ const Index = ({
               ></textarea>
             </div>
             <div className="memberPassion">
-              <h4>Passion</h4>
+              <h4 className="memberInputTitle">Passion</h4>
               <textarea
+                className="memberInput"
                 value={passion}
                 name="passion"
                 onChange={handleMemberUpdateData}
@@ -280,13 +315,13 @@ const Index = ({
               ></textarea>
             </div>
             <div className="memberAboutMe">
-              <h4>About</h4>
+              <h4 className="memberInputTitle">About</h4>
               <textarea
                 value={about}
                 name="about"
                 onChange={handleMemberUpdateData}
                 readOnly={textEditable}
-                className="memberAboutMeContent"
+                className="memberAboutMeContent memberInput"
               ></textarea>
             </div>
           </div>

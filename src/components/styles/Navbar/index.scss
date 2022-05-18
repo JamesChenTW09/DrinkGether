@@ -7,11 +7,7 @@
 body {
   background-color: rgb(252, 252, 209);
 }
-// canvas {
-//   width: 1300px;
-//   position: absolute;
-//   z-index: 5;
-// }
+
 .bannerImg {
   width: 100%;
   height: 100vh;
@@ -71,7 +67,7 @@ nav {
     border-radius: 10px;
     padding: 5px 0px;
     background-color: transparent;
-    width: 90px;
+    // width: 90px;
     color: rgb(252, 252, 209);
     font-size: 22px;
     cursor: pointer;
@@ -142,5 +138,84 @@ nav {
   to {
     opacity: 1;
     transform: translateX(0px);
+  }
+}
+
+@media (max-width: 900px) {
+  nav {
+    width: 90%;
+    h1 {
+      grid-column: 1/6;
+      font-size: 1.6rem;
+    }
+    ul {
+      grid-column: 7/18;
+      font-size: 16px;
+    }
+    button {
+      grid-column: 19/21;
+      padding: 3px;
+      font-size: 16px;
+    }
+  }
+  .bannerContent {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 520px) {
+  nav {
+    width: 95%;
+    h1 {
+      grid-column: 1/6;
+      font-size: 1.5rem;
+    }
+    ul {
+      grid-column: 7/17;
+      font-size: 14px;
+      justify-content: flex-end;
+      li {
+        margin: 0px 5px;
+      }
+      li:nth-child(2) {
+        padding: 4px;
+      }
+      li:nth-child(3) {
+        display: none;
+      }
+    }
+    button {
+      grid-column: 18/21;
+      padding: 4px;
+      font-size: 14px;
+    }
+  }
+
+  .bannerContent {
+    width: 95%;
+    height: 350px;
+    font-size: 1.8rem;
+    padding: 0;
+    margin: 100px auto 200px auto;
+    h2 {
+      padding: 5px 0px;
+    }
+    button {
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 8px 16px;
+      margin-top: 40px;
+    }
+  }
+}
+
+@media (max-width: 390px) {
+  .bannerContent {
+    font-size: 1.5rem;
+    margin: 150px auto 200px auto;
+
+    button {
+      font-size: 1.3rem;
+    }
   }
 }

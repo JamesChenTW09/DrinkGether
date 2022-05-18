@@ -1,12 +1,11 @@
 .launchEventBox {
   width: 370px;
   height: 550px;
-  transform: translateX(-50%);
   background-color: rgb(220, 220, 220);
   border-radius: 10px;
   box-shadow: 2px 2px 3px gray;
   left: 38%;
-  top: 7%;
+  top: 10%;
   z-index: 30;
   position: fixed;
   transition: 0.4s;
@@ -71,4 +70,45 @@
 }
 .launchEventBox .newEventBox button:hover {
   background-color: rgb(160, 160, 160);
+}
+
+@media (max-width: 950px) {
+  .launchEventBox {
+    width: 330px;
+    height: 460px;
+    left: 30%;
+  }
+  .launchEventBox .newEventBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .launchEventBox .newEventBox h3 {
+    margin-top: 7px;
+    font-size: 1.2rem;
+  }
+  .launchEventBox .newEventBox .eventInputTitle {
+    font-size: 12px;
+    margin: 6px 0px 3px 0px;
+  }
+  .launchEventBox .newEventBox input {
+    padding: 3px 8px;
+  }
+  .launchEventBox .newEventBox textarea {
+    height: 110px;
+  }
+  .launchEventBox .newEventBox button {
+    font-size: 16px;
+  }
+}
+@media (max-width: 600px) {
+  .launchEventBox {
+    left: 20%;
+  }
+}
+@media (max-width: 485px) {
+  .launchEventBox {
+    width: 310px;
+    left: 5%;
+  }
 }/*# sourceMappingURL=index.css.map */

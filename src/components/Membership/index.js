@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { sortEventList } from "../../utils/utilities";
-import { auth, dbRef } from "../../firebase.js";
+import { dbRef } from "../../firebase.js";
 import { getStorage, getDownloadURL, ref as sRef } from "firebase/storage";
 import { get, child } from "firebase/database";
 import BarRecommend from "./BarRecommend";
@@ -13,7 +13,6 @@ const Index = () => {
   const location = useLocation();
   const [memberHoldEventList, setMemberHoldEventList] = useState([]);
   const [memberJoinEventList, setMemberJoinEventList] = useState([]);
-  const [participantContact, setParticipantContact] = useState([]);
   const [showContactBox, setShowContactBox] = useState(false);
   const [storeUserNameId, setStoreUserNameId] = useState("");
   const [barRecommendArr, setBarRecommendArr] = useState([]);
@@ -30,15 +29,12 @@ const Index = () => {
     lineId: "",
   });
 
-  useEffect(() => {
+  const fetchMemberInitialData = useCallback(() => {
     const userNameId = location.pathname.split("/member/")[1];
-    setStoreUserNameId(userNameId);
-    //clean previous user data
-    setMemberHoldEventList(null);
-    setMemberJoinEventList(null);
-    setBarRecommendArr(null);
-    setStoreImg(null);
-    get(child(dbRef, "user/" + userNameId)).then((snapshot) => {
+    const decodeNameId = decodeURIComponent(userNameId);
+    setStoreUserNameId(decodeNameId);
+
+    get(child(dbRef, "user/" + decodeNameId)).then((snapshot) => {
       if (snapshot.exists()) {
         //send info data to MemberInfo
         const { info, BarRecommend } = snapshot.val();
@@ -49,19 +45,17 @@ const Index = () => {
         if (lineIdForAll) {
           setShowLineId((preState) => (preState = lineIdForAll));
         }
+
         //check the headshot is exist or not
         const storage = getStorage();
-        const pathReference = sRef(storage, auth.currentUser.displayName);
+        const pathReference = sRef(storage, decodeNameId);
         getDownloadURL(pathReference)
           .then((res) => {
             setStoreImg(res);
           })
-          .catch((err) => {
-            return;
-          });
-        const decodeNameId = decodeURIComponent(storeUserNameId);
-        setStoreUserNameId(decodeNameId);
+          .catch((err) => {});
         //check have join/hold event, bar recommend list
+
         if (info["joinEvents"]) {
           const joinEventsList = sortEventList(info["joinEvents"]);
           setMemberJoinEventList(joinEventsList);
@@ -77,51 +71,24 @@ const Index = () => {
           });
           setBarRecommendArr(barRecommendList);
         }
-      } else {
-        return;
       }
     });
-  }, [location.pathname, storeUserNameId]);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    //clean previous user data
+    setMemberHoldEventList([]);
+    setMemberJoinEventList([]);
+    setBarRecommendArr([]);
+    setStoreImg([]);
+    fetchMemberInitialData();
+  }, [fetchMemberInitialData]);
   return (
     <>
       <section className="memberContainer">
-        <div
-          className="participantContact"
-          style={
-            showContactBox
-              ? { transform: "scale(1)" }
-              : { transform: "scale(0)" }
-          }
-        >
-          <div className="participantListItem">
-            <div className="participantName">姓名</div>
-            <div className="participantLineId">Line ID</div>
-            <div className="participantWebsite">個人網址連結</div>
-          </div>
-          {participantContact
-            ? participantContact.map((item) => {
-                return (
-                  <div className="participantListItem">
-                    <div className="participantName">{item["name"]}</div>
-                    <div className="participantLineId">
-                      {item["lineId"] ? item["lineId"] : "無"}
-                    </div>
-                    <div
-                      onClick={() => {
-                        window.location =
-                          "http://localhost:3000/member/" + item["name"];
-                      }}
-                      className="participantWebsiteLink"
-                    >
-                      localhost:3000/member/{item["name"]}
-                    </div>
-                  </div>
-                );
-              })
-            : ""}
-        </div>
         <MemberInfo
           storeUserNameId={storeUserNameId}
+          setStoreUserNameId={setStoreUserNameId}
           memberUpdateData={memberUpdateData}
           setMemberUpdateDate={setMemberUpdateDate}
           showLineId={showLineId}
@@ -138,11 +105,11 @@ const Index = () => {
         />
         <MemberActivity
           storeUserNameId={storeUserNameId}
+          setStoreUserNameId={setStoreUserNameId}
           memberHoldEventList={memberHoldEventList}
           memberJoinEventList={memberJoinEventList}
           setMemberHoldEventList={setMemberHoldEventList}
           setMemberJoinEventList={setMemberJoinEventList}
-          setParticipantContact={setParticipantContact}
           setShowContactBox={setShowContactBox}
           showContactBox={showContactBox}
         />

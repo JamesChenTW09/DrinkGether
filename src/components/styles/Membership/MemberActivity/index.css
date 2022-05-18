@@ -1,0 +1,177 @@
+.memberEvents {
+  box-shadow: 2px 2px 5px gray, -2px -2px 1px gray;
+  border-radius: 10px;
+  background-color: white;
+  position: relative;
+  grid-column: 13/24;
+  grid-row: 18/25;
+}
+.memberEvents .eventHeader {
+  border-radius: 10px;
+  display: flex;
+  width: 100%;
+}
+.memberEvents .eventHeader .memberEventLaunch {
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-align: center;
+  width: 50%;
+  border-radius: 10px;
+  outline: 1px solid gray;
+  cursor: pointer;
+}
+.memberEvents .eventHeader .memberEventLaunch:hover {
+  background-color: rgb(238, 238, 238);
+}
+.memberEvents .eventHeader .memberEventJoin {
+  text-align: center;
+  outline: 1px solid gray;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  width: 50%;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.memberEvents .eventHeader .memberEventJoin:hover {
+  background-color: rgb(238, 238, 238);
+}
+.memberEvents .memberEventContainer {
+  overflow-y: auto;
+  width: 95%;
+  height: 220px;
+  margin: 15px auto 5px auto;
+  background-color: rgb(238, 238, 238);
+  padding: 5px;
+}
+.memberEvents .memberEventContainer .memberEventList {
+  border-bottom: 1px solid gray;
+  display: grid;
+  grid-template-columns: 40% 25% 20% 15%;
+  grid-template-rows: 16px 40px 10px;
+  margin-top: 3px;
+  padding: 4px 0px;
+}
+.memberEvents .memberEventContainer .memberEventList:nth-child(1) {
+  grid-template-rows: 20px;
+}
+.memberEvents .memberEventContainer .memberEventList .memberEventName {
+  grid-column: 1/2;
+  grid-row: 1/2;
+}
+.memberEvents .memberEventContainer .memberEventList .memberEventDate {
+  grid-column: 2/3;
+  grid-row: 1/2;
+}
+.memberEvents .memberEventContainer .memberEventList .memberEventTime {
+  grid-column: 3/4;
+  grid-row: 1/2;
+}
+.memberEvents .memberEventContainer .memberEventList .memberEventPal {
+  grid-column: 4/5;
+  grid-row: 1/2;
+}
+.memberEvents .memberEventContainer .memberEventList .memberEventBtn {
+  grid-column: 1/5;
+  grid-row: 2/3;
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+}
+.memberEvents .memberEventContainer .memberEventList .memberEventBtn .memberEventContact {
+  width: 30%;
+  border-radius: 5px;
+  padding: 3px 5px;
+  margin-right: 15px;
+  border: none;
+  outline: 1px solid black;
+  cursor: pointer;
+}
+.memberEvents .memberEventContainer .memberEventList .memberEventBtn .memberEventDelete {
+  width: 30%;
+  padding: 3px 5px;
+  border-radius: 5px;
+  border: none;
+  outline: 1px solid black;
+  cursor: pointer;
+}
+
+.participantContact {
+  width: 350px;
+  height: 260px;
+  background-color: rgb(224, 222, 222);
+  position: absolute;
+  z-index: 15;
+  top: 30px;
+  left: 10%;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  transition: 0.4s;
+}
+.participantContact .participantCross {
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 8px;
+}
+.participantContact .participantListTitleItem {
+  display: flex;
+  border-bottom: 1px solid rgb(75, 75, 75);
+  padding-bottom: 10px;
+}
+.participantContact .participantListTitleItem .participantTitleName {
+  width: 175px;
+}
+.participantContact .participantListTitleItem .participantTitleLineId {
+  width: 175px;
+}
+.participantContact .participantListItem {
+  width: 340px;
+  margin: 5px 0px;
+  padding: 5px 0px;
+  display: grid;
+  grid-template-columns: 170px 170px;
+  grid-template-rows: 25px 20px;
+  border-bottom: 1px solid rgb(75, 75, 75);
+}
+.participantContact .participantListItem .participantName {
+  grid-column: 1/2;
+  grid-row: 1/2;
+}
+.participantContact .participantListItem .participantLineId {
+  grid-column: 2/3;
+  grid-row: 1/2;
+}
+.participantContact .participantListItem .participantWebsiteLink {
+  grid-column: 1/3;
+  grid-row: 2/3;
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
+}
+
+@media (max-width: 1200px) {
+  .memberEvents {
+    grid-column: 2/3;
+    grid-row: 3/4;
+  }
+}
+@media (max-width: 600px) {
+  .memberEvents {
+    grid-column: 1/4;
+    grid-row: 3/4;
+  }
+}
+@media (max-width: 430px) {
+  .memberEvents .participantContact {
+    left: 5%;
+    width: 300px;
+  }
+  .memberEvents .participantContact .participantListItem {
+    width: 300px;
+  }
+}/*# sourceMappingURL=index.css.map */

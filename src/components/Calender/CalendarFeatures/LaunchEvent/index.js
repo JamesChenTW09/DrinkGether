@@ -1,43 +1,47 @@
 import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import dayjs from "dayjs";
+import { useSelector, useDispatch } from "react-redux";
+import { notShowStartEventBox } from "../../../../redux_toolkit/slice/boolean.js";
+import { storeEventInput } from "../../../../redux_toolkit/slice/startEvent";
 import {
   writeNewEvent,
   auth,
   writeNewParticipant,
   writeMemberHoldEvent,
 } from "../../../../firebase.js";
-import { v4 as uuidv4 } from "uuid";
-import dayjs from "dayjs";
+import {
+  addCalendarEvent,
+  addAllEvent,
+} from "../../../../redux_toolkit/slice/eventList";
 import "../../../styles/Calendar/LaunchEvent/index.css";
 
-const Index = ({
-  showStartEventBox,
-  setShowStartEventBox,
-  eventInputValue,
-  setEventInputValue,
-  bigDateEventList,
-  setBigDateEventList,
-  allEventList,
-  setAllEventList,
-}) => {
-  // handle event box cancel by clicking cross
+const Index = () => {
+  const { startEventBox } = useSelector((state) => state.boolean);
+  const { eventInput } = useSelector((state) => state.eventInput);
+  const { allEventList } = useSelector((state) => state.eventList);
+  const dispatch = useDispatch();
+  // handle event list
   const handleCloseLaunch = () => {
-    setShowStartEventBox(0);
-    setEventInputValue({
-      eventPlace: "",
-      eventDate: "",
-      eventTime: "",
-      eventMaxPal: "",
-      eventDescription: "",
-    });
+    dispatch(notShowStartEventBox());
+    setEventErrorMessage("");
+    dispatch(
+      storeEventInput({
+        eventPlace: "",
+        eventDate: "",
+        eventTime: "",
+        eventMaxPal: "",
+        eventDescription: "",
+      })
+    );
   };
   //get the input value by onchange
   const [eventErrorMessage, setEventErrorMessage] = useState("");
   const { eventPlace, eventDate, eventTime, eventMaxPal, eventDescription } =
-    eventInputValue;
+    eventInput;
   const handleGetEventInput = (e) => {
-    setEventInputValue({ ...eventInputValue, [e.target.name]: e.target.value });
+    dispatch(storeEventInput({ [e.target.name]: e.target.value }));
   };
-
   const handleSubmitEventData = () => {
     if (!eventPlace || !eventDate || !eventTime || !eventMaxPal) {
       setEventErrorMessage("Fill the requested(*) blanks");
@@ -48,6 +52,10 @@ const Index = ({
     } else if (eventDate < dayjs().format("YYYY-MM-DD")) {
       setEventErrorMessage("Wrong Date");
       return;
+    } else if (eventPlace.length > 12) {
+      setEventErrorMessage("bar Name Max 12 words");
+    } else if (eventMaxPal > 16) {
+      setEventErrorMessage("Max Pal is 16");
     }
     const uuid = uuidv4();
     const { displayName } = auth.currentUser;
@@ -56,30 +64,30 @@ const Index = ({
       return item["eventDate"] === eventDate;
     });
     if (checkLengthArr.length < 2) {
-      setBigDateEventList([...bigDateEventList, eventInputValue]);
+      dispatch(addCalendarEvent(eventInput));
     } else if (checkLengthArr.length === 2) {
-      setBigDateEventList([
-        ...bigDateEventList,
-        { eventPlace: "還有...", eventDate },
-      ]);
+      dispatch(addCalendarEvent({ eventPlace: "還有...", eventDate }));
     }
-    setAllEventList([...allEventList, eventInputValue]);
-    writeNewEvent(uuid, eventInputValue, displayName);
-    setEventInputValue({
-      eventPlace: "",
-      eventDate: "",
-      eventTime: "",
-      eventMaxPal: "",
-      eventDescription: "",
-    });
-    writeMemberHoldEvent(displayName, uuid, eventInputValue);
+    dispatch(addAllEvent(eventInput));
+    writeNewEvent(uuid, eventInput, displayName);
+    dispatch(
+      storeEventInput({
+        eventPlace: "",
+        eventDate: "",
+        eventTime: "",
+        eventMaxPal: "",
+        eventDescription: "",
+      })
+    );
+
+    writeMemberHoldEvent(displayName, uuid, eventInput);
     writeNewParticipant(eventDate, uuid, "eventParticipants", displayName);
-    setShowStartEventBox(0);
+    dispatch(notShowStartEventBox());
   };
   return (
     <>
       <section
-        style={{ transform: "scale(" + showStartEventBox + ")" }}
+        style={{ transform: "scale(" + startEventBox + ")" }}
         className="launchEventBox"
       >
         <p className="handleCancelEventBox" onClick={handleCloseLaunch}>

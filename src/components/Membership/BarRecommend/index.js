@@ -3,9 +3,11 @@ import { v4 as uuidv4 } from "uuid";
 import { remove, ref } from "firebase/database";
 import { auth, writeRecommendBar, db } from "../../../firebase";
 
-import "../../styles/Membership/index.css";
+// import "../../styles/Membership/index.css";
+import "../../styles/Membership/BarRecommend/index.css";
 
 const Index = ({ barRecommendArr, setBarRecommendArr }) => {
+  const [barRecommendMessage, setBarRecommendMessage] = useState("");
   //store recommend bar data and send to database
   const [recommendBar, setRecommendBarName] = useState({
     barName: "",
@@ -23,11 +25,19 @@ const Index = ({ barRecommendArr, setBarRecommendArr }) => {
     });
   };
   const handleSubmitRecommend = () => {
+    const { displayName } = auth.currentUser;
     if (barRecommendArr.length >= 3 || !barName || !barRceommendText) {
+      setBarRecommendMessage("All inputs are required");
+      return;
+    } else if (barName.length > 12) {
+      setBarRecommendMessage("Bar Name Max 12 words");
+      return;
+    } else if (barRceommendText.length > 70) {
+      setBarRecommendMessage("Intro max 70 words");
       return;
     }
     setBarRecommendArr([...barRecommendArr, recommendBar]);
-    const { displayName } = auth.currentUser;
+
     writeRecommendBar(displayName, uuid, barName, barRceommendText);
     setRecommendBarName({ barName: "", barRceommendText: "", uuid: "" });
   };
@@ -36,6 +46,9 @@ const Index = ({ barRecommendArr, setBarRecommendArr }) => {
   const handleDeleteRecommencBar = () => {
     const checkBoxIdArr = [];
     const checkArr = recommendOutput.current.children;
+    if (checkArr.length === 0) {
+      return;
+    }
     for (let i = 0; i < checkArr.length; i++) {
       if (checkArr[i].children[0].checked) {
         checkBoxIdArr.push(checkArr[i].children[0].name);
@@ -80,6 +93,7 @@ const Index = ({ barRecommendArr, setBarRecommendArr }) => {
             <button onClick={handleSubmitRecommend}>Submit</button>
             <button onClick={handleDeleteRecommencBar}>Delete</button>
           </div>
+          <div className="barRecommendMessage">{barRecommendMessage}</div>
         </div>
         <div ref={recommendOutput} className="barRecommendOutput">
           {barRecommendArr

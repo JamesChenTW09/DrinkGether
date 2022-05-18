@@ -2,41 +2,35 @@ import React from "react";
 import SmallCalendarDay from "../SmallCalendarDay";
 import LaunchEvent from "./LaunchEvent";
 import dayjs from "dayjs";
-
+import { useSelector, useDispatch } from "react-redux";
+import { showStartEventBox } from "../../../redux_toolkit/slice/boolean";
 import "../../styles/Calendar/CalendarFeatures/index.css";
 const Index = ({
-  showAllEventsBox,
+  setSmallDateBox,
   smallDateBox,
   getMonth,
   smallNowMonth,
   setSmallNowMonth,
   setBigDateBox,
   setBigNowMonth,
-  eventInputValue,
-  setEventInputValue,
-  showStartEventBox,
-  setShowStartEventBox,
-  bigDateEventList,
-  setBigDateEventList,
-  allEventList,
-  setAllEventList,
 }) => {
-  // useEffect(() => {
-  //   setSmallDateBox(getMonth(smallNowMonth));
-  // }, [smallNowMonth, getMonth, setSmallDateBox]);
+  const { allEventsBox } = useSelector((state) => state.boolean);
+  const dispatch = useDispatch();
+
+  //handle event list
   const handleAddOneMonth = () => {
     setSmallNowMonth((pre) => pre + 1);
+    setSmallDateBox(getMonth(smallNowMonth + 1));
   };
   const handleMinusOneMonth = () => {
     setSmallNowMonth((pre) => pre - 1);
+    setSmallDateBox(getMonth(smallNowMonth - 1));
   };
-
-  //handle launch a new event
-  const handleLaunchEvent = () => {
-    if (showAllEventsBox) {
+  const handleShowNewEventBox = () => {
+    if (allEventsBox) {
       return;
     }
-    setShowStartEventBox(1);
+    dispatch(showStartEventBox());
   };
   //change big calendar same month with small calendar
   const handleChangeBigCalendar = (e) => {
@@ -46,18 +40,9 @@ const Index = ({
 
   return (
     <>
-      <LaunchEvent
-        bigDateEventList={bigDateEventList}
-        setBigDateEventList={setBigDateEventList}
-        showStartEventBox={showStartEventBox}
-        setShowStartEventBox={setShowStartEventBox}
-        eventInputValue={eventInputValue}
-        setEventInputValue={setEventInputValue}
-        allEventList={allEventList}
-        setAllEventList={setAllEventList}
-      />
+      <LaunchEvent />
       <section className="calendarFeatures">
-        <div onClick={handleLaunchEvent} className="launchEventBtn">
+        <div onClick={handleShowNewEventBox} className="launchEventBtn">
           發起活動
         </div>
         <div className="smallCalendarDay">

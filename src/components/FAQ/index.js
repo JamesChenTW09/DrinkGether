@@ -6,7 +6,7 @@ const Index = () => {
     const target = e.target;
     const targetP = target.parentNode.nextSibling;
     if (target.textContent === "+") {
-      target.textContent = "-";
+      target.textContent = "- ";
       targetP.style.display = "block";
     } else {
       target.textContent = "+";
@@ -21,20 +21,20 @@ const Index = () => {
       </section>
       <section className="faqContainer">
         <div className="faqContent">
-          <h4>
-            1. How to create a new account?
+          <div className="faqItemTitle">
+            <h4>1. How to create a new account?</h4>
             <span onClick={faqShowHandle}>+</span>
-          </h4>
+          </div>
           <p>
             You can click the <span>account</span> button to create a new
             account
           </p>
         </div>
         <div className="faqContent">
-          <h4>
-            1. How to create a new account?
+          <div className="faqItemTitle">
+            <h4>1. How to create a new account?</h4>
             <span onClick={faqShowHandle}>+</span>
-          </h4>
+          </div>
           <p>
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolorum
             nisi quod aspernatur ipsum praesentium doloremque blanditiis iure
@@ -44,10 +44,10 @@ const Index = () => {
           </p>
         </div>
         <div className="faqContent">
-          <h4>
-            1. How to create a new account?
+          <div className="faqItemTitle">
+            <h4>1. How to create a new account?</h4>
             <span onClick={faqShowHandle}>+</span>
-          </h4>
+          </div>
           <p>
             You can click the <span>account</span> button to create a new
             account

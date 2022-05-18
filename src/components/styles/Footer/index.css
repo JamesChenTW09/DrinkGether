@@ -1,4 +1,136 @@
 footer {
+  margin-top: 200px;
   width: 100%;
-  height: 100vh;
+  position: relative;
+  background-color: #007663;
+}
+footer .custom-shape-divider-top-1652431112 {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+footer .custom-shape-divider-top-1652431112 svg {
+  position: relative;
+  display: block;
+  width: calc(200% + 1.3px);
+  height: 146px;
+}
+footer .custom-shape-divider-top-1652431112 svg .shape-fill {
+  fill: #fcfcd1;
+}
+footer .footerContainer {
+  background-color: #007663;
+  padding-top: 160px;
+  margin: 0px auto;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+footer .footerContainer .footerContent {
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+footer .footerContainer .footerContent h3 {
+  font-size: 2rem;
+  color: yellow;
+}
+footer .footerContainer .footerContent ul {
+  list-style: none;
+  margin: 30px 0px;
+  width: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: bold;
+  color: #fcfcd1;
+}
+footer .footerContainer .footerContent ul li {
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+footer .footerContainer .footerContent ul li:hover {
+  color: #f8f88f;
+}
+footer .footerContainer .footerContent .contactContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: 0.4s;
+}
+footer .footerContainer .footerContent .contactContent input {
+  text-align: center;
+  font-size: 18px;
+  width: 300px;
+  border-radius: 5px;
+  padding: 3px 5px;
+  border: 1px solid #fcfcd1;
+  background-color: transparent;
+}
+footer .footerContainer .footerContent .contactContent input:focus {
+  outline: 1px solid #fcfcd1;
+}
+footer .footerContainer .footerContent .contactContent textarea {
+  font-size: 18px;
+  margin: 10px 0px;
+  resize: none;
+  width: 300px;
+  height: 100px;
+  border-radius: 5px;
+  padding: 3px 5px;
+  border: 1px solid #fcfcd1;
+  background-color: transparent;
+}
+footer .footerContainer .footerContent .contactContent textarea:focus {
+  outline: 1px solid #fcfcd1;
+}
+footer .footerContainer .footerContent .contactContent ::-moz-placeholder {
+  letter-spacing: 3px;
+  color: #fcfcd1;
+  text-align: center;
+}
+footer .footerContainer .footerContent .contactContent :-ms-input-placeholder {
+  letter-spacing: 3px;
+  color: #fcfcd1;
+  text-align: center;
+}
+footer .footerContainer .footerContent .contactContent ::placeholder {
+  letter-spacing: 3px;
+  color: #fcfcd1;
+  text-align: center;
+}
+footer .footerContainer .footerContent .contactContent button {
+  cursor: pointer;
+  width: 300px;
+  border-radius: 5px;
+  padding: 3px 5px;
+  border: 1px solid #fcfcd1;
+  background-color: transparent;
+  color: #fcfcd1;
+  font-size: 18px;
+  transition: 0.3s;
+}
+footer .footerContainer .footerContent .contactContent button:hover {
+  background-color: #00977e;
+}
+footer .footerContainer .footerContent p {
+  margin-top: 20px;
+  letter-spacing: 3px;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #fcfcd1;
+}
+
+@media (max-width: 550px) {
+  footer .footerContainer .footerContent ul {
+    width: 330px;
+  }
+  footer .footerContainer .footerContent p {
+    font-size: 1rem;
+  }
 }/*# sourceMappingURL=index.css.map */

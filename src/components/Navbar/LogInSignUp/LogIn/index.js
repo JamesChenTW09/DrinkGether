@@ -133,7 +133,7 @@ const Index = () => {
         style={
           showLogInBox
             ? { transform: "translateX(0)" }
-            : { transform: "translateX(360px)" }
+            : { transform: "translateX(330px)" }
         }
       >
         {loadingCircle ? <div className="logInLoading"></div> : ""}

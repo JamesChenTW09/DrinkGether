@@ -36,4 +36,33 @@
   padding: 2px 4px;
   font-size: 14px;
   margin: 0px 10px;
+}
+
+@media (max-width: 950px) {
+  .calendarHeader {
+    width: 100%;
+    justify-content: center;
+    border: none;
+    margin-bottom: 50px;
+  }
+}
+@media (max-width: 500px) {
+  .calendarHeader {
+    padding-top: 60px;
+    grid-template-columns: 100%;
+  }
+  .calendarHeader h2 {
+    display: none;
+  }
+  .calendarHeader .calendarMonthChange {
+    grid-column: 1/2;
+    justify-content: center;
+    align-items: center;
+  }
+  .calendarHeader .calendarMonthChange p {
+    font-size: 1.4rem;
+  }
+  .calendarHeader .calendarMonthChange h3 {
+    font-size: 1.6rem;
+  }
 }/*# sourceMappingURL=index.css.map */

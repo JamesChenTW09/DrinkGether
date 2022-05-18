@@ -10,6 +10,7 @@ const Index = ({
   bigNowMonth,
   setBigNowMonth,
 }) => {
+  //handle event list
   const handleBackToToday = () => {
     setSmallDateBox(getMonth());
     setBigDateBox(getMonth());
@@ -17,14 +18,13 @@ const Index = ({
     setBigNowMonth(dayjs().month());
   };
 
-  // useEffect(() => {
-  //   setCurrentMonth2(getMonth(nowMonth));
-  // }, [nowMonth, getMonth, setCurrentMonth2]);
   const handleAddOneMonth = () => {
     setBigNowMonth((pre) => pre + 1);
+    setBigDateBox(getMonth(bigNowMonth + 1));
   };
   const handleMinusOneMonth = () => {
     setBigNowMonth((pre) => pre - 1);
+    setBigDateBox(getMonth(bigNowMonth - 1));
   };
   return (
     <div>

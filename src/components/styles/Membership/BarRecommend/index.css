@@ -1,0 +1,93 @@
+.memberRecommend {
+  box-shadow: 2px 2px 5px gray, -2px -2px 1px gray;
+  border-radius: 10px;
+  background-color: white;
+  grid-column: 13/24;
+  grid-row: 2/17;
+}
+.memberRecommend h3 {
+  margin-top: 5px;
+  text-align: center;
+}
+.memberRecommend .barRecommendInput {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.memberRecommend .barRecommendInput input {
+  margin: 15px;
+  width: 30%;
+  background-color: rgb(224, 222, 222);
+  border-radius: 10px;
+  padding: 8px;
+  border: none;
+}
+.memberRecommend .barRecommendInput input:focus {
+  outline: none;
+}
+.memberRecommend .barRecommendInput textarea {
+  resize: none;
+  width: 70%;
+  height: 75px;
+  background-color: rgb(224, 222, 222);
+  border-radius: 10px;
+  padding: 8px;
+  border: none;
+}
+.memberRecommend .barRecommendInput div button {
+  cursor: pointer;
+  margin: 10px 10px 0px 10px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: rgb(223, 221, 221);
+}
+.memberRecommend .barRecommendInput div button:nth-child(1) {
+  background-color: rgb(160, 159, 159);
+}
+.memberRecommend .barRecommendInput .barRecommendMessage {
+  color: red;
+  font-weight: bold;
+  font-size: 18px;
+  letter-spacing: 2px;
+  margin: 5px 0px;
+  height: 20px;
+}
+.memberRecommend .barRecommendOutput {
+  background-color: rgb(202, 200, 200);
+  border-radius: 10px;
+  width: 90%;
+  height: 330px;
+  margin: 5px auto;
+  display: flex;
+  flex-direction: column;
+}
+.memberRecommend .barRecommendOutput div {
+  height: 110px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+}
+.memberRecommend .barRecommendOutput div:nth-child(1) {
+  border-bottom: 1px solid black;
+}
+.memberRecommend .barRecommendOutput div:nth-child(2) {
+  border-bottom: 1px solid black;
+}
+.memberRecommend .barRecommendOutput div input {
+  margin: 2px 10px 0px 0px;
+}
+.memberRecommend .barRecommendOutput div h4 {
+  width: 25%;
+}
+.memberRecommend .barRecommendOutput div p {
+  width: 75%;
+}
+
+@media (max-width: 1200px) {
+  .memberRecommend {
+    grid-column: 1/4;
+    grid-row: 2/3;
+    margin: 30px 0px;
+  }
+}/*# sourceMappingURL=index.css.map */
