@@ -7,7 +7,7 @@ import LogInSignUp from "./LogInSignUp/LogIn/";
 import GlobalContext from "../../context/GlobalContext";
 import "../styles/Navbar/index.css";
 
-const Index = () => {
+const Index = ({ scrollRef }) => {
   const {
     setShowLogInBox,
     setGreetingName,
@@ -18,6 +18,7 @@ const Index = () => {
 
   const navigate = useNavigate();
   const [userOrNotBtnText, setUserOrNotBtnText] = useState(false);
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -34,8 +35,8 @@ const Index = () => {
               return;
             }
           })
-          .catch((err) => {
-            console.log(err);
+          .catch(() => {
+            return;
           });
       } else {
         setUserOrNotBtnText((preState) => (preState = false));
@@ -57,6 +58,12 @@ const Index = () => {
       });
     }
   };
+  const handleNavigateToActivity = () => {
+    navigate("/activity");
+    setTimeout(() => {
+      scrollRef.current["calendar"].scrollIntoView({ behavior: "smooth" });
+    });
+  };
 
   return (
     <>
@@ -64,15 +71,16 @@ const Index = () => {
         <div className="backgroundShadow"></div>
       </section>
       <nav>
-        <h1 onClick={() => navigate("/")}>DrinkGether</h1>
+        <h1 onClick={() => navigate("/")}>
+          DrinkGether <i class="fa-solid fa-champagne-glasses"></i>
+        </h1>
         <ul>
           <li onClick={() => navigate("/")}>Main</li>
-          <li onClick={() => navigate("/activity")}>Quick Start</li>
+          <li onClick={handleNavigateToActivity}>Quick Start</li>
           <li>FAQ</li>
         </ul>
         <button onClick={handleAccountClick}>
           {userOrNotBtnText ? "Account" : "Log in"}
-          <div className="newMessageMark">!</div>
         </button>
       </nav>
       <LogInSignUp />
@@ -80,7 +88,7 @@ const Index = () => {
         <h2>Meet People</h2>
         <h2>Dicsover Places</h2>
         <h2>Enjoy Time</h2>
-        <button onClick={() => navigate("/activity")}>Let's Start</button>
+        <button onClick={handleNavigateToActivity}>Let's Start</button>
       </section>
     </>
   );

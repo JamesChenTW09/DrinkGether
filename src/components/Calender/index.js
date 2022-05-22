@@ -1,12 +1,12 @@
 import React, { useState } from "react";
+import dayjs from "dayjs";
 import { getMonth } from "../../utils/utilities";
 import CalendarFeatures from "./CalendarFeatures";
 import CalendarHeader from "./CalendarHeader";
 import CalendarMain from "./CalendarMain";
-import dayjs from "dayjs";
 import "../styles/Calendar/index.css";
 
-const Index = () => {
+const Index = ({ scrollRef }) => {
   const [bigDateBox, setBigDateBox] = useState(getMonth());
   const [smallDateBox, setSmallDateBox] = useState(getMonth());
   const [bigNowMonth, setBigNowMonth] = useState(dayjs().month());
@@ -23,6 +23,7 @@ const Index = () => {
         setBigDateBox={setBigDateBox}
         bigNowMonth={bigNowMonth}
         setBigNowMonth={setBigNowMonth}
+        scrollRef={scrollRef}
       />
 
       <section className="calendarMainArea">

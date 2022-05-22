@@ -5,10 +5,11 @@ const Day = ({ day }) => {
   function checkCurrentDay() {
     return dayjs().format("DD-MM-YY") === day.format("DD-MM-YY")
       ? {
-          color: "white",
-          cursor: "pointer",
+          color: "#3e5969",
+          backgroundColor: "rgb(250,250,209)",
+          fontWeight: "bolder",
         }
-      : { color: "black", cursor: "pointer" };
+      : {};
   }
 
   return (

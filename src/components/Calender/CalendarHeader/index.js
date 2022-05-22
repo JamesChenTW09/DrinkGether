@@ -9,6 +9,7 @@ const Index = ({
   setBigDateBox,
   bigNowMonth,
   setBigNowMonth,
+  scrollRef,
 }) => {
   //handle event list
   const handleBackToToday = () => {
@@ -28,7 +29,12 @@ const Index = ({
   };
   return (
     <div>
-      <div className="calendarHeader">
+      <div
+        className="calendarHeader"
+        ref={(el) =>
+          (scrollRef.current = { ...scrollRef.current, calendar: el })
+        }
+      >
         <h2>DrinkGether</h2>
         <div className="calendarMonthChange">
           <p onClick={handleMinusOneMonth}>＜</p>

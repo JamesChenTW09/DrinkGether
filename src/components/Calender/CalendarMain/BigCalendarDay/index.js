@@ -8,16 +8,18 @@ import "../../../styles/Calendar/CalendarMain/index.css";
 
 const Day = ({ day }) => {
   const { allEventsBox, startEventBox } = useSelector((state) => state.boolean);
-  const { calendarEventList } = useSelector((state) => state.eventList);
+  const { allEventList } = useSelector((state) => state.eventList);
   const dispatch = useDispatch();
   function checkCurrentDay() {
     return dayjs().format("DD-MM-YY") === day.format("DD-MM-YY")
       ? {
-          color: "blue",
-          cursor: "pointer",
+          color: "#3e5969",
+          backgroundColor: "rgb(250,250,209)",
+          fontWeight: "bolder",
         }
-      : { color: "black", cursor: "pointer" };
+      : {};
   }
+
   const handleShowAllDailyEvents = (e) => {
     if (startEventBox || allEventsBox) {
       return;
@@ -33,7 +35,7 @@ const Day = ({ day }) => {
     <>
       <p style={checkCurrentDay()}>{day.format("DD")}</p>
       <div className="eventListDetailBox">
-        {calendarEventList.map((item) => {
+        {allEventList.map((item) => {
           const { eventDate, eventPlace } = item;
           return eventDate === day.format("YYYY-MM-DD") ? (
             <div

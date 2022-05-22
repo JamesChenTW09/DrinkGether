@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { child, get } from "firebase/database";
 import EventDetail from "./EventDetail";
 import { dbRef } from "../../../../firebase";
-import { child, get } from "firebase/database";
 import { dailyEventSort } from "../../../../utils/utilities";
-import { useSelector, useDispatch } from "react-redux";
 import {
   showEventDetailBox,
   notShowEventDetailBox,
@@ -24,8 +24,7 @@ const Index = () => {
   );
   const dispatch = useDispatch();
 
-  //handle event list
-  const handleSendDetailData = (e, item) => {
+  const handleSendDetailData = (item) => {
     dispatch(storeEventDetail(item));
     if (eventDetailBox) {
       dispatch(notShowEventDetailBox());
@@ -57,8 +56,10 @@ const Index = () => {
         });
         discussTimeArr = discussTimeArr.sort();
         let finalDiscussArr = [];
-        for (let i = 0; i < discussListItem.length; i++) {
-          for (let j = 0; j < discussTimeArr.length; j++) {
+        let discussListItemLen = discussListItem.length;
+        let discussTimeArrLen = discussTimeArr.length;
+        for (let i = 0; i < discussListItemLen; i++) {
+          for (let j = 0; j < discussTimeArrLen; j++) {
             if (discussTimeArr[i] === discussListItem[j]["discussTime"]) {
               finalDiscussArr.push(discussListItem[j]);
               break;
@@ -81,15 +82,16 @@ const Index = () => {
       <EventDetail />
 
       {dailyEventList.map((item) => {
+        const { eventId, eventPlace, eventTime } = item;
         return (
           <div
-            key={item["eventId"]}
+            key={eventId}
             className="allEventDetail"
-            onClick={(e) => handleSendDetailData(e, item)}
+            onClick={() => handleSendDetailData(item)}
             style={eventDetailBox ? { display: "none" } : { display: "flex" }}
           >
-            <h4>{item["eventPlace"]}</h4>
-            <p>{item["eventTime"]}</p>
+            <h4>{eventPlace}</h4>
+            <p>{eventTime}</p>
           </div>
         );
       })}

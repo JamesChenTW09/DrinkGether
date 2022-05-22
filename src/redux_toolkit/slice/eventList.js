@@ -27,6 +27,10 @@ export const eventListSlice = createSlice({
     addAllEvent: (state, action) => {
       state.allEventList = [...state.allEventList, action.payload];
     },
+    filterAllEventList: (state, action) => {
+      state.allEventList = action.payload;
+    },
+
     storeEventDetail: (state, action) => {
       state.eventDetail = action.payload;
     },
@@ -34,7 +38,7 @@ export const eventListSlice = createSlice({
       state.dailyEventList = action.payload;
     },
     filterDailyEvent: (state, action) => {
-      state.calendarEventList = [...state.calendarEventList, action.payload];
+      state.dailyEventList = [...state.dailyEventList, action.payload];
     },
     setInitialDiscussList: (state, action) => {
       state.discussList = action.payload;
@@ -64,5 +68,6 @@ export const {
   storeEventDetail,
   setInitialDailyEventList,
   filterDailyEvent,
+  filterAllEventList,
 } = eventListSlice.actions;
 export default eventListSlice.reducer;

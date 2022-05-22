@@ -1,9 +1,9 @@
 import React from "react";
-import SmallCalendarDay from "../SmallCalendarDay";
-import LaunchEvent from "./LaunchEvent";
 import dayjs from "dayjs";
 import { useSelector, useDispatch } from "react-redux";
 import { showStartEventBox } from "../../../redux_toolkit/slice/boolean";
+import SmallCalendarDay from "../SmallCalendarDay";
+import LaunchEvent from "./LaunchEvent";
 import "../../styles/Calendar/CalendarFeatures/index.css";
 const Index = ({
   setSmallDateBox,
@@ -32,8 +32,9 @@ const Index = ({
     }
     dispatch(showStartEventBox());
   };
+
   //change big calendar same month with small calendar
-  const handleChangeBigCalendar = (e) => {
+  const handleChangeBigCalendar = () => {
     setBigDateBox(getMonth(smallNowMonth));
     setBigNowMonth(smallNowMonth);
   };
@@ -45,8 +46,8 @@ const Index = ({
         <div onClick={handleShowNewEventBox} className="launchEventBtn">
           發起活動
         </div>
-        <div className="smallCalendarDay">
-          <div className="smallCalendarSelect">
+        <div className="smallCalendarHeader">
+          <div className="smallCalendarMonth">
             <p onClick={handleMinusOneMonth}>＜</p>
             <h4>
               {dayjs(new Date(dayjs().year(), smallNowMonth)).format(
@@ -77,11 +78,6 @@ const Index = ({
                     className="dayMap"
                     id={day.format("DD-MM-YY")}
                     key={idx}
-                    style={
-                      dayjs().format("DD-MM-YY") === day.format("DD-MM-YY")
-                        ? { backgroundColor: "green", borderRadius: "50%" }
-                        : { backgroundColor: "rgb(252, 252, 209)" }
-                    }
                   >
                     <SmallCalendarDay day={day} />
                   </div>

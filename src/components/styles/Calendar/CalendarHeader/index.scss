@@ -1,10 +1,10 @@
 .calendarHeader {
   width: 95%;
-  border-bottom: 1px solid rgb(180, 180, 180);
   margin: 100px auto 0px auto;
   display: grid;
   grid-template-columns: 250px auto;
   align-items: baseline;
+  color: #2f4858;
   h2 {
     grid-column: 1/2;
     padding: 10px;
@@ -26,14 +26,16 @@
       margin: 0px 10px;
     }
     button {
-      background-color: transparent;
+      background-color: #2f4858;
+      color: rgb(250, 250, 209);
       border: none;
-      outline: 1px solid black;
-      border-radius: 8px;
-      cursor: pointer;
-      padding: 2px 4px;
+      padding: 4px 6px;
       font-size: 14px;
       margin: 0px 10px;
+      transition: 0.3s;
+      &:hover {
+        background-color: #3e5969;
+      }
     }
   }
 }

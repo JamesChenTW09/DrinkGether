@@ -1,29 +1,20 @@
 import React, { useState, useRef, useContext } from "react";
+import { update, ref } from "firebase/database";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import GlobalContext from "../../../../../context/GlobalContext.js";
 import Greeting from "./Greeting";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { writeUserData, auth, db, fetchData } from "../../../../../firebase.js";
-import { update, ref } from "firebase/database";
 import "../../../../styles/Navbar/LogInSignUp/index.css";
 import googleIcon from "../../../../styles/icon/googleIcon.png";
 
-const SignUp = ({ handleAccountBoxCross, handleLogOutBtn }) => {
+const SignUp = ({ handleAccountBoxCross }) => {
   const { accountProcessing, setAccountProcessing, setGreetingName } =
     useContext(GlobalContext);
   const { signUp, loadingCircle } = accountProcessing;
-  const [signUpErrorMessage, setSignUpErrorMessage] = useState("");
-  const [passwordShowing, setPasswordShowing] = useState(false);
-
-  //handle event list
-  const handleSignUpLogInChange = () => {
-    setAccountProcessing({ ...accountProcessing, logIn: true, signUp: false });
-  };
-
-  const handleShowPassword = () => {
-    setPasswordShowing(!passwordShowing);
-  };
 
   //store user signUp data
+  const [signUpErrorMessage, setSignUpErrorMessage] = useState("");
+  const [passwordShowing, setPasswordShowing] = useState(false);
   const [signUpData, setSignUpData] = useState({
     name: "",
     email: "",
@@ -53,7 +44,7 @@ const SignUp = ({ handleAccountBoxCross, handleLogOutBtn }) => {
     fetchData("/user").then((data) => {
       const userArr = Object.keys(data);
       if (userArr.includes(name)) {
-        setSignUpErrorMessage("名字重複了");
+        setSignUpErrorMessage("Name repeated");
         setAccountProcessing({
           ...accountProcessing,
           signUp: true,
@@ -101,23 +92,30 @@ const SignUp = ({ handleAccountBoxCross, handleLogOutBtn }) => {
             ) {
               setSignUpErrorMessage("Email-already-in-use");
             } else {
-              console.log(err.message);
+              setSignUpErrorMessage("fail");
             }
           });
       }
     });
   };
+  const handleShowPassword = () => {
+    setPasswordShowing((preState) => !preState);
+  };
+
+  const handleSignUpLogInChange = () => {
+    setAccountProcessing({ ...accountProcessing, logIn: true, signUp: false });
+  };
 
   return (
     <>
-      {loadingCircle ? <div className="logInLoading"></div> : ""}
+      {loadingCircle && <div className="logInLoading"></div>}
       <Greeting handleAccountBoxCross={handleAccountBoxCross} />
       <section
         className="logInSignUp"
         style={signUp ? { display: "flex" } : { display: "none" }}
       >
         <h1>DrinkGether</h1>
-        <h3>Hello !!</h3>
+        <h4>Hello !!</h4>
         <button>
           <img className="googleIcon" src={googleIcon} alt="Google Icon" />
           Log in with Google
@@ -152,24 +150,24 @@ const SignUp = ({ handleAccountBoxCross, handleLogOutBtn }) => {
 
             <img
               onClick={handleShowPassword}
-              className=" togglePassword"
+              className=" logInTogglePassword"
               src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/000000/external-transparency-marketing-agency-flaticons-lineal-color-flat-icons-2.png"
-              alt=""
+              alt="glasses"
             />
             <div
               onClick={handleShowPassword}
               style={{ display: passwordShowing ? "none" : "block" }}
-              className="passwordLine"
+              className="logInPasswordLine"
             ></div>
           </div>
           <div className="checkOver18">
             <input ref={checkBox} type="checkbox" />
-            <label htmlFor="">Over 18</label>
+            <label>Over 18</label>
           </div>
 
           <br />
           <button onClick={sendSignUp}>Sign up</button>
-          <p style={{ margin: "10px", color: "red" }}>{signUpErrorMessage}</p>
+          <p className="accountErrorMessage">{signUpErrorMessage}</p>
         </div>
         <p>
           Have an account ?

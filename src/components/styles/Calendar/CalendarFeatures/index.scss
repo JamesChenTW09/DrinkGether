@@ -1,46 +1,34 @@
 .calendarFeatures {
-  outline: 1px solid rgb(180, 180, 180);
+  color: rgb(250, 250, 209);
+  background-color: #2f4858;
+  border-right: 2px solid rgb(180, 180, 180);
   grid-column: 1/2;
   height: 500px;
+  border-radius: 10px 0px 0px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   .launchEventBtn {
     width: 210px;
-    letter-spacing: 5px;
-    font-weight: bolder;
     padding: 7px 5px;
     margin: 20px auto;
     cursor: pointer;
     text-align: center;
-    border-radius: 10px;
-    border: 1px solid gray;
+    border-radius: 30px;
+    background-color: rgb(250, 250, 209);
+    color: #2f4858;
     font-size: 1.2rem;
+    letter-spacing: 5px;
+    font-weight: bolder;
     transition: 0.3s;
     &:hover {
-      background-color: rgb(212, 212, 119);
+      background-color: rgb(231, 231, 181);
     }
   }
-  //repeat
-  .changeMonthDayBtn {
-    width: 210px;
-    letter-spacing: 5px;
-    font-weight: bolder;
-    padding: 7px 5px;
-    margin: 20px auto;
-    cursor: pointer;
-    text-align: center;
-    border-radius: 10px;
-    border: 1px solid gray;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    h3 {
-      font-size: 1.2rem;
-    }
-    p {
-      font-size: 1.2rem;
-    }
-  }
-  .smallCalendarDay {
-    .smallCalendarSelect {
+
+  .smallCalendarHeader {
+    .smallCalendarMonth {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -64,28 +52,30 @@
       padding: 0px 5px;
     }
   }
+
   .smallCalendar {
     margin: 0px auto;
-    width: 240px;
+    width: 238px;
     height: 160px;
+    .rowMap {
+      display: flex;
+      flex-wrap: wrap;
+      .dayMap {
+        height: 32px;
+        width: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        p {
+          pointer-events: none;
+          border-radius: 50%;
+          height: 24px;
+          padding: 2px 5px;
+          cursor: pointer;
+        }
+      }
+    }
   }
-}
-
-.rowMap {
-  display: grid;
-  justify-content: space-around;
-  align-items: center;
-  height: 28px;
-  grid-template-columns: repeat(auto-fill, 32px);
-}
-.dayMap {
-  padding: 1px;
-  height: 24px;
-  text-align: center;
-}
-
-.colorBlue {
-  color: blue;
 }
 
 @media (max-width: 950px) {

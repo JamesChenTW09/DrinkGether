@@ -1,15 +1,22 @@
 import React from "react";
 import "../styles/Features/index.css";
 import icon from "../styles/photos/beer.jpg";
-const Index = () => {
+const Index = ({ scrollRef }) => {
   return (
     <>
-      <section className="mainFeature">
+      <section
+        className="mainFeature"
+        ref={(el) =>
+          (scrollRef.current = { ...scrollRef.current, Introduction: el })
+        }
+      >
         <h3>Why us ??</h3>
         <p>A new paradise for Alcholic, never drink alone again</p>
         <section className="featuresContainer">
           <div className="featureItem">
-            <img src={icon} alt="" />
+            <div className="featureItemIconContainer">
+              <i class="fa-solid fa-champagne-glasses"></i>
+            </div>
             <ul>
               <li>想喝酒找不到人?</li>
               <li>想認識新朋友?</li>
@@ -17,14 +24,19 @@ const Index = () => {
             </ul>
           </div>
           <div className="featureItem">
-            <img src={icon} alt="" />
+            <div className="featureItemIconContainer">
+              <i class="fa-solid fa-champagne-glasses"></i>
+            </div>
+
             <ul>
               <li>操作簡單，一鍵發起活動</li>
               <li>日曆介面，方便瀏覽</li>
             </ul>
           </div>
           <div className="featureItem">
-            <img src={icon} alt="" />
+            <div className="featureItemIconContainer">
+              <i class="fa-solid fa-champagne-glasses"></i>
+            </div>
             <ul>
               <li>會員評論功能，見面更安心</li>
               <li>專屬討論區，你我有保障</li>
@@ -32,7 +44,9 @@ const Index = () => {
             </ul>
           </div>
           <div className="featureItem">
-            <img src={icon} alt="" />
+            <div className="featureItemIconContainer">
+              <i class="fa-solid fa-champagne-glasses"></i>
+            </div>
             <ul>
               <li>會員評論功能，見面更安心</li>
               <li>專屬討論區，你我有保障</li>
@@ -41,7 +55,10 @@ const Index = () => {
           </div>
         </section>
       </section>
-      <div className="guideTitle">
+      <div
+        className="guideTitle"
+        ref={(el) => (scrollRef.current = { ...scrollRef.current, Steps: el })}
+      >
         <h3>How to Start ?</h3>
         <p>詳細介紹讓您五分鐘內開始找活動</p>
       </div>

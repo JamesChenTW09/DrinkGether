@@ -1,19 +1,21 @@
 import dayjs from "dayjs";
+import { auth } from "../firebase";
 
 export function orderByTime(listOfId, timeLabel, reverse = false) {
   const idList = Object.keys(listOfId);
-  const timeList = idList.map((item) => {
+  let timeList = idList.map((item) => {
     return listOfId[item][timeLabel];
   });
   if (reverse) {
-    timeList.sort().reverse();
+    timeList = mergeSort(timeList, reverse);
   } else {
-    timeList.sort();
+    timeList = mergeSort(timeList);
   }
-
   let fianlArr = [];
-  for (let i = 0; i < timeList.length; i++) {
-    for (let j = 0; j < idList.length; j++) {
+  let timeListLen = timeList.length;
+  let idListLen = idList.length;
+  for (let i = 0; i < timeListLen; i++) {
+    for (let j = 0; j < idListLen; j++) {
       if (timeList[i] === listOfId[idList[j]][timeLabel]) {
         fianlArr.push(listOfId[idList[j]]);
         idList.splice(j, 1);
@@ -33,9 +35,11 @@ export function dailyEventSort(allEventList, keepDay) {
     return item["eventTime"];
   });
 
-  eventTimeArr = eventTimeArr.sort();
-  for (let i = 0; i < eventTimeArr.length; i++) {
-    for (let j = 0; j < todayEventArr.length; j++) {
+  eventTimeArr = mergeSort(eventTimeArr);
+  let eventTimeArrLen = eventTimeArr.length;
+  let todayEventArrLen = todayEventArr.length;
+  for (let i = 0; i < eventTimeArrLen; i++) {
+    for (let j = 0; j < todayEventArrLen; j++) {
       if (eventTimeArr[i] === todayEventArr[j]["eventTime"]) {
         finalArr.push(todayEventArr[j]);
         todayEventArr.splice(j, 1);
@@ -46,15 +50,15 @@ export function dailyEventSort(allEventList, keepDay) {
   return finalArr;
 }
 
-export function sortEventList(memberEventList) {
+export function sortMemberEventList(memberEventList) {
   if (!memberEventList) {
     return null;
   }
-  const memberOrderHoldEventList = orderByTime(
+  const memberOrderEventList = orderByTime(
     memberEventList,
     "memberEventDateAndTime"
   );
-  return memberOrderHoldEventList;
+  return memberOrderEventList;
 }
 
 export function flattern(arr) {
@@ -95,4 +99,71 @@ export function getMonth(month = dayjs().month()) {
     });
   });
   return daysMatrix;
+}
+
+export function checkUserOrVisitor(user, visitor, storeUserId) {
+  return auth.currentUser && storeUserId === auth.currentUser.displayName
+    ? { display: user }
+    : { display: visitor };
+}
+
+function merge(arr1, arr2, reverse) {
+  let i = 0;
+  let j = 0;
+  let a1Len = arr1.length;
+  let a2Len = arr2.length;
+  let result = [];
+  if (reverse) {
+    while (i < a1Len && j < a2Len) {
+      if (arr1[i] < arr2[j]) {
+        result.push(arr2[j]);
+        j++;
+      } else {
+        result.push(arr1[i]);
+        i++;
+      }
+    }
+    while (i < a1Len) {
+      result.push(arr1[i]);
+      i++;
+    }
+    while (j < a2Len) {
+      result.push(arr2[j]);
+      j++;
+    }
+  } else {
+    while (i < a1Len && j < a2Len) {
+      if (arr1[i] < arr2[j]) {
+        result.push(arr1[i]);
+        i++;
+      } else {
+        result.push(arr2[j]);
+        j++;
+      }
+    }
+    while (i < a1Len) {
+      result.push(arr1[i]);
+      i++;
+    }
+    while (j < a2Len) {
+      result.push(arr2[j]);
+      j++;
+    }
+  }
+  return result;
+}
+
+function mergeSort(arr, reverse = false) {
+  if (arr.length === 1 || arr.length === 0) {
+    return arr;
+  } else {
+    let middle = Math.floor(arr.length / 2);
+    let left = arr.slice(0, middle);
+    let right = arr.slice(middle, arr.length);
+    if (reverse) {
+      return merge(mergeSort(left, true), mergeSort(right, true), true);
+    } else {
+      return merge(mergeSort(left), mergeSort(right));
+    }
+  }
 }

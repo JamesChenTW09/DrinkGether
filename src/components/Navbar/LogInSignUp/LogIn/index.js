@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import GlobalContext from "../../../../context/GlobalContext.js";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { ref, update } from "firebase/database";
 import {
@@ -9,6 +8,7 @@ import {
   fetchData,
   writeUserData,
 } from "../../../../firebase.js";
+import GlobalContext from "../../../../context/GlobalContext.js";
 import SignUp from "./SignUp/index.js";
 import ForgotPassword from "./ForgotPassword/";
 import "../../../styles/Navbar/LogInSignUp/index.css";
@@ -25,29 +25,31 @@ const Index = () => {
   } = useContext(GlobalContext);
 
   const { logIn, loadingCircle } = accountProcessing;
-  const [logInErrorMessage, setLogInErrorMessage] = useState("");
 
-  // handle event list
-  const handleLogInSignUpChange = () => {
-    setAccountProcessing({ ...accountProcessing, logIn: false, signUp: true });
-  };
   const handleAccountBoxCross = () => {
     setShowLogInBox((preState) => !preState);
   };
-  const handleForgotPassword = () => {
-    setInputEmail(email);
-    setAccountProcessing({
-      ...accountProcessing,
-      logIn: false,
-      forgotPasswordBox: true,
+
+  //log in with google
+  const handleLogInGoogle = () => {
+    signInWithPopup(auth, provider).then((result) => {
+      const user = result.user;
+      if (result) {
+        const { displayName, email, uid, accessToken } = result["user"];
+        writeUserData(uid, email, displayName, accessToken);
+        setAccountProcessing({
+          ...accountProcessing,
+          logIn: false,
+          signUp: false,
+          logInGreeting: true,
+        });
+        setGreetingName(user.displayName);
+      }
     });
-  };
-  const [passwordShowingIcon, setPasswordShowingIcon] = useState(false);
-  const handleShowPassword = () => {
-    setPasswordShowingIcon(!passwordShowingIcon);
   };
 
   //store user login data and start login
+  const [logInErrorMessage, setLogInErrorMessage] = useState("");
   const [logInData, setLogInData] = useState({
     email: "",
     password: "",
@@ -56,6 +58,7 @@ const Index = () => {
   const handleLogIn = (e) => {
     setLogInData({ ...logInData, [e.target.name]: e.target.value });
   };
+
   const handleStartLogin = () => {
     if (!email || !password) {
       setLogInErrorMessage("All inputs are required");
@@ -67,7 +70,7 @@ const Index = () => {
       loadingCircle: true,
     });
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(() => {
         const { displayName } = auth.currentUser;
         const updateRoute = "user/" + displayName + "/info/";
         const fetchRoute = "user/" + displayName;
@@ -107,23 +110,23 @@ const Index = () => {
         }
       });
   };
+  const [passwordShowingIcon, setPasswordShowingIcon] = useState(false);
+  const handleShowPassword = () => {
+    setPasswordShowingIcon((preState) => !preState);
+  };
 
-  //log in with google
-  const handleLogInGoogle = () => {
-    signInWithPopup(auth, provider).then((result) => {
-      const user = result.user;
-      if (result) {
-        const { displayName, email, uid, accessToken } = result["user"];
-        writeUserData(uid, email, displayName, accessToken);
-        setAccountProcessing({
-          ...accountProcessing,
-          logIn: false,
-          signUp: false,
-          logInGreeting: true,
-        });
-        setGreetingName(user.displayName);
-      }
+  const handleForgotPassword = () => {
+    setInputEmail(email);
+    setAccountProcessing({
+      ...accountProcessing,
+      logIn: false,
+      forgotPasswordBox: true,
     });
+  };
+
+  // handle event list
+  const handleLogInSignUpChange = () => {
+    setAccountProcessing({ ...accountProcessing, logIn: false, signUp: true });
   };
 
   return (
@@ -136,7 +139,7 @@ const Index = () => {
             : { transform: "translateX(330px)" }
         }
       >
-        {loadingCircle ? <div className="logInLoading"></div> : ""}
+        {loadingCircle && <div className="logInLoading"></div>}
 
         <div onClick={handleAccountBoxCross} className="cancelAccountBox">
           ｘ
@@ -147,7 +150,7 @@ const Index = () => {
           style={logIn ? { display: "flex" } : { display: "none" }}
         >
           <h1>DrinkGether</h1>
-          <h3>Welcome Back</h3>
+          <h4>Welcome Back</h4>
           <button onClick={handleLogInGoogle}>
             <img className="googleIcon" src={googleIcon} alt="Google Icon" />
             Log in with Google
@@ -176,14 +179,14 @@ const Index = () => {
 
               <img
                 onClick={handleShowPassword}
-                className=" togglePassword"
+                className=" logInTogglePassword"
                 src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/000000/external-transparency-marketing-agency-flaticons-lineal-color-flat-icons-2.png"
-                alt=""
+                alt="glasses"
               />
               <div
                 onClick={handleShowPassword}
                 style={{ display: passwordShowingIcon ? "none" : "block" }}
-                className="passwordLine"
+                className="logInPasswordLine"
               ></div>
             </div>
 
@@ -191,7 +194,7 @@ const Index = () => {
               Forgot password
             </p>
             <button onClick={handleStartLogin}>Log in</button>
-            <p style={{ margin: "10px", color: "red" }}>{logInErrorMessage}</p>
+            <p className="accountErrorMessage">{logInErrorMessage}</p>
           </div>
           <p>
             Don't have an account ?
@@ -199,7 +202,6 @@ const Index = () => {
           </p>
         </section>
 
-        {/* below is signUp part */}
         <SignUp handleAccountBoxCross={handleAccountBoxCross} />
         <ForgotPassword />
       </div>

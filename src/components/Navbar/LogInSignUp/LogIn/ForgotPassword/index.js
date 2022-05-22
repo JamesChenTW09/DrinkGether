@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
-import GlobalContext from "../../../../../context/GlobalContext.js";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../../../../../firebase.js";
+import GlobalContext from "../../../../../context/GlobalContext.js";
 import "../../../../styles/Navbar/LogInSignUp/index.css";
 
 const ForgotPassword = () => {
@@ -10,19 +10,10 @@ const ForgotPassword = () => {
   const { forgotPasswordBox } = accountProcessing;
   const [forgorPasswordMessage, setForgorPasswordMessage] = useState("");
 
-  //handle event list
   const handleInputEmail = (e) => {
     setInputEmail(e.target.value);
   };
-  const handleReturnLogIn = () => {
-    setAccountProcessing({
-      ...accountProcessing,
-      forgotPasswordBox: false,
-      logIn: true,
-    });
-    setInputEmail("");
-    setForgorPasswordMessage("");
-  };
+
   const handleSendEmail = () => {
     if (!inputEmail) {
       setForgorPasswordMessage("Input is empty");
@@ -36,6 +27,16 @@ const ForgotPassword = () => {
         setForgorPasswordMessage("Not a valid Email");
       });
     setInputEmail("");
+  };
+
+  const handleReturnLogIn = () => {
+    setAccountProcessing({
+      ...accountProcessing,
+      forgotPasswordBox: false,
+      logIn: true,
+    });
+    setInputEmail("");
+    setForgorPasswordMessage("");
   };
 
   return (

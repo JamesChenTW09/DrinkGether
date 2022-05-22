@@ -1,8 +1,8 @@
 import React, { useState, useRef } from "react";
-import { getDatabase, update, ref } from "firebase/database";
+import { update, ref } from "firebase/database";
 import { getStorage, uploadBytes, ref as sRef } from "firebase/storage";
-import { auth } from "../../../firebase.js";
-// import "../../styles/Membership/index.css";
+import { auth, db } from "../../../firebase.js";
+import { checkUserOrVisitor } from "../../../utils/utilities";
 import "../../styles/Membership/MemberInfo/index.css";
 const Index = ({
   storeUserNameId,
@@ -15,68 +15,6 @@ const Index = ({
   storeImg,
   setStoreImg,
 }) => {
-  //handle info is editable or not
-  const [textEditable, setTextEditable] = useState(true);
-  const handleTextEditable = () => {
-    setTextEditable((preState) => !preState);
-    setModifyInfo((preState) => !preState);
-  };
-  //handle show privateInfo or publicInfo
-  const [infoPrivateOrPublic, setInfoPrivateOrPublic] = useState(true);
-  const handleSecretInfo = () => {
-    setInfoPrivateOrPublic((preState) => !preState);
-  };
-
-  const [showPassword, setShowPassword] = useState(false);
-  const handleShowPassword = () => {
-    setShowPassword((preState) => !preState);
-  };
-
-  //handle line id circle for everyone
-  const handleMoveAllLineIdCircle = () => {
-    if (textEditable) {
-      return;
-    }
-    setLineIdAllOption(!lineIdAllOption);
-  };
-
-  //get the data user type
-
-  const { name, email, job, passion, sex, about, password, phone, lineId } =
-    memberUpdateData;
-  const handleMemberUpdateData = (e) => {
-    setMemberUpdateDate({
-      ...memberUpdateData,
-      [e.target.name]: e.target.value,
-    });
-  };
-  //handle show pen or check
-  const [modifyInfo, setModifyInfo] = useState(false);
-  const handleCompleteEdit = () => {
-    const db = getDatabase();
-    update(ref(db, "user/" + auth.currentUser.displayName + "/info/"), {
-      job,
-      passion,
-      sex,
-      about,
-      password,
-      phone,
-      lineId,
-      lineIdForAll: lineIdAllOption,
-    });
-    setTextEditable((preState) => !preState);
-    setModifyInfo((preState) => !preState);
-    if (lineIdAllOption) {
-      setShowLineId((preState) => (preState = lineIdAllOption));
-    } else {
-      setShowLineId((preState) => (preState = false));
-    }
-  };
-  //handle show line id
-
-  const handleShowLineId = () => {
-    setShowLineId(!showLineId);
-  };
   //photo
   const imgInput = useRef();
   const finalImg = useRef();
@@ -101,12 +39,71 @@ const Index = ({
         (blob) => {
           const storage = getStorage();
           const storageRef = sRef(storage, auth.currentUser.displayName);
-          uploadBytes(storageRef, blob).then((snapshot) => {});
+          uploadBytes(storageRef, blob);
         },
         "image/jpeg",
         0.6
       );
     };
+  };
+  //handle info is editable or not
+  const [textEditable, setTextEditable] = useState(true);
+  const handleTextEditable = () => {
+    setTextEditable((preState) => !preState);
+    setModifyInfo((preState) => !preState);
+  };
+  //handle show privateInfo or publicInfo
+  const [infoPrivateOrPublic, setInfoPrivateOrPublic] = useState(true);
+  const handleSecretInfo = () => {
+    setInfoPrivateOrPublic((preState) => !preState);
+  };
+
+  const [showPassword, setShowPassword] = useState(false);
+  const handleShowPassword = () => {
+    setShowPassword((preState) => !preState);
+  };
+
+  //handle line id circle for everyone
+  const handleMoveAllLineIdCircle = () => {
+    if (textEditable) {
+      return;
+    }
+    setLineIdAllOption(!lineIdAllOption);
+  };
+  //handle show line id
+  const handleShowLineId = () => {
+    setShowLineId(!showLineId);
+  };
+
+  //get the data user type
+  const { name, email, job, passion, sex, about, password, phone, lineId } =
+    memberUpdateData;
+  const handleMemberUpdateData = (e) => {
+    setMemberUpdateDate({
+      ...memberUpdateData,
+      [e.target.name]: e.target.value,
+    });
+  };
+  //handle show pen or check
+  const [modifyInfo, setModifyInfo] = useState(false);
+  const handleCompleteEdit = () => {
+    update(ref(db, "user/" + auth.currentUser.displayName + "/info/"), {
+      job,
+      passion,
+      sex,
+      about,
+      password,
+      phone,
+      lineId,
+      lineIdForAll: lineIdAllOption,
+    });
+    setTextEditable((preState) => !preState);
+    setModifyInfo((preState) => !preState);
+    if (lineIdAllOption) {
+      setShowLineId((preState) => (preState = lineIdAllOption));
+    } else {
+      setShowLineId((preState) => (preState = false));
+    }
   };
 
   return (
@@ -114,7 +111,7 @@ const Index = ({
       <div className="basicInfo">
         <div className="memberImg">
           <div className="headShot" ref={finalImg}>
-            {storeImg ? <img alt="headShot" src={storeImg}></img> : ""}
+            {storeImg && <img alt="headShot" src={storeImg}></img>}
             <canvas
               style={storeImg ? { display: "none" } : { display: "block" }}
               ref={canvasPhoto}
@@ -123,13 +120,7 @@ const Index = ({
           <div
             className="cameraIconBox"
             onClick={handleChangePhoto}
-            style={
-              auth.currentUser
-                ? storeUserNameId === auth.currentUser.displayName
-                  ? { display: "flex" }
-                  : { display: "none" }
-                : { display: "none" }
-            }
+            style={checkUserOrVisitor("flex", "none", storeUserNameId)}
           >
             <i class="fa-solid fa-camera">
               <input
@@ -150,11 +141,7 @@ const Index = ({
                 class="fa-solid fa-pen"
                 style={
                   (modifyInfo ? { display: "none" } : { display: "inline" },
-                  auth.currentUser
-                    ? storeUserNameId === auth.currentUser.displayName
-                      ? { display: "inline" }
-                      : { display: "none" }
-                    : { display: "none" })
+                  checkUserOrVisitor("inline", "none", storeUserNameId))
                 }
               ></i>
               <i
@@ -165,13 +152,7 @@ const Index = ({
             </h3>
 
             <div
-              style={
-                auth.currentUser
-                  ? storeUserNameId === auth.currentUser.displayName
-                    ? { display: "inline" }
-                    : { display: "none" }
-                  : { display: "none" }
-              }
+              style={checkUserOrVisitor("inline", "none", storeUserNameId)}
               className="PrivatePublicBtn"
             >
               <button onClick={handleSecretInfo}>
@@ -187,7 +168,7 @@ const Index = ({
               infoPrivateOrPublic ? { display: "none" } : { display: "block" }
             }
           >
-            <div className="memberEmail">
+            <div className="memberEmail inputAndTitle">
               <h4 className="memberInputTitle">Email</h4>
               <textarea
                 className="memberInput"
@@ -196,7 +177,7 @@ const Index = ({
                 readOnly
               ></textarea>
             </div>
-            <div className="memberPassword">
+            <div className="memberPassword inputAndTitle">
               <h4 className="memberInputTitle">Password</h4>
               <input
                 className="memberInput"
@@ -216,6 +197,9 @@ const Index = ({
               <div
                 onClick={handleShowPassword}
                 className="memberPasswordLine"
+                style={
+                  showPassword ? { display: "none" } : { display: "block" }
+                }
               ></div>
             </div>
             <div className="memberOption">
@@ -257,7 +241,7 @@ const Index = ({
                 ></textarea>
               </div>
             </div>
-            <div className="memberLineId">
+            <div className="memberLineId inputAndTitle">
               <h4 className="memberInputTitle">Line ID</h4>
               <input
                 className="memberInput"
@@ -270,13 +254,7 @@ const Index = ({
               />
 
               <img
-                style={
-                  auth.currentUser
-                    ? storeUserNameId === auth.currentUser.displayName
-                      ? { display: "inline" }
-                      : { display: "none" }
-                    : { display: "none" }
-                }
+                style={checkUserOrVisitor("inline", "none", storeUserNameId)}
                 onClick={handleShowLineId}
                 className=" memberTogglePassword"
                 src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/000000/external-transparency-marketing-agency-flaticons-lineal-color-flat-icons-2.png"
@@ -284,17 +262,14 @@ const Index = ({
               />
               <div
                 style={
-                  auth.currentUser
-                    ? storeUserNameId === auth.currentUser.displayName
-                      ? { display: "inline" }
-                      : { display: "none" }
-                    : { display: "none" }
+                  (checkUserOrVisitor("inline", "none", storeUserNameId),
+                  showLineId ? { display: "none" } : { display: "inline" })
                 }
                 onClick={handleShowLineId}
                 className="memberPasswordLine"
               ></div>
             </div>
-            <div className="memberJob">
+            <div className="memberJob inputAndTitle">
               <h4 className="memberInputTitle">Job</h4>
               <textarea
                 className="memberInput"
@@ -304,7 +279,7 @@ const Index = ({
                 readOnly={textEditable}
               ></textarea>
             </div>
-            <div className="memberPassion">
+            <div className="memberPassion inputAndTitle">
               <h4 className="memberInputTitle">Passion</h4>
               <textarea
                 className="memberInput"

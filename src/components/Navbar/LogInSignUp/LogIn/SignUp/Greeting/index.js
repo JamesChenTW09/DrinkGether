@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import GlobalContext from "../../../../../../context/GlobalContext";
 import { signOut } from "firebase/auth";
-import { ref, getDatabase, remove, update } from "firebase/database";
+import { ref, remove, update } from "firebase/database";
 import { useNavigate } from "react-router-dom";
+import GlobalContext from "../../../../../../context/GlobalContext";
 import { auth, db } from "../../../../../../firebase";
 import "../../../../../styles/Navbar/LogInSignUp/index.css";
 
@@ -14,9 +14,9 @@ const Index = ({ handleAccountBoxCross }) => {
     accountProcessing,
     setAccountProcessing,
   } = useContext(GlobalContext);
-  const { logInGreeting } = accountProcessing;
-  //navigate to member Page
   const navigate = useNavigate();
+  const { logInGreeting } = accountProcessing;
+
   //logout button
   const handleLogOutBtn = () => {
     setAccountProcessing({
@@ -31,9 +31,7 @@ const Index = ({ handleAccountBoxCross }) => {
     });
     signOut(auth)
       .then(() => {})
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch(() => {});
   };
 
   //drag
@@ -47,21 +45,13 @@ const Index = ({ handleAccountBoxCross }) => {
   const drop = (e) => {
     e.preventDefault();
     const deleteId = e.dataTransfer.getData("text");
+    const { displayName } = auth.currentUser;
     setStoreNotificationMessage((preState) =>
       preState.filter((item) => {
         return item["uuid"] !== deleteId;
       })
     );
-    const db = getDatabase();
-    remove(
-      ref(
-        db,
-        "user/" +
-          auth.currentUser.displayName +
-          "/info/notification/" +
-          deleteId
-      )
-    );
+    remove(ref(db, "user/" + displayName + "/info/notification/" + deleteId));
   };
 
   return (
@@ -84,15 +74,16 @@ const Index = ({ handleAccountBoxCross }) => {
         <div className="notificationListBox">
           {storeNotificationMessage
             ? storeNotificationMessage.map((item) => {
+                const { uuid, message, nowTime } = item;
                 return (
                   <div
-                    key={item["uuid"]}
+                    key={uuid}
                     className="notificationItem"
                     draggable={true}
                     onDragStart={(e) => drag(e, item)}
                   >
-                    <p>{item["message"]}</p>
-                    <div className="notificationTime">{item["nowTime"]}</div>
+                    <p>{message}</p>
+                    <div className="notificationTime">{nowTime}</div>
                   </div>
                 );
               })

@@ -1,7 +1,9 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/Footer/index.css";
 
-const Index = () => {
+const Index = ({ scrollRef }) => {
+  const navigate = useNavigate();
   const [showContact, setShowContact] = useState(false);
   const [showKeyboard, setShowKeyBoard] = useState(false);
   const footerContent = useRef();
@@ -10,6 +12,13 @@ const Index = () => {
   };
   const handleKeyboardCover = () => {
     setShowKeyBoard((preState) => !preState);
+  };
+
+  const handleScroll = (element) => {
+    navigate("/");
+    setTimeout(() => {
+      scrollRef.current[element].scrollIntoView({ behavior: "smooth" });
+    });
   };
 
   return (
@@ -35,9 +44,9 @@ const Index = () => {
         >
           <h3>DrinkGether</h3>
           <ul>
-            <li>Introduction</li>
-            <li>Steps</li>
-            <li>FAQ</li>
+            <li onClick={() => handleScroll("Introduction")}>Introduction</li>
+            <li onClick={() => handleScroll("Steps")}>Steps</li>
+            <li onClick={() => handleScroll("FAQ")}>FAQ</li>
             <li onClick={handleShowContact}>Contact</li>
           </ul>
           <div

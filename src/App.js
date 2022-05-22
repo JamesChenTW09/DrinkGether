@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Features from "./components/Features";
@@ -10,23 +11,27 @@ import store from "./redux_toolkit/store";
 
 import "./firebase.js";
 function App() {
+  const scrollRef = useRef({});
   return (
     <Provider store={store}>
-      <Navbar />
+      <Navbar scrollRef={scrollRef} />
       <Routes>
         <Route
           path="/"
           element={
             <>
-              <Features />
-              <FAQ />
+              <Features scrollRef={scrollRef} />
+              <FAQ scrollRef={scrollRef} />
             </>
           }
         ></Route>
         <Route path="/member/:name" element={<Membership />}></Route>
-        <Route path="/activity" element={<Calender />}></Route>
+        <Route
+          path="/activity"
+          element={<Calender scrollRef={scrollRef} />}
+        ></Route>
       </Routes>
-      <Footer />
+      <Footer scrollRef={scrollRef} />
     </Provider>
   );
 }

@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { ref, update, remove } from "firebase/database";
-import DiscussBox from "./DiscussBox";
 import { v4 as uuidv4 } from "uuid";
 import { useSelector, useDispatch } from "react-redux";
+import DiscussBox from "./DiscussBox";
 import {
   showAllEventsBox,
   notShowAllEventsBox,
@@ -12,9 +12,9 @@ import {
   showDiscussAreaBox,
 } from "../../../../../redux_toolkit/slice/boolean";
 import {
-  filterCalendarEvent,
   filterDailyEvent,
   setEmptyDiscussList,
+  filterAllEventList,
 } from "../../../../../redux_toolkit/slice/eventList";
 import {
   fetchData,
@@ -32,7 +32,7 @@ const Index = () => {
   const { allEventsBox, eventDetailBox, discussAreaBox } = useSelector(
     (state) => state.boolean
   );
-  const { calendarEventList, eventDetail, dailyEventList, discussList } =
+  const { allEventList, eventDetail, dailyEventList, discussList } =
     useSelector((state) => state.eventList);
   const dispatch = useDispatch();
   let {
@@ -59,7 +59,6 @@ const Index = () => {
     }
     setEventDetailMessage("");
     dispatch(notShowDiscussAreaBox());
-
     dispatch(setEmptyDiscussList());
   };
 
@@ -85,15 +84,13 @@ const Index = () => {
       dispatch(notShowAllEventsBox());
     }
 
-    //filter calendar list and daily event list
     dispatch(
-      filterCalendarEvent(
-        calendarEventList.filter((item) => {
+      filterAllEventList(
+        allEventList.filter((item) => {
           return item["eventId"] !== eventId;
         })
       )
     );
-
     dispatch(
       filterDailyEvent(
         dailyEventList.filter((item) => {
@@ -132,7 +129,7 @@ const Index = () => {
       const message = `您在${eventDate}所參加的${eventPlace}活動，${displayName}取消參加`;
       sendNotificationMessage(eventDetail, data, uuidv4(), message);
     });
-    eventDetail["eventCurrentPal"] = currentAttendant;
+
     if (eventDetailBox) {
       dispatch(notShowEventDetailBox());
     } else {
@@ -281,7 +278,7 @@ const Index = () => {
         </p>
         <p className="eventDetailMessage">{eventDetailMessage}</p>
         <div className="eventDetailDiscuss">
-          <h4 onClick={handleShowDiscussArea}>留言{discussList.length}</h4>{" "}
+          <h4 onClick={handleShowDiscussArea}>留言{discussList.length}</h4>
           <DiscussBox setEventDetailMessage={setEventDetailMessage} />
         </div>
       </div>

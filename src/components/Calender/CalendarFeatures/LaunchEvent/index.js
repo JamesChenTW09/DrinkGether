@@ -10,10 +10,7 @@ import {
   writeNewParticipant,
   writeMemberHoldEvent,
 } from "../../../../firebase.js";
-import {
-  addCalendarEvent,
-  addAllEvent,
-} from "../../../../redux_toolkit/slice/eventList";
+import { addAllEvent } from "../../../../redux_toolkit/slice/eventList";
 import "../../../styles/Calendar/LaunchEvent/index.css";
 
 const Index = () => {
@@ -21,7 +18,7 @@ const Index = () => {
   const { eventInput } = useSelector((state) => state.eventInput);
   const { allEventList } = useSelector((state) => state.eventList);
   const dispatch = useDispatch();
-  // handle event list
+
   const handleCloseLaunch = () => {
     dispatch(notShowStartEventBox());
     setEventErrorMessage("");
@@ -35,7 +32,7 @@ const Index = () => {
       })
     );
   };
-  //get the input value by onchange
+  // store input value
   const [eventErrorMessage, setEventErrorMessage] = useState("");
   const { eventPlace, eventDate, eventTime, eventMaxPal, eventDescription } =
     eventInput;
@@ -59,15 +56,6 @@ const Index = () => {
     }
     const uuid = uuidv4();
     const { displayName } = auth.currentUser;
-
-    const checkLengthArr = allEventList.filter((item) => {
-      return item["eventDate"] === eventDate;
-    });
-    if (checkLengthArr.length < 2) {
-      dispatch(addCalendarEvent(eventInput));
-    } else if (checkLengthArr.length === 2) {
-      dispatch(addCalendarEvent({ eventPlace: "還有...", eventDate }));
-    }
     dispatch(addAllEvent(eventInput));
     writeNewEvent(uuid, eventInput, displayName);
     dispatch(

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
-import { sortEventList } from "../../utils/utilities";
-import { dbRef } from "../../firebase.js";
 import { getStorage, getDownloadURL, ref as sRef } from "firebase/storage";
 import { get, child } from "firebase/database";
+import { sortMemberEventList } from "../../utils/utilities";
+import { dbRef } from "../../firebase.js";
 import BarRecommend from "./BarRecommend";
 import MemberInfo from "./MemberInfo";
 import MemberActivity from "./MemberActivity";
@@ -57,11 +57,11 @@ const Index = () => {
         //check have join/hold event, bar recommend list
 
         if (info["joinEvents"]) {
-          const joinEventsList = sortEventList(info["joinEvents"]);
+          const joinEventsList = sortMemberEventList(info["joinEvents"]);
           setMemberJoinEventList(joinEventsList);
         }
         if (info["holdEvents"]) {
-          const holdEventsList = sortEventList(info["holdEvents"]);
+          const holdEventsList = sortMemberEventList(info["holdEvents"]);
           setMemberHoldEventList(holdEventsList);
         }
         if (BarRecommend) {
@@ -83,6 +83,7 @@ const Index = () => {
     setStoreImg([]);
     fetchMemberInitialData();
   }, [fetchMemberInitialData]);
+
   return (
     <>
       <section className="memberContainer">

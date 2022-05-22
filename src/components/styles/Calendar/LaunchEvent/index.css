@@ -1,9 +1,10 @@
 .launchEventBox {
-  width: 370px;
-  height: 550px;
-  background-color: rgb(220, 220, 220);
+  width: 350px;
+  height: 530px;
+  box-shadow: #553e4c 2px 2px 3px, #553e4c -2px -2px 2px;
+  background-color: #fff7d6;
+  color: #213d4e;
   border-radius: 10px;
-  box-shadow: 2px 2px 3px gray;
   left: 38%;
   top: 10%;
   z-index: 30;
@@ -39,18 +40,24 @@
   width: 250px;
   border-radius: 10px;
   padding: 5px 8px;
-  border: none;
+  border: 2px solid #436072;
   text-align: center;
   font-size: 16px;
 }
 .launchEventBox .newEventBox input:focus {
-  outline: 2px solid gray;
+  outline: none;
+  box-shadow: 1px 1px 3px #436072;
 }
 .launchEventBox .newEventBox textarea {
   width: 250px;
-  height: 130px;
+  height: 100px;
   padding: 5px 8px;
+  border: 2px solid #436072;
   resize: none;
+}
+.launchEventBox .newEventBox textarea:focus {
+  outline: none;
+  box-shadow: 1px 1px 3px #436072;
 }
 .launchEventBox .newEventBox .eventErrorMessage {
   font-weight: bolder;
@@ -58,18 +65,17 @@
 }
 .launchEventBox .newEventBox button {
   width: 250px;
-  border-radius: 10px;
   padding: 5px 8px;
+  margin-top: 12px;
   border: none;
   text-align: center;
   font-size: 18px;
-  margin-top: 12px;
-  cursor: pointer;
-  background-color: rgb(145, 143, 143);
+  background-color: #436072;
+  color: rgb(250, 250, 209);
   transition: 0.3s;
 }
 .launchEventBox .newEventBox button:hover {
-  background-color: rgb(160, 160, 160);
+  background-color: #506b7c;
 }
 
 @media (max-width: 950px) {

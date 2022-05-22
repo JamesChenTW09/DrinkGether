@@ -1,6 +1,7 @@
 .basicInfo {
   box-shadow: 2px 2px 5px gray, -2px -2px 1px gray;
-  background-color: white;
+  background-color: #2f4858;
+  color: rgb(250, 250, 209);
   border-radius: 10px;
   grid-column: 2/12;
   grid-row: 2/25;
@@ -9,18 +10,12 @@
     width: 300px;
     height: 300px;
     position: relative;
-    .headShot {
-      border-radius: 20px;
-      canvas {
-        border-radius: 20px;
-        vertical-align: middle;
-      }
-    }
     .cameraIconBox {
       position: absolute;
       bottom: -20px;
       right: -20px;
-      background-color: rgb(189, 189, 189);
+      background-color: rgb(250, 250, 209);
+      color: #2f4858;
       border-radius: 50%;
       height: 50px;
       width: 50px;
@@ -28,6 +23,10 @@
       justify-content: center;
       align-items: center;
       cursor: pointer;
+      transition: 0.3s;
+      &:hover {
+        background-color: rgb(226, 226, 177);
+      }
       .fa-camera {
         font-size: 2rem;
       }
@@ -40,25 +39,27 @@
       display: flex;
       align-items: baseline;
       justify-content: space-between;
-      border-bottom: 1px solid gray;
+      border-bottom: 2px solid rgb(250, 250, 209);
       padding: 15px 0px;
       h3 {
         font-size: 1.8rem;
-        .fa-pen {
+        i {
           cursor: pointer;
           margin-left: 10px;
           font-size: 14px;
+          font-weight: bolder;
+        }
+        .fa-pen {
+          color: rgb(250, 250, 209);
+          display: none;
           &:hover {
-            color: rgb(90, 90, 90);
+            color: rgb(223, 223, 165);
           }
         }
         .fa-check {
-          cursor: pointer;
-          margin-left: 10px;
-          font-size: 16px;
-          font-weight: bolder;
+          color: rgb(250, 250, 209);
           &:hover {
-            color: rgb(90, 90, 90);
+            color: rgb(223, 223, 165);
           }
         }
       }
@@ -66,14 +67,12 @@
         width: 100px;
         button {
           width: 100px;
-          cursor: pointer;
-          background-color: gray;
+          background-color: rgb(250, 250, 209);
           padding: 5px 8px;
           font-size: 16px;
           border: none;
-          border-radius: 20px;
           &:hover {
-            background-color: rgb(107, 107, 107);
+            background-color: rgb(223, 223, 165);
           }
           .fa-user-pen {
             font-size: 14px;
@@ -92,7 +91,7 @@
       height: 30px;
       width: 75%;
       text-align: center;
-      background-color: rgb(224, 222, 222);
+      background-color: rgb(250, 250, 209);
       padding: 5px;
       border-radius: 10px;
       font-size: 15px;
@@ -117,7 +116,7 @@
         height: 30px;
         border: none;
         text-align: center;
-        background-color: rgb(224, 222, 222);
+        background-color: rgb(250, 250, 209);
         padding: 5px;
         font-size: 15px;
         border-radius: 10px;
@@ -131,21 +130,13 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background-color: white;
+
         h4 {
           width: 20%;
-          font-size: 1.2rem;
           margin-right: 10px;
         }
         textarea {
-          resize: none;
           width: 60%;
-          height: 30px;
-          text-align: center;
-          padding: 5px;
-          border: none;
-          font-size: 15px;
-          border-radius: 10px;
           &:focus {
             outline: none;
           }
@@ -154,18 +145,10 @@
     }
 
     .memberJob {
-      width: 95%;
       margin-top: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
     .memberPassion {
-      width: 95%;
       margin-top: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
     .memberAboutMe {
       width: 95%;
@@ -173,6 +156,7 @@
       display: flex;
       justify-content: space-between;
       .memberAboutMeContent {
+        text-align: left;
         height: 135px;
       }
     }
@@ -197,26 +181,14 @@
   background-color: black;
 }
 .memberLineId {
-  width: 95%;
-  display: flex;
-  align-items: center;
   margin: 20px 0px;
-  justify-content: space-between;
   position: relative;
 }
 .memberEmail {
-  width: 95%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin: 20px 0px;
 }
 .memberPassword {
-  width: 95%;
   margin-top: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   position: relative;
 }
 .memberOption {
@@ -224,21 +196,6 @@
   h4 {
     text-align: center;
     font-size: 1.2rem;
-  }
-
-  .memberOptionContainer {
-    width: 40px;
-    outline: 1px solid gray;
-    margin: 0px 8px;
-    border-radius: 20px;
-    .memberOptionCircle {
-      transition: 0.3s;
-      width: 22px;
-      height: 22px;
-      background-color: darkblue;
-      border-radius: 50%;
-      cursor: pointer;
-    }
   }
 
   .memberOptionLindId {
@@ -268,11 +225,17 @@
         transition: 0.3s;
         width: 22px;
         height: 22px;
-        background-color: darkblue;
+        background-color: rgb(250, 250, 209);
         border-radius: 50%;
       }
     }
   }
+}
+.inputAndTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 95%;
 }
 
 @media (max-width: 1200px) {

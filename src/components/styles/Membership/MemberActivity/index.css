@@ -1,48 +1,38 @@
 .memberEvents {
   box-shadow: 2px 2px 5px gray, -2px -2px 1px gray;
   border-radius: 10px;
-  background-color: white;
+  background-color: #2f4858;
   position: relative;
   grid-column: 13/24;
-  grid-row: 18/25;
+  grid-row: 2/9;
 }
 .memberEvents .eventHeader {
   border-radius: 10px;
   display: flex;
   width: 100%;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-align: center;
 }
 .memberEvents .eventHeader .memberEventLaunch {
-  font-size: 20px;
-  font-weight: bold;
-  letter-spacing: 3px;
-  text-align: center;
   width: 50%;
-  border-radius: 10px;
-  outline: 1px solid gray;
+  border-radius: 10px 0px 0px 0px;
+  border-right: 1px solid #2f4858;
   cursor: pointer;
-}
-.memberEvents .eventHeader .memberEventLaunch:hover {
-  background-color: rgb(238, 238, 238);
 }
 .memberEvents .eventHeader .memberEventJoin {
-  text-align: center;
-  outline: 1px solid gray;
-  font-size: 20px;
-  font-weight: bold;
-  letter-spacing: 3px;
   width: 50%;
-  border-radius: 10px;
+  border-radius: 0px 10px 0px 0px;
   cursor: pointer;
-}
-.memberEvents .eventHeader .memberEventJoin:hover {
-  background-color: rgb(238, 238, 238);
 }
 .memberEvents .memberEventContainer {
   overflow-y: auto;
   width: 95%;
   height: 220px;
   margin: 15px auto 5px auto;
-  background-color: rgb(238, 238, 238);
+  border-radius: 10px;
+  background-color: rgb(250, 250, 209);
   padding: 5px;
 }
 .memberEvents .memberEventContainer .memberEventList {
@@ -79,32 +69,32 @@
   display: flex;
   justify-content: center;
 }
-.memberEvents .memberEventContainer .memberEventList .memberEventBtn .memberEventContact {
+.memberEvents .memberEventContainer .memberEventList .memberEventBtn button {
+  font-weight: bold;
+  background-color: #2f4858;
+  color: rgb(250, 250, 209);
   width: 30%;
-  border-radius: 5px;
   padding: 3px 5px;
-  margin-right: 15px;
   border: none;
-  outline: 1px solid black;
-  cursor: pointer;
+  transition: 0.4s;
 }
-.memberEvents .memberEventContainer .memberEventList .memberEventBtn .memberEventDelete {
-  width: 30%;
-  padding: 3px 5px;
-  border-radius: 5px;
-  border: none;
-  outline: 1px solid black;
-  cursor: pointer;
+.memberEvents .memberEventContainer .memberEventList .memberEventBtn button:hover {
+  background-color: #4b6677;
+}
+.memberEvents .memberEventContainer .memberEventList .memberEventBtn .memberEventContact {
+  margin-right: 15px;
 }
 
 .participantContact {
-  width: 350px;
-  height: 260px;
-  background-color: rgb(224, 222, 222);
+  width: 330px;
+  height: 240px;
+  background-color: rgb(250, 250, 209);
   position: absolute;
+  box-shadow: 2px 2px 3px #2f4858, -2px -2px 2px #2f4858;
   z-index: 15;
   top: 30px;
-  left: 10%;
+  left: 50%;
+  transform: translateX(-50%);
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -124,17 +114,16 @@
   padding-bottom: 10px;
 }
 .participantContact .participantListTitleItem .participantTitleName {
-  width: 175px;
+  width: 50%;
 }
 .participantContact .participantListTitleItem .participantTitleLineId {
-  width: 175px;
+  width: 50%;
 }
 .participantContact .participantListItem {
-  width: 340px;
   margin: 5px 0px;
   padding: 5px 0px;
   display: grid;
-  grid-template-columns: 170px 170px;
+  grid-template-columns: 160px 160px;
   grid-template-rows: 25px 20px;
   border-bottom: 1px solid rgb(75, 75, 75);
 }
@@ -156,22 +145,22 @@
 
 @media (max-width: 1200px) {
   .memberEvents {
+    margin: 30px 0px;
     grid-column: 2/3;
-    grid-row: 3/4;
+    grid-row: 2/3;
   }
 }
 @media (max-width: 600px) {
   .memberEvents {
     grid-column: 1/4;
-    grid-row: 3/4;
   }
 }
 @media (max-width: 430px) {
   .memberEvents .participantContact {
-    left: 5%;
-    width: 300px;
+    width: 310px;
   }
   .memberEvents .participantContact .participantListItem {
     width: 300px;
+    grid-template-columns: 150px 150px;
   }
 }/*# sourceMappingURL=index.css.map */

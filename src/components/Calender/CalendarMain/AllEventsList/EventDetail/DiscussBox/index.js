@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
 import { addDiscussList } from "../../../../../../redux_toolkit/slice/eventList.js";
-import dayjs from "dayjs";
 import {
   auth,
   writeDiscussItem,
   sendNotificationMessage,
   fetchData,
 } from "../../../../../../firebase.js";
-
 import "../../../../../styles/Calendar/EventDetail/index.css";
 
 const Index = ({ setEventDetailMessage }) => {

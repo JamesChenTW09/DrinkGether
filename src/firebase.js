@@ -4,7 +4,6 @@ import {
   getDatabase,
   ref,
   set,
-  onValue,
   get,
   child,
   update,
@@ -31,7 +30,6 @@ export const auth = getAuth();
 export const db = getDatabase();
 export const dbRef = ref(getDatabase());
 
-//yes
 export async function fetchData(route) {
   return await get(child(dbRef, route)).then((snapshot) => {
     if (snapshot.exists()) {
@@ -40,29 +38,25 @@ export async function fetchData(route) {
   });
 }
 
-//yes
 export function deleteMemberEventData(participants, event) {
   const { displayName } = auth.currentUser;
+  const { eventId } = event;
   const participantList = Object.keys(participants);
   participantList.filter((item) => {
     return item !== auth.currentUser.displayName;
   });
-  for (let i = 0; i < participantList.length; i++) {
+  const participantListLen = participantList.length;
+  for (let i = 0; i < participantListLen; i++) {
     remove(
-      ref(
-        db,
-        "user/" + participantList[i] + "/info/joinEvents/" + event["eventId"]
-      )
+      ref(db, "user/" + participantList[i] + "/info/joinEvents/" + eventId)
     );
   }
-  remove(
-    ref(db, "user/" + displayName + "/info/holdEvents/" + event["eventId"])
-  );
+  remove(ref(db, "user/" + displayName + "/info/holdEvents/" + eventId));
 }
-//yes
+
+//調整目前人數
 export function updateCurrentPal(participants, event, currentPal) {
   const participantsList = Object.keys(participants);
-
   if (event.holdUserId) {
     const { eventId, holdUserId } = event;
     const participantForJoinEvent = participantsList.filter((item) => {
@@ -91,7 +85,7 @@ export function updateCurrentPal(participants, event, currentPal) {
     });
   }
 }
-//yes
+
 export function sendNotificationMessage(event, participants, uuid, message) {
   const notificationTime = dayjs().format("YYYY-MM-DD.HH:mm:ss");
   let participantsList = Object.keys(participants);
@@ -128,23 +122,17 @@ export function sendNotificationMessage(event, participants, uuid, message) {
 }
 
 export function writeDiscussData(name, textContent, imageUrl, date, count) {
-  const db = getDatabase(app);
   const reference = ref(db, "discuss/" + date + "/" + count);
-
   set(reference, {
     profilePicture: imageUrl,
     username: name,
     textContent: textContent,
   });
 }
-export function getTotalDiscuss(date, cb) {
-  const db = getDatabase();
-  const test = ref(db, "discuss/" + date);
-  onValue(test, (snapshot) => {
-    const data = snapshot.val();
-    cb(data);
-  });
-}
+// export function getTotalDiscuss(date, cb) {
+//   const test = ref(db, "discuss/" + date);
+//   onValue(test, (snapshot) => cb(snapshot.val()));
+// }
 
 export function writeUserData(
   userId,
@@ -303,24 +291,24 @@ export function writeDiscussItem(
   });
 }
 
-export function writeDiscussReplyItem(
-  eventId,
-  discussId,
-  userId,
-  discussContent,
-  discussName,
-  discussTime,
-  replyId
-) {
-  const reference = ref(
-    db,
-    "discuss/" + eventId + "/" + discussId + "/replyItem" + replyId
-  );
-  set(reference, {
-    userId,
-    discussContent,
-    discussName,
-    discussTime,
-    replyId,
-  });
-}
+// export function writeDiscussReplyItem(
+//   eventId,
+//   discussId,
+//   userId,
+//   discussContent,
+//   discussName,
+//   discussTime,
+//   replyId
+// ) {
+//   const reference = ref(
+//     db,
+//     "discuss/" + eventId + "/" + discussId + "/replyItem" + replyId
+//   );
+//   set(reference, {
+//     userId,
+//     discussContent,
+//     discussName,
+//     discussTime,
+//     replyId,
+//   });
+// }

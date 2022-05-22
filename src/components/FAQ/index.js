@@ -1,8 +1,8 @@
 import React from "react";
 import "./styles/index.css";
 
-const Index = () => {
-  const faqShowHandle = (e) => {
+const Index = ({ scrollRef }) => {
+  const handleShowFaqDetail = (e) => {
     const target = e.target;
     const targetP = target.parentNode.nextSibling;
     if (target.textContent === "+") {
@@ -15,7 +15,10 @@ const Index = () => {
   };
   return (
     <>
-      <section className="faqTitle">
+      <section
+        className="faqTitle"
+        ref={(el) => (scrollRef.current = { ...scrollRef.current, FAQ: el })}
+      >
         <h3>FAQ</h3>
         <p>Find your question or send yours to us through Contact below</p>
       </section>
@@ -23,7 +26,7 @@ const Index = () => {
         <div className="faqContent">
           <div className="faqItemTitle">
             <h4>1. How to create a new account?</h4>
-            <span onClick={faqShowHandle}>+</span>
+            <span onClick={handleShowFaqDetail}>+</span>
           </div>
           <p>
             You can click the <span>account</span> button to create a new
@@ -33,7 +36,7 @@ const Index = () => {
         <div className="faqContent">
           <div className="faqItemTitle">
             <h4>1. How to create a new account?</h4>
-            <span onClick={faqShowHandle}>+</span>
+            <span onClick={handleShowFaqDetail}>+</span>
           </div>
           <p>
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolorum
@@ -46,7 +49,7 @@ const Index = () => {
         <div className="faqContent">
           <div className="faqItemTitle">
             <h4>1. How to create a new account?</h4>
-            <span onClick={faqShowHandle}>+</span>
+            <span onClick={handleShowFaqDetail}>+</span>
           </div>
           <p>
             You can click the <span>account</span> button to create a new

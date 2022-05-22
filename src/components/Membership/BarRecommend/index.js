@@ -2,20 +2,17 @@ import React, { useState, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { remove, ref } from "firebase/database";
 import { auth, writeRecommendBar, db } from "../../../firebase";
-
-// import "../../styles/Membership/index.css";
 import "../../styles/Membership/BarRecommend/index.css";
 
 const Index = ({ barRecommendArr, setBarRecommendArr }) => {
   const [barRecommendMessage, setBarRecommendMessage] = useState("");
-  //store recommend bar data and send to database
+
   const [recommendBar, setRecommendBarName] = useState({
     barName: "",
     barRceommendText: "",
     uuid: "",
   });
   const { barName, barRceommendText, uuid } = recommendBar;
-
   const handleRecommendBar = (e) => {
     const uuid = uuidv4();
     setRecommendBarName({
@@ -37,19 +34,21 @@ const Index = ({ barRecommendArr, setBarRecommendArr }) => {
       return;
     }
     setBarRecommendArr([...barRecommendArr, recommendBar]);
-
     writeRecommendBar(displayName, uuid, barName, barRceommendText);
     setRecommendBarName({ barName: "", barRceommendText: "", uuid: "" });
+    setBarRecommendMessage("");
   };
+
   // handle delete bar recommend
   const recommendOutput = useRef();
   const handleDeleteRecommencBar = () => {
     const checkBoxIdArr = [];
     const checkArr = recommendOutput.current.children;
-    if (checkArr.length === 0) {
+    const checkArrLen = checkArr.length;
+    if (!checkArrLen) {
       return;
     }
-    for (let i = 0; i < checkArr.length; i++) {
+    for (let i = 0; i < checkArrLen; i++) {
       if (checkArr[i].children[0].checked) {
         checkBoxIdArr.push(checkArr[i].children[0].name);
       }
@@ -57,14 +56,13 @@ const Index = ({ barRecommendArr, setBarRecommendArr }) => {
     const newBarRecommendArr = barRecommendArr.filter((item) => {
       return !checkBoxIdArr.includes(item.uuid);
     });
-
     setBarRecommendArr(newBarRecommendArr);
-    for (let i = 0; i < checkArr.length; i++) {
+    for (let i = 0; i < checkArrLen; i++) {
       checkArr[i].children[0].checked = false;
     }
-
     const { displayName } = auth.currentUser;
-    for (let i = 0; i < checkBoxIdArr.length; i++) {
+    const checkBoxIdArrLen = checkBoxIdArr.length;
+    for (let i = 0; i < checkBoxIdArrLen; i++) {
       remove(
         ref(db, "user/" + displayName + "/BarRecommend/" + checkBoxIdArr[i])
       );
@@ -100,7 +98,7 @@ const Index = ({ barRecommendArr, setBarRecommendArr }) => {
             ? barRecommendArr.map((item) => {
                 const { uuid, barName, barRceommendText } = item;
                 return (
-                  <div>
+                  <div key={uuid}>
                     <input name={uuid} type="checkbox" />
                     <h4>{barName}</h4>
                     <p>{barRceommendText}</p>
