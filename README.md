@@ -60,7 +60,8 @@ Use firebase realtime database to handle CRUD
 
 
 
-![memberPage](https://user-images.githubusercontent.com/92699251/171172008-9da94a92-6923-4eb9-b346-84abf18daeee.gif)
+![memberPage](https://user-images.githubusercontent.com/92699251/171178883-0b658d4c-19e4-48f6-9d80-a1cabc9f53b7.gif)
+
 
 5. Responsive Web Design (RWD)
 
