@@ -40,7 +40,8 @@ Use firebase realtime database to handle CRUD
 
 
 
-![mainPage](https://user-images.githubusercontent.com/92699251/171171849-0a0796f7-5939-431c-8ab0-9e0d1eb56770.gif)
+![mainPage](https://user-images.githubusercontent.com/92699251/171176569-b468ee1c-1125-4634-97db-cd6ee774b881.gif)
+
 
 2. Member System
 
