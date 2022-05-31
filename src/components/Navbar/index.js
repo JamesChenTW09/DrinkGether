@@ -60,14 +60,27 @@ const Index = ({ scrollRef }) => {
   };
   const handleNavigateToActivity = () => {
     navigate("/activity");
-    setTimeout(() => {
-      scrollRef.current["calendar"].scrollIntoView({ behavior: "smooth" });
-    });
+    scrollToActivity();
+    function scrollToActivity() {
+      if (scrollRef.current["calendar"]) {
+        scrollRef.current["calendar"].scrollIntoView({ behavior: "smooth" });
+      } else {
+        setTimeout(() => {
+          scrollToActivity();
+        }, 100);
+      }
+    }
+  };
+  const handleNavigateToFaq = () => {
+    scrollRef.current["FAQ"].scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <>
-      <section className="bannerImg">
+      <section
+        className="bannerImg"
+        ref={(el) => (scrollRef.current = { ...scrollRef.current, main: el })}
+      >
         <div className="backgroundShadow"></div>
       </section>
       <nav>
@@ -77,7 +90,7 @@ const Index = ({ scrollRef }) => {
         <ul>
           <li onClick={() => navigate("/")}>Main</li>
           <li onClick={handleNavigateToActivity}>Quick Start</li>
-          <li>FAQ</li>
+          <li onClick={handleNavigateToFaq}>FAQ</li>
         </ul>
         <button onClick={handleAccountClick}>
           {userOrNotBtnText ? "Account" : "Log in"}

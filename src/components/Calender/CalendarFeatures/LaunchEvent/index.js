@@ -10,13 +10,12 @@ import {
   writeNewParticipant,
   writeMemberHoldEvent,
 } from "../../../../firebase.js";
-import { addAllEvent } from "../../../../redux_toolkit/slice/eventList";
+// import { addAllEvent } from "../../../../redux_toolkit/slice/eventList";
 import "../../../styles/Calendar/LaunchEvent/index.css";
 
 const Index = () => {
   const { startEventBox } = useSelector((state) => state.boolean);
   const { eventInput } = useSelector((state) => state.eventInput);
-  const { allEventList } = useSelector((state) => state.eventList);
   const dispatch = useDispatch();
 
   const handleCloseLaunch = () => {
@@ -56,21 +55,25 @@ const Index = () => {
     }
     const uuid = uuidv4();
     const { displayName } = auth.currentUser;
-    dispatch(addAllEvent(eventInput));
-    writeNewEvent(uuid, eventInput, displayName);
-    dispatch(
-      storeEventInput({
-        eventPlace: "",
-        eventDate: "",
-        eventTime: "",
-        eventMaxPal: "",
-        eventDescription: "",
-      })
-    );
 
-    writeMemberHoldEvent(displayName, uuid, eventInput);
-    writeNewParticipant(eventDate, uuid, "eventParticipants", displayName);
-    dispatch(notShowStartEventBox());
+    try {
+      writeNewEvent(uuid, eventInput, displayName);
+      writeMemberHoldEvent(displayName, uuid, eventInput);
+      writeNewParticipant(eventDate, uuid, "eventParticipants", displayName);
+      // dispatch(addAllEvent(eventInput));
+      dispatch(notShowStartEventBox());
+      dispatch(
+        storeEventInput({
+          eventPlace: "",
+          eventDate: "",
+          eventTime: "",
+          eventMaxPal: "",
+          eventDescription: "",
+        })
+      );
+    } catch {
+      setEventErrorMessage("Fail! Try again later");
+    }
   };
   return (
     <>

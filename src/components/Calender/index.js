@@ -35,6 +35,7 @@ const Index = ({ scrollRef }) => {
           setSmallNowMonth={setSmallNowMonth}
           setBigDateBox={setBigDateBox}
           setBigNowMonth={setBigNowMonth}
+          scrollRef={scrollRef}
         />
 
         <CalendarMain smallNowMonth={smallNowMonth} bigDateBox={bigDateBox} />

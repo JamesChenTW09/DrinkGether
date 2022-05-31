@@ -26,12 +26,14 @@ const Index = ({ handleAccountBoxCross }) => {
       signUpGreeting: false,
     });
     const { displayName } = auth.currentUser;
-    update(ref(db, "user/" + displayName + "/info/"), {
-      isOnline: false,
-    });
-    signOut(auth)
-      .then(() => {})
-      .catch(() => {});
+    try {
+      update(ref(db, "user/" + displayName + "/info/"), {
+        isOnline: false,
+      });
+      signOut(auth);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   //drag
@@ -51,7 +53,11 @@ const Index = ({ handleAccountBoxCross }) => {
         return item["uuid"] !== deleteId;
       })
     );
-    remove(ref(db, "user/" + displayName + "/info/notification/" + deleteId));
+    try {
+      remove(ref(db, "user/" + displayName + "/info/notification/" + deleteId));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (

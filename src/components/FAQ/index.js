@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
+import GlobalContext from "../../context/GlobalContext";
 import "./styles/index.css";
 
 const Index = ({ scrollRef }) => {
+  const { setShowLogInBox } = useContext(GlobalContext);
+  const handleShowLogInBox = () => {
+    setShowLogInBox((preState) => !preState);
+  };
   const handleShowFaqDetail = (e) => {
     const target = e.target;
     const targetP = target.parentNode.nextSibling;
@@ -20,7 +25,7 @@ const Index = ({ scrollRef }) => {
         ref={(el) => (scrollRef.current = { ...scrollRef.current, FAQ: el })}
       >
         <h3>FAQ</h3>
-        <p>Find your question or send yours to us through Contact below</p>
+        <p>Find your question or send yours through Contact below</p>
       </section>
       <section className="faqContainer">
         <div className="faqContent">
@@ -29,31 +34,19 @@ const Index = ({ scrollRef }) => {
             <span onClick={handleShowFaqDetail}>+</span>
           </div>
           <p>
-            You can click the <span>account</span> button to create a new
-            account
+            You can click the <span onClick={handleShowLogInBox}>log in</span>
+            button to create a new account
           </p>
         </div>
         <div className="faqContent">
           <div className="faqItemTitle">
-            <h4>1. How to create a new account?</h4>
+            <h4>1. Is my personal member page open for everyone?</h4>
             <span onClick={handleShowFaqDetail}>+</span>
           </div>
           <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolorum
-            nisi quod aspernatur ipsum praesentium doloremque blanditiis iure
-            qui itaque enim velit officiis laboriosam sint a nulla eius
-            cupiditate at quasi, amet ullam tempore. Consequuntur, hic! Eaque
-            vero molestiae animi numquam?
-          </p>
-        </div>
-        <div className="faqContent">
-          <div className="faqItemTitle">
-            <h4>1. How to create a new account?</h4>
-            <span onClick={handleShowFaqDetail}>+</span>
-          </div>
-          <p>
-            You can click the <span>account</span> button to create a new
-            account
+            Yes, it is. Everyone can visit your member page and check the basic
+            info, however, your private info like, email, password, and activity
+            detail are only for yourself
           </p>
         </div>
       </section>

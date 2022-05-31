@@ -35,8 +35,8 @@ const Index = () => {
     signInWithPopup(auth, provider).then((result) => {
       const user = result.user;
       if (result) {
-        const { displayName, email, uid, accessToken } = result["user"];
-        writeUserData(uid, email, displayName, accessToken);
+        const { displayName, email, uid } = result["user"];
+        writeUserData(uid, email, displayName, result["providerId"]);
         setAccountProcessing({
           ...accountProcessing,
           logIn: false,
@@ -105,7 +105,6 @@ const Index = () => {
             setLogInErrorMessage("User not found");
             break;
           default:
-            console.log(err.message);
             setLogInErrorMessage("fail");
         }
       });

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { getStorage, getDownloadURL, ref as sRef } from "firebase/storage";
-import { get, child } from "firebase/database";
+import { onValue, ref } from "firebase/database";
 import { sortMemberEventList } from "../../utils/utilities";
-import { dbRef } from "../../firebase.js";
+import { db } from "../../firebase.js";
 import BarRecommend from "./BarRecommend";
 import MemberInfo from "./MemberInfo";
 import MemberActivity from "./MemberActivity";
@@ -17,7 +17,7 @@ const Index = () => {
   const [storeUserNameId, setStoreUserNameId] = useState("");
   const [barRecommendArr, setBarRecommendArr] = useState([]);
   const [lineIdAllOption, setLineIdAllOption] = useState(false);
-  const [showLineId, setShowLineId] = useState(false);
+
   const [storeImg, setStoreImg] = useState(null);
   const [memberUpdateData, setMemberUpdateDate] = useState({
     job: "",
@@ -34,17 +34,15 @@ const Index = () => {
     const decodeNameId = decodeURIComponent(userNameId);
     setStoreUserNameId(decodeNameId);
 
-    get(child(dbRef, "user/" + decodeNameId)).then((snapshot) => {
-      if (snapshot.exists()) {
+    const userRoute = ref(db, "user/" + decodeNameId);
+    try {
+      onValue(userRoute, (snapshot) => {
         //send info data to MemberInfo
         const { info, BarRecommend } = snapshot.val();
         setMemberUpdateDate(info);
         // check line id is open or not
         const { lineIdForAll } = info;
         setLineIdAllOption(lineIdForAll);
-        if (lineIdForAll) {
-          setShowLineId((preState) => (preState = lineIdForAll));
-        }
 
         //check the headshot is exist or not
         const storage = getStorage();
@@ -71,8 +69,10 @@ const Index = () => {
           });
           setBarRecommendArr(barRecommendList);
         }
-      }
-    });
+      });
+    } catch (err) {
+      console.error(err);
+    }
   }, [location.pathname]);
 
   useEffect(() => {
@@ -92,8 +92,6 @@ const Index = () => {
           setStoreUserNameId={setStoreUserNameId}
           memberUpdateData={memberUpdateData}
           setMemberUpdateDate={setMemberUpdateDate}
-          showLineId={showLineId}
-          setShowLineId={setShowLineId}
           lineIdAllOption={lineIdAllOption}
           setLineIdAllOption={setLineIdAllOption}
           storeImg={storeImg}
@@ -101,6 +99,7 @@ const Index = () => {
         />
 
         <BarRecommend
+          storeUserNameId={storeUserNameId}
           barRecommendArr={barRecommendArr}
           setBarRecommendArr={setBarRecommendArr}
         />

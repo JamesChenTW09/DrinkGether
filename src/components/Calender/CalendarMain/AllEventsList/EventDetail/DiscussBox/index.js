@@ -36,21 +36,25 @@ const Index = ({ setEventDetailMessage }) => {
     if (auth.currentUser) {
       const { displayName } = auth.currentUser;
       dispatch(addDiscussList(discussData));
-      writeDiscussItem(
-        eventId,
-        uuidv4(),
-        displayName,
-        discussContent,
-        discussName,
-        dayjs().format("YYYY.MM.DD.H.mm.ss")
-      );
-      const participantsRoute =
-        "event/" + eventDate + "/" + eventId + "/eventParticipants/";
-      fetchData(participantsRoute).then((data) => {
-        const message = `${displayName}在您所參加的${eventDate},${eventPlace}活動中留言`;
-        sendNotificationMessage(eventDetail, data, uuidv4(), message);
-      });
-      setDiscussData({ discussContent: "", discussName: "" });
+      try {
+        writeDiscussItem(
+          eventId,
+          uuidv4(),
+          displayName,
+          discussContent,
+          discussName,
+          dayjs().format("YYYY.MM.DD.H.mm.ss")
+        );
+        const participantsRoute =
+          "event/" + eventDate + "/" + eventId + "/eventParticipants/";
+        fetchData(participantsRoute).then((data) => {
+          const message = `${displayName}在您所參加的${eventDate},${eventPlace}活動中留言`;
+          sendNotificationMessage(eventDetail, data, uuidv4(), message);
+        });
+        setDiscussData({ discussContent: "", discussName: "" });
+      } catch {
+        setEventDetailMessage("Fail! Try again");
+      }
     } else {
       setEventDetailMessage("please log in first");
     }

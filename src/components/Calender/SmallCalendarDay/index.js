@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import dayjs from "dayjs";
 
 const Day = ({ day }) => {
@@ -21,4 +21,4 @@ const Day = ({ day }) => {
   );
 };
 
-export default Day;
+export default memo(Day);

@@ -1,6 +1,6 @@
 .mainFeature {
   width: 1200px;
-  margin: 200px auto;
+  margin: 250px auto 200px auto;
   h3 {
     color: #2f4858;
     font-size: 2rem;
@@ -40,6 +40,8 @@
         list-style-type: none;
         margin-top: 30px;
         li {
+          font-weight: bold;
+          font-size: 19px;
           padding: 10px 0px;
         }
       }
@@ -136,7 +138,17 @@
       color: rgb(250, 250, 209);
       padding: 10px 5px;
       text-align: center;
+      span {
+        text-decoration: underline;
+        color: rgb(255, 255, 123);
+        cursor: pointer;
+      }
     }
+  }
+}
+@media (max-width: 900px) {
+  .mainFeature {
+    margin-top: 100px;
   }
 }
 
@@ -184,8 +196,8 @@
       h3 {
         &::before {
           border-top: 60px solid transparent;
-          border-left: 175px solid #8fb597;
-          border-right: 175px solid #8fb597;
+          border-left: 175px solid #005e4e;
+          border-right: 175px solid #005e4e;
         }
       }
     }
@@ -241,8 +253,8 @@
       h3 {
         &::before {
           border-top: 50px solid transparent;
-          border-left: 150px solid #8fb597;
-          border-right: 150px solid #8fb597;
+          border-left: 150px solid #005e4e;
+          border-right: 150px solid #005e4e;
         }
       }
     }

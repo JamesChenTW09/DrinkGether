@@ -43,52 +43,6 @@ const Index = ({ bigDateBox }) => {
         );
         //store every event to present on daily box
         dispatch(setInitialAllEventList(totalEventList));
-
-        //separate event >= 3 or < 3
-        // const lessThreeEvents = idList.filter((item) => {
-        //   return item.length <= 2;
-        // });
-        // const overThreeEvents = idList.filter((item) => {
-        //   return item.length > 2;
-        // });
-        // const allLessThreeEvents = lessThreeEvents.flat(Infinity);
-        // const allOverThreeEvents = overThreeEvents.flat(Infinity);
-
-        // const allLessItemList = showAllEventItemArr(
-        //   snapshot.val(),
-        //   allLessThreeEvents,
-        //   whichDayList
-        // );
-        // let allOverItemList = showAllEventItemArr(
-        //   snapshot.val(),
-        //   allOverThreeEvents,
-        //   whichDayList
-        // );
-
-        // let result = {};
-        // allOverItemList = allOverItemList.map((item) => {
-        //   if (item["eventDate"] in result) {
-        //     result[item["eventDate"]]++;
-        //   } else {
-        //     result[item["eventDate"]] = 1;
-        //   }
-        //   if (result[item["eventDate"]] === 3) {
-        //     return {
-        //       eventPlace: "還有......",
-        //       eventTime: "",
-        //       eventDate: item["eventDate"],
-        //     };
-        //   } else if (result[item["eventDate"]] > 3) {
-        //     item["eventDate"]++;
-        //   } else {
-        //     return item;
-        //   }
-        //   return result;
-        // });
-
-        // //store event only for present on calendar, not all events
-        // const finalEventArr = [...allOverItemList, ...allLessItemList];
-        // dispatch(setInitialCalendarEventList(finalEventArr));
       } else {
         return;
       }

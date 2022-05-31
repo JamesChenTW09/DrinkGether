@@ -4,9 +4,8 @@ import { remove, ref } from "firebase/database";
 import { auth, writeRecommendBar, db } from "../../../firebase";
 import "../../styles/Membership/BarRecommend/index.css";
 
-const Index = ({ barRecommendArr, setBarRecommendArr }) => {
+const Index = ({ barRecommendArr, setBarRecommendArr, storeUserNameId }) => {
   const [barRecommendMessage, setBarRecommendMessage] = useState("");
-
   const [recommendBar, setRecommendBarName] = useState({
     barName: "",
     barRceommendText: "",
@@ -23,6 +22,10 @@ const Index = ({ barRecommendArr, setBarRecommendArr }) => {
   };
   const handleSubmitRecommend = () => {
     const { displayName } = auth.currentUser;
+    if (displayName !== storeUserNameId) {
+      setBarRecommendMessage("This is not your member page");
+      return;
+    }
     if (barRecommendArr.length >= 3 || !barName || !barRceommendText) {
       setBarRecommendMessage("All inputs are required");
       return;
@@ -33,15 +36,25 @@ const Index = ({ barRecommendArr, setBarRecommendArr }) => {
       setBarRecommendMessage("Intro max 70 words");
       return;
     }
-    setBarRecommendArr([...barRecommendArr, recommendBar]);
-    writeRecommendBar(displayName, uuid, barName, barRceommendText);
-    setRecommendBarName({ barName: "", barRceommendText: "", uuid: "" });
-    setBarRecommendMessage("");
+
+    try {
+      writeRecommendBar(displayName, uuid, barName, barRceommendText);
+      setBarRecommendArr([...barRecommendArr, recommendBar]);
+      setRecommendBarName({ barName: "", barRceommendText: "", uuid: "" });
+      setBarRecommendMessage("");
+    } catch {
+      setBarRecommendMessage("Fail! Try again");
+    }
   };
 
   // handle delete bar recommend
   const recommendOutput = useRef();
   const handleDeleteRecommencBar = () => {
+    const { displayName } = auth.currentUser;
+    if (displayName !== storeUserNameId) {
+      setBarRecommendMessage("This is not your member page");
+      return;
+    }
     const checkBoxIdArr = [];
     const checkArr = recommendOutput.current.children;
     const checkArrLen = checkArr.length;
@@ -60,7 +73,6 @@ const Index = ({ barRecommendArr, setBarRecommendArr }) => {
     for (let i = 0; i < checkArrLen; i++) {
       checkArr[i].children[0].checked = false;
     }
-    const { displayName } = auth.currentUser;
     const checkBoxIdArrLen = checkBoxIdArr.length;
     for (let i = 0; i < checkBoxIdArrLen; i++) {
       remove(
@@ -79,7 +91,7 @@ const Index = ({ barRecommendArr, setBarRecommendArr }) => {
             onChange={handleRecommendBar}
             value={barName}
             type="text"
-            placeholder="Name of the Bar"
+            placeholder="Bar"
           />
           <textarea
             value={barRceommendText}

@@ -1,5 +1,6 @@
 import React from "react";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { showStartEventBox } from "../../../redux_toolkit/slice/boolean";
 import SmallCalendarDay from "../SmallCalendarDay";
@@ -13,9 +14,11 @@ const Index = ({
   setSmallNowMonth,
   setBigDateBox,
   setBigNowMonth,
+  scrollRef,
 }) => {
   const { allEventsBox } = useSelector((state) => state.boolean);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   //handle event list
   const handleAddOneMonth = () => {
@@ -32,7 +35,12 @@ const Index = ({
     }
     dispatch(showStartEventBox());
   };
-
+  const handleBackToMainPage = () => {
+    navigate("/");
+    setTimeout(() => {
+      scrollRef.current["main"].scrollIntoView();
+    });
+  };
   //change big calendar same month with small calendar
   const handleChangeBigCalendar = () => {
     setBigDateBox(getMonth(smallNowMonth));
@@ -44,7 +52,10 @@ const Index = ({
       <LaunchEvent />
       <section className="calendarFeatures">
         <div onClick={handleShowNewEventBox} className="launchEventBtn">
-          發起活動
+          Start
+        </div>
+        <div onClick={handleBackToMainPage} className="launchEventBtn">
+          Back to Main
         </div>
         <div className="smallCalendarHeader">
           <div className="smallCalendarMonth">

@@ -67,6 +67,8 @@ const Index = () => {
           }
         }
         dispatch(setInitialDiscussList(finalDiscussArr));
+      } else {
+        return;
       }
     });
   };

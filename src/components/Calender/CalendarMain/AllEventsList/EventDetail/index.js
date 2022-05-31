@@ -71,37 +71,41 @@ const Index = () => {
   };
   //delete an event
   const handleDeleteEvent = () => {
-    fetchData(participantsRoute).then((data) => {
-      deleteMemberEventData(data, eventDetail);
-      const message = `您在${eventDate}所參加的${eventPlace}活動，已被刪除`;
-      sendNotificationMessage(eventDetail, data, uuidv4(), message);
-    });
-    remove(ref(db, "event/" + eventDate + "/" + eventId));
-    remove(ref(db, "discuss/" + eventId));
+    try {
+      fetchData(participantsRoute).then((data) => {
+        deleteMemberEventData(data, eventDetail);
+        const message = `您在${eventDate}所參加的${eventPlace}活動，已被刪除`;
+        sendNotificationMessage(eventDetail, data, uuidv4(), message);
+      });
+      remove(ref(db, "event/" + eventDate + "/" + eventId));
+      remove(ref(db, "discuss/" + eventId));
 
-    // if no event today, back to calendar page
-    if (dailyEventList.length === 1) {
-      dispatch(notShowAllEventsBox());
+      // if no event today, back to calendar page
+      if (dailyEventList.length === 1) {
+        dispatch(notShowAllEventsBox());
+      }
+
+      dispatch(
+        filterAllEventList(
+          allEventList.filter((item) => {
+            return item["eventId"] !== eventId;
+          })
+        )
+      );
+      dispatch(
+        filterDailyEvent(
+          dailyEventList.filter((item) => {
+            return item["eventId"] !== eventId;
+          })
+        )
+      );
+
+      dispatch(setEmptyDiscussList());
+      dispatch(notShowEventDetailBox());
+      dispatch(notShowDiscussAreaBox());
+    } catch (err) {
+      console.error(err);
     }
-
-    dispatch(
-      filterAllEventList(
-        allEventList.filter((item) => {
-          return item["eventId"] !== eventId;
-        })
-      )
-    );
-    dispatch(
-      filterDailyEvent(
-        dailyEventList.filter((item) => {
-          return item["eventId"] !== eventId;
-        })
-      )
-    );
-
-    dispatch(setEmptyDiscussList());
-    dispatch(notShowEventDetailBox());
-    dispatch(notShowDiscussAreaBox());
   };
   //cancel join event
   const handleCancelJoin = () => {
@@ -118,22 +122,26 @@ const Index = () => {
       setEventDetailMessage("您是主辦人，如欲取消請直接刪除");
       return;
     }
-    remove(ref(db, removeParticipantRoute));
-    remove(ref(db, "user/" + displayName + "/info/joinEvents/" + eventId));
-    update(ref(db, "event/" + eventDate + "/" + eventId), {
-      eventCurrentPal: currentAttendant,
-    });
+    try {
+      remove(ref(db, removeParticipantRoute));
+      remove(ref(db, "user/" + displayName + "/info/joinEvents/" + eventId));
+      update(ref(db, "event/" + eventDate + "/" + eventId), {
+        eventCurrentPal: currentAttendant,
+      });
 
-    fetchData(participantsRoute).then((data) => {
-      updateCurrentPal(data, eventDetail, currentAttendant);
-      const message = `您在${eventDate}所參加的${eventPlace}活動，${displayName}取消參加`;
-      sendNotificationMessage(eventDetail, data, uuidv4(), message);
-    });
+      fetchData(participantsRoute).then((data) => {
+        updateCurrentPal(data, eventDetail, currentAttendant);
+        const message = `您在${eventDate}所參加的${eventPlace}活動，${displayName}取消參加`;
+        sendNotificationMessage(eventDetail, data, uuidv4(), message);
+      });
 
-    if (eventDetailBox) {
-      dispatch(notShowEventDetailBox());
-    } else {
-      dispatch(showEventDetailBox());
+      if (eventDetailBox) {
+        dispatch(notShowEventDetailBox());
+      } else {
+        dispatch(showEventDetailBox());
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
   //one more attendent
@@ -156,21 +164,30 @@ const Index = () => {
       return;
     } else {
       currentAttendant += 1;
-      update(ref(db, "event/" + eventDate + "/" + eventId), {
-        eventCurrentPal: currentAttendant,
-      });
-      writeNewParticipant(eventDate, eventId, "eventParticipants", displayName);
-      writeMemberJoinEvent(displayName, currentAttendant, eventDetail);
-      fetchData(participantsRoute).then((data) => {
-        updateCurrentPal(data, eventDetail, currentAttendant);
-        const message = `您在${eventDate}所參加的${eventPlace}活動，${displayName}加入活動`;
-        sendNotificationMessage(eventDetail, data, uuidv4(), message);
-      });
-      eventCurrentPal = currentAttendant;
-      if (eventDetailBox) {
-        dispatch(notShowEventDetailBox());
-      } else {
-        dispatch(showEventDetailBox());
+      try {
+        update(ref(db, "event/" + eventDate + "/" + eventId), {
+          eventCurrentPal: currentAttendant,
+        });
+        writeNewParticipant(
+          eventDate,
+          eventId,
+          "eventParticipants",
+          displayName
+        );
+        writeMemberJoinEvent(displayName, currentAttendant, eventDetail);
+        fetchData(participantsRoute).then((data) => {
+          updateCurrentPal(data, eventDetail, currentAttendant);
+          const message = `您在${eventDate}所參加的${eventPlace}活動，${displayName}加入活動`;
+          sendNotificationMessage(eventDetail, data, uuidv4(), message);
+        });
+        eventCurrentPal = currentAttendant;
+        if (eventDetailBox) {
+          dispatch(notShowEventDetailBox());
+        } else {
+          dispatch(showEventDetailBox());
+        }
+      } catch (err) {
+        console.error(err);
       }
     }
   };

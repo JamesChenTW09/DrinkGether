@@ -1,5 +1,4 @@
 import dayjs from "dayjs";
-import { auth } from "../firebase";
 
 export function orderByTime(listOfId, timeLabel, reverse = false) {
   const idList = Object.keys(listOfId);
@@ -99,12 +98,6 @@ export function getMonth(month = dayjs().month()) {
     });
   });
   return daysMatrix;
-}
-
-export function checkUserOrVisitor(user, visitor, storeUserId) {
-  return auth.currentUser && storeUserId === auth.currentUser.displayName
-    ? { display: user }
-    : { display: visitor };
 }
 
 function merge(arr1, arr2, reverse) {

@@ -44,6 +44,11 @@
   border-radius: 30px;
   display: none;
 }
+.faqContainer .faqContent p span {
+  cursor: pointer;
+  text-decoration: underline;
+  color: rgb(104, 104, 0);
+}
 
 @media (max-width: 1200px) {
   .faqContainer {

@@ -1,6 +1,6 @@
 .mainFeature {
   width: 1200px;
-  margin: 200px auto;
+  margin: 250px auto 200px auto;
 }
 .mainFeature h3 {
   color: #2f4858;
@@ -41,6 +41,8 @@
   margin-top: 30px;
 }
 .mainFeature .featuresContainer .featureItem ul li {
+  font-weight: bold;
+  font-size: 19px;
   padding: 10px 0px;
 }
 
@@ -137,7 +139,17 @@
   padding: 10px 5px;
   text-align: center;
 }
+.guideSteps .stepContainer p span {
+  text-decoration: underline;
+  color: rgb(255, 255, 123);
+  cursor: pointer;
+}
 
+@media (max-width: 900px) {
+  .mainFeature {
+    margin-top: 100px;
+  }
+}
 @media (max-width: 1200px) {
   .mainFeature {
     width: 90%;
@@ -184,8 +196,8 @@
   }
   .guideSteps .stepContainer h3::before {
     border-top: 60px solid transparent;
-    border-left: 175px solid #8fb597;
-    border-right: 175px solid #8fb597;
+    border-left: 175px solid #005e4e;
+    border-right: 175px solid #005e4e;
   }
 }
 @media (max-width: 650px) {
@@ -238,7 +250,7 @@
   }
   .guideSteps .stepContainer h3::before {
     border-top: 50px solid transparent;
-    border-left: 150px solid #8fb597;
-    border-right: 150px solid #8fb597;
+    border-left: 150px solid #005e4e;
+    border-right: 150px solid #005e4e;
   }
 }/*# sourceMappingURL=index.css.map */

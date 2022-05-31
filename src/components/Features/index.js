@@ -1,7 +1,15 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/Features/index.css";
 import icon from "../styles/photos/beer.jpg";
 const Index = ({ scrollRef }) => {
+  const navigate = useNavigate();
+  const handleMoveToActivity = () => {
+    navigate("/activity");
+    setTimeout(() => {
+      scrollRef.current["calendar"].scrollIntoView();
+    });
+  };
   return (
     <>
       <section
@@ -11,46 +19,45 @@ const Index = ({ scrollRef }) => {
         }
       >
         <h3>Why us ??</h3>
-        <p>A new paradise for Alcholic, never drink alone again</p>
+        <p>Find your Drink partner easily. Never drink alone again</p>
         <section className="featuresContainer">
           <div className="featureItem">
             <div className="featureItemIconContainer">
-              <i class="fa-solid fa-champagne-glasses"></i>
+              <i class="fa-solid fa-martini-glass"></i>
             </div>
             <ul>
-              <li>想喝酒找不到人?</li>
-              <li>想認識新朋友?</li>
-              <li>DrinkGether幫你!</li>
+              <li>No Friend drink with?</li>
+              <li>Make New Friend?</li>
+              <li>DrinkGether Helps You!</li>
             </ul>
           </div>
           <div className="featureItem">
             <div className="featureItemIconContainer">
-              <i class="fa-solid fa-champagne-glasses"></i>
+              <i class="fa-solid fa-calendar-days"></i>
             </div>
-
             <ul>
-              <li>操作簡單，一鍵發起活動</li>
-              <li>日曆介面，方便瀏覽</li>
+              <li>Calendar Style </li>
+              <li>Friendly Operational Interface</li>
             </ul>
           </div>
           <div className="featureItem">
             <div className="featureItemIconContainer">
-              <i class="fa-solid fa-champagne-glasses"></i>
+              <i class="fa-brands fa-rocketchat"></i>
             </div>
             <ul>
-              <li>會員評論功能，見面更安心</li>
-              <li>專屬討論區，你我有保障</li>
-              <li>精美個人頁面</li>
+              <li>Discuss before meet</li>
+              <li>Easily Join and Cancel</li>
+              <li>Free Viewing Member Info</li>
             </ul>
           </div>
           <div className="featureItem">
             <div className="featureItemIconContainer">
-              <i class="fa-solid fa-champagne-glasses"></i>
+              <i class="fa-solid fa-address-card"></i>
             </div>
             <ul>
-              <li>會員評論功能，見面更安心</li>
-              <li>專屬討論區，你我有保障</li>
-              <li>精美個人頁面</li>
+              <li>Friendly Member Page</li>
+              <li>Bar Recommend</li>
+              <li>Notification system</li>
             </ul>
           </div>
         </section>
@@ -60,35 +67,38 @@ const Index = ({ scrollRef }) => {
         ref={(el) => (scrollRef.current = { ...scrollRef.current, Steps: el })}
       >
         <h3>How to Start ?</h3>
-        <p>詳細介紹讓您五分鐘內開始找活動</p>
+        <p>Follow 3 Steps for Quick Start</p>
       </div>
       <section className="guideSteps">
         <div className="stepContainer">
           <div className="guideImgContainer">
             <img src={icon} alt="" />
           </div>
-          <h3>註冊會員</h3>
-          <p>1.點擊右上角會員登入，完成註冊 / 登入手續</p>
-          <p>2.進入會員頁面，編輯個人資料</p>
-          <p>3.完成後即可開始參加活動</p>
+          <h3>Create a Account</h3>
+          <p>1.Click upper right Log in button</p>
+          <p>2.Fill in requested datas</p>
+          <p>
+            3.After signing up, visit&nbsp;
+            <span onClick={handleMoveToActivity}>Calendar</span> to start
+          </p>
         </div>
         <div className="stepContainer">
           <div className="guideImgContainer">
             <img src={icon} alt="" />
           </div>
-          <h3>註冊會員</h3>
-          <p>123456789123456789</p>
-          <p>123456789123456789</p>
-          <p>123456789123456789</p>
+          <h3>Start / Join Activity</h3>
+          <p>1.Start or Join activity</p>
+          <p>2.Click to see detail</p>
+          <p>3.Discuss before joining</p>
         </div>
         <div className="stepContainer">
           <div className="guideImgContainer">
             <img src={icon} alt="" />
           </div>
-          <h3>註冊會員</h3>
-          <p>123456789123456789</p>
-          <p>123456789123456789</p>
-          <p>123456789123456789</p>
+          <h3>Check Member Page</h3>
+          <p>1.Fill in your Basic Info</p>
+          <p>2.Manage your activities</p>
+          <p>3.Look forward to the activity coming</p>
         </div>
       </section>
     </>
