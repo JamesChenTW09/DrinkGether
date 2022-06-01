@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { showStartEventBox } from "../../../redux_toolkit/slice/boolean";
 import SmallCalendarDay from "../SmallCalendarDay";
 import LaunchEvent from "./LaunchEvent";
-import "../../styles/Calendar/CalendarFeatures/index.css";
+import "../../../styles/Calendar/CalendarFeatures/index.css";
 const Index = ({
   setSmallDateBox,
   smallDateBox,

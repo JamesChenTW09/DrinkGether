@@ -11,8 +11,8 @@ import {
 import GlobalContext from "../../../../context/GlobalContext.js";
 import SignUp from "./SignUp/index.js";
 import ForgotPassword from "./ForgotPassword/";
-import "../../../styles/Navbar/LogInSignUp/index.css";
-import googleIcon from "../../../styles/icon/googleIcon.png";
+import "../../../../styles/Navbar/LogInSignUp/index.css";
+import googleIcon from "../../../../styles/icon/googleIcon.png";
 
 const Index = () => {
   const {

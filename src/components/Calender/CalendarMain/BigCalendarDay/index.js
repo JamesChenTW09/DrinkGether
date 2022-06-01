@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useSelector, useDispatch } from "react-redux";
 import { reserveClickDate } from "../../../../redux_toolkit/slice/eventList";
 import { showAllEventsBox } from "../../../../redux_toolkit/slice/boolean";
-import "../../../styles/Calendar/CalendarMain/index.css";
+import "../../../../styles/Calendar/CalendarMain/index.css";
 
 const Day = ({ day }) => {
   const { allEventsBox, startEventBox } = useSelector((state) => state.boolean);

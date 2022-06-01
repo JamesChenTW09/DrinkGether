@@ -4,7 +4,7 @@ import { getMonth } from "../../utils/utilities";
 import CalendarFeatures from "./CalendarFeatures";
 import CalendarHeader from "./CalendarHeader";
 import CalendarMain from "./CalendarMain";
-import "../styles/Calendar/index.css";
+import "../../styles/Calendar/index.css";
 
 const Index = ({ scrollRef }) => {
   const [bigDateBox, setBigDateBox] = useState(getMonth());

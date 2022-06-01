@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { update, ref } from "firebase/database";
 import { getStorage, uploadBytes, ref as sRef } from "firebase/storage";
 import { auth, db } from "../../../firebase.js";
-import "../../styles/Membership/MemberInfo/index.css";
+import "../../../styles/Membership/MemberInfo/index.css";
 const Index = ({
   storeUserNameId,
   memberUpdateData,

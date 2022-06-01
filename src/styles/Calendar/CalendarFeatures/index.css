@@ -60,6 +60,7 @@
   flex-wrap: wrap;
 }
 .calendarFeatures .smallCalendar .rowMap .dayMap {
+  cursor: pointer;
   height: 32px;
   width: 34px;
   display: flex;
@@ -71,7 +72,6 @@
   border-radius: 50%;
   height: 24px;
   padding: 2px 5px;
-  cursor: pointer;
 }
 
 @media (max-width: 950px) {

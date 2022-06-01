@@ -13,7 +13,7 @@ import {
   setInitialDailyEventList,
   setInitialDiscussList,
 } from "../../../../redux_toolkit/slice/eventList";
-import "../../../styles/Calendar/AllEvensList/index.css";
+import "../../../../styles/Calendar/AllEvensList/index.css";
 
 const Index = () => {
   const { allEventsBox, eventDetailBox } = useSelector(

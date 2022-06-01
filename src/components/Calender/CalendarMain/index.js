@@ -9,7 +9,7 @@ import { db } from "../../../firebase";
 import { showStartEventBox } from "../../../redux_toolkit/slice/boolean";
 import { storeEventInput } from "../../../redux_toolkit/slice/startEvent";
 import { setInitialAllEventList } from "../../../redux_toolkit/slice/eventList";
-import "../../styles/Calendar/CalendarMain/index.css";
+import "../../../styles/Calendar/CalendarMain/index.css";
 
 const Index = ({ bigDateBox }) => {
   const { allEventsBox } = useSelector((state) => state.boolean);

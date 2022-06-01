@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/Footer/index.css";
+import "../../styles/Footer/index.css";
 
 const Index = ({ scrollRef }) => {
   const navigate = useNavigate();

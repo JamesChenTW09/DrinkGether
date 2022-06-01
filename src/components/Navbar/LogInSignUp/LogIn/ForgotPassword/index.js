@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../../../../../firebase.js";
 import GlobalContext from "../../../../../context/GlobalContext.js";
-import "../../../../styles/Navbar/LogInSignUp/index.css";
+import "../../../../../styles/Navbar/LogInSignUp/index.css";
 
 const ForgotPassword = () => {
   const { accountProcessing, setAccountProcessing, setInputEmail, inputEmail } =

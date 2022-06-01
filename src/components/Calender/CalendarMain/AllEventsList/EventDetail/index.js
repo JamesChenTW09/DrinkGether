@@ -26,7 +26,7 @@ import {
   sendNotificationMessage,
   updateCurrentPal,
 } from "../../../../../firebase.js";
-import "../../../../styles/Calendar/EventDetail/index.css";
+import "../../../../../styles/Calendar/EventDetail/index.css";
 
 const Index = () => {
   const { allEventsBox, eventDetailBox, discussAreaBox } = useSelector(

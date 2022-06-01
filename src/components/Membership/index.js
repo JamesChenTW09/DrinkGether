@@ -7,7 +7,7 @@ import { db } from "../../firebase.js";
 import BarRecommend from "./BarRecommend";
 import MemberInfo from "./MemberInfo";
 import MemberActivity from "./MemberActivity";
-import "../styles/Membership/index.css";
+import "../../styles/Membership/index.css";
 
 const Index = () => {
   const location = useLocation();

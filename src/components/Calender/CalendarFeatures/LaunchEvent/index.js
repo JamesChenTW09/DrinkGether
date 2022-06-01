@@ -11,7 +11,7 @@ import {
   writeMemberHoldEvent,
 } from "../../../../firebase.js";
 // import { addAllEvent } from "../../../../redux_toolkit/slice/eventList";
-import "../../../styles/Calendar/LaunchEvent/index.css";
+import "../../../../styles/Calendar/LaunchEvent/index.css";
 
 const Index = () => {
   const { startEventBox } = useSelector((state) => state.boolean);
@@ -48,10 +48,15 @@ const Index = () => {
     } else if (eventDate < dayjs().format("YYYY-MM-DD")) {
       setEventErrorMessage("Wrong Date");
       return;
-    } else if (eventPlace.length > 12) {
+    } else if (eventPlace.length > 18) {
       setEventErrorMessage("bar Name Max 12 words");
+      return;
     } else if (eventMaxPal > 16) {
       setEventErrorMessage("Max Pal is 16");
+      return;
+    } else if (eventDescription.length > 80) {
+      setEventErrorMessage("Description Max 80 words");
+      return;
     }
     const uuid = uuidv4();
     const { displayName } = auth.currentUser;
@@ -95,6 +100,7 @@ const Index = () => {
               name="eventPlace"
               value={eventPlace}
               type="text"
+              maxLength={18}
             />
           </div>
           <div className="eventBarDate">
@@ -136,6 +142,7 @@ const Index = () => {
               onChange={handleGetEventInput}
               value={eventDescription}
               name="eventDescription"
+              maxLength={80}
             ></textarea>
           </div>
           <p className="eventErrorMessage">{eventErrorMessage}</p>

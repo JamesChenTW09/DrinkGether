@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/Features/index.css";
-import icon from "../styles/photos/beer.jpg";
+import "../../styles/Features/index.css";
+import icon from "../../styles/photos/beer.jpg";
 const Index = ({ scrollRef }) => {
   const navigate = useNavigate();
   const handleMoveToActivity = () => {

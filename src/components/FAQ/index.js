@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import GlobalContext from "../../context/GlobalContext";
-import "./styles/index.css";
+import "../../styles/FAQ/index.css";
 
 const Index = ({ scrollRef }) => {
   const { setShowLogInBox } = useContext(GlobalContext);

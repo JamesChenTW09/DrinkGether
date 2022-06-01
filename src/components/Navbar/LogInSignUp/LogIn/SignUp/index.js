@@ -4,8 +4,8 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import GlobalContext from "../../../../../context/GlobalContext.js";
 import Greeting from "./Greeting";
 import { writeUserData, auth, db, fetchData } from "../../../../../firebase.js";
-import "../../../../styles/Navbar/LogInSignUp/index.css";
-import googleIcon from "../../../../styles/icon/googleIcon.png";
+import "../../../../../styles/Navbar/LogInSignUp/index.css";
+import googleIcon from "../../../../../styles/icon/googleIcon.png";
 
 const SignUp = ({ handleAccountBoxCross }) => {
   const { accountProcessing, setAccountProcessing, setGreetingName } =
@@ -42,59 +42,71 @@ const SignUp = ({ handleAccountBoxCross }) => {
       loadingCircle: true,
     });
     fetchData("/user").then((data) => {
-      const userArr = Object.keys(data);
-      if (userArr.includes(name)) {
-        setSignUpErrorMessage("Name repeated");
+      if (data) {
+        const userArr = Object.keys(data);
+        if (userArr.includes(name)) {
+          setSignUpErrorMessage("Name repeated");
+          setAccountProcessing({
+            ...accountProcessing,
+            signUp: true,
+            loadingCircle: false,
+          });
+          return;
+        } else {
+          createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+              updateProfile(auth.currentUser, { displayName: name });
+              const user = userCredential.user;
+              setGreetingName(name);
+              writeUserData(user.uid, email, name, password);
+              update(ref(db, "user/" + name + "/info/"), {
+                isOnline: true,
+              });
+              setSignUpData({
+                name: "",
+                email: "",
+                password: "",
+              });
+              setSignUpErrorMessage("");
+              setAccountProcessing({
+                ...accountProcessing,
+                logInGreeting: true,
+                signUp: false,
+                loadingCircle: false,
+              });
+            })
+            .catch((err) => {
+              setAccountProcessing({
+                ...accountProcessing,
+                signUp: true,
+                loadingCircle: false,
+              });
+              if (err.message === "Firebase: Error (auth/invalid-email).") {
+                setSignUpErrorMessage("Not a Valid Email");
+              } else if (
+                err.message ===
+                "Firebase: Password should be at least 6 characters (auth/weak-password)."
+              ) {
+                setSignUpErrorMessage(
+                  "Password should be at least 6 characters"
+                );
+              } else if (
+                err.message === "Firebase: Error (auth/email-already-in-use)."
+              ) {
+                setSignUpErrorMessage("Email-already-in-use");
+              } else {
+                setSignUpErrorMessage("fail");
+              }
+            });
+        }
+      } else {
         setAccountProcessing({
           ...accountProcessing,
           signUp: true,
           loadingCircle: false,
         });
+        setSignUpErrorMessage("Fail, try again later");
         return;
-      } else {
-        createUserWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-            updateProfile(auth.currentUser, { displayName: name });
-            const user = userCredential.user;
-            setGreetingName(name);
-            writeUserData(user.uid, email, name, password);
-            update(ref(db, "user/" + name + "/info/"), {
-              isOnline: true,
-            });
-            setSignUpData({
-              name: "",
-              email: "",
-              password: "",
-            });
-            setSignUpErrorMessage("");
-            setAccountProcessing({
-              ...accountProcessing,
-              logInGreeting: true,
-              signUp: false,
-              loadingCircle: false,
-            });
-          })
-          .catch((err) => {
-            setAccountProcessing({
-              ...accountProcessing,
-              signUp: true,
-              loadingCircle: false,
-            });
-            if (err.message === "Firebase: Error (auth/invalid-email).") {
-              setSignUpErrorMessage("Not a Valid Email");
-            } else if (
-              err.message ===
-              "Firebase: Password should be at least 6 characters (auth/weak-password)."
-            ) {
-              setSignUpErrorMessage("Password should be at least 6 characters");
-            } else if (
-              err.message === "Firebase: Error (auth/email-already-in-use)."
-            ) {
-              setSignUpErrorMessage("Email-already-in-use");
-            } else {
-              setSignUpErrorMessage("fail");
-            }
-          });
       }
     });
   };

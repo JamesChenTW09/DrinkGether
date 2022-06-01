@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { remove, ref } from "firebase/database";
 import { auth, writeRecommendBar, db } from "../../../firebase";
-import "../../styles/Membership/BarRecommend/index.css";
+import "../../../styles/Membership/BarRecommend/index.css";
 
 const Index = ({ barRecommendArr, setBarRecommendArr, storeUserNameId }) => {
   const [barRecommendMessage, setBarRecommendMessage] = useState("");

@@ -4,7 +4,7 @@ import { ref, remove, update } from "firebase/database";
 import { useNavigate } from "react-router-dom";
 import GlobalContext from "../../../../../../context/GlobalContext";
 import { auth, db } from "../../../../../../firebase";
-import "../../../../../styles/Navbar/LogInSignUp/index.css";
+import "../../../../../../styles/Navbar/LogInSignUp/index.css";
 
 const Index = ({ handleAccountBoxCross }) => {
   const {

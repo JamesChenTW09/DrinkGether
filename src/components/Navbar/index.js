@@ -5,7 +5,7 @@ import { orderByTime } from "../../utils/utilities";
 import { auth, fetchData } from "../../firebase.js";
 import LogInSignUp from "./LogInSignUp/LogIn/";
 import GlobalContext from "../../context/GlobalContext";
-import "../styles/Navbar/index.css";
+import "../../styles/Navbar/index.css";
 
 const Index = ({ scrollRef }) => {
   const {

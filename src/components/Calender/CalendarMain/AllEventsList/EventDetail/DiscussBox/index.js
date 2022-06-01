@@ -9,7 +9,7 @@ import {
   sendNotificationMessage,
   fetchData,
 } from "../../../../../../firebase.js";
-import "../../../../../styles/Calendar/EventDetail/index.css";
+import "../../../../../../styles/Calendar/EventDetail/index.css";
 
 const Index = ({ setEventDetailMessage }) => {
   const { discussAreaBox } = useSelector((state) => state.boolean);

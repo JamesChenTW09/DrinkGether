@@ -9,7 +9,7 @@ import {
   updateCurrentPal,
   sendNotificationMessage,
 } from "../../../firebase";
-import "../../styles/Membership/MemberActivity/index.css";
+import "../../../styles/Membership/MemberActivity/index.css";
 const Index = ({
   memberHoldEventList,
   memberJoinEventList,
