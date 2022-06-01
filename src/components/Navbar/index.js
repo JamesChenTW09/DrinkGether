@@ -72,7 +72,10 @@ const Index = ({ scrollRef }) => {
     }
   };
   const handleNavigateToFaq = () => {
-    scrollRef.current["FAQ"].scrollIntoView({ behavior: "smooth" });
+    navigate("/");
+    setTimeout(() => {
+      scrollRef.current["FAQ"].scrollIntoView({ behavior: "smooth" });
+    });
   };
 
   return (

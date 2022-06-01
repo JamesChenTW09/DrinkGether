@@ -40,7 +40,7 @@ const Index = ({ scrollRef }) => {
         </div>
         <div className="faqContent">
           <div className="faqItemTitle">
-            <h4>1. Is my personal member page open for everyone?</h4>
+            <h4>2. Is my personal member page open for everyone?</h4>
             <span onClick={handleShowFaqDetail}>+</span>
           </div>
           <p>

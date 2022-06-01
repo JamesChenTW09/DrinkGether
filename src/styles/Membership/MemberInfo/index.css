@@ -7,8 +7,9 @@
   grid-row: 2/25;
 }
 .basicInfo .memberImg {
+  outline: 1px solid rgb(250, 250, 209);
   margin: 15px auto;
-  width: 300px;
+  width: 250px;
   height: 300px;
   position: relative;
 }

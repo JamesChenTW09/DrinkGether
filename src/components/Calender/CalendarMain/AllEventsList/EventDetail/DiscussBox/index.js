@@ -34,6 +34,13 @@ const Index = ({ setEventDetailMessage }) => {
   };
   const handleSendNewDiscuss = () => {
     if (auth.currentUser) {
+      if (!discussContent) {
+        setEventDetailMessage("It's Empty");
+        return;
+      } else if (discussContent.length > 50) {
+        setEventDetailMessage("Max 50 words");
+        return;
+      }
       const { displayName } = auth.currentUser;
       dispatch(addDiscussList(discussData));
       try {

@@ -40,11 +40,11 @@ body {
 
 .bannerImg {
   width: 100%;
-  height: 670px;
+  height: 100vh;
   background: url("../photos/beer.jpg") no-repeat;
   background-position: center;
   background-size: cover;
-  position: absolute;
+  // position: absolute;
   .backgroundShadow {
     height: inherit;
     width: 100%;
@@ -53,13 +53,14 @@ body {
 }
 nav {
   width: 80%;
-  margin: 0px auto;
-  padding-top: 20px;
   opacity: 0;
   z-index: 10;
   display: grid;
   grid-template-columns: 5% repeat(16, 5%) 13% 2%;
   align-items: center;
+  position: absolute;
+  top: 30px;
+  left: 10%;
   transform: translateY(-50px);
   animation: navSlideDown 0.4s 1s forwards;
   h1 {
@@ -103,11 +104,13 @@ nav {
 }
 
 .bannerContent {
+  position: absolute;
+  top: 200px;
+  left: 10%;
   width: 80%;
   height: 350px;
   z-index: 10;
   padding-left: 4%;
-  margin: 100px auto 200px auto;
   color: rgb(252, 252, 209);
   font-size: 2.4rem;
   opacity: 0;
@@ -155,11 +158,7 @@ nav {
 }
 
 @media (max-width: 900px) {
-  .bannerImg {
-    height: 100vh;
-  }
   nav {
-    width: 90%;
     h1 {
       grid-column: 1/9;
       font-size: 1.6rem;
@@ -175,45 +174,38 @@ nav {
     }
   }
   .bannerContent {
+    padding-left: 0%;
+
     font-size: 2rem;
   }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 600px) {
   nav {
-    width: 95%;
     h1 {
-      grid-column: 1/12;
+      grid-column: 1/14;
       font-size: 1.5rem;
     }
     ul {
       display: none;
     }
     button {
-      grid-column: 17/19;
+      grid-column: 16/19;
       font-size: 14px;
     }
   }
 
   .bannerContent {
-    width: 95%;
     height: 350px;
-    font-size: 1.8rem;
+    font-size: 1.3rem;
     padding: 0;
-    margin: 100px auto 200px auto;
     h2 {
       padding: 5px 0px;
     }
     button {
-      font-size: 1.3rem;
+      font-size: 1rem;
       padding: 8px 16px;
       margin-top: 40px;
     }
-  }
-}
-
-@media (max-width: 390px) {
-  .bannerContent {
-    font-size: 1.5rem;
   }
 }

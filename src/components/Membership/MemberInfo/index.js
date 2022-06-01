@@ -27,9 +27,9 @@ const Index = ({
       setStoreImg(null);
       const canvas = photo.current["canvasPhoto"];
       const ctx = canvas.getContext("2d");
-      canvas.width = 300;
+      canvas.width = 250;
       canvas.height = 300;
-      ctx.drawImage(img, 0, 0, 300, 300);
+      ctx.drawImage(img, 0, 0, 250, 300);
       canvas.toBlob(
         (blob) => {
           try {
@@ -109,6 +109,7 @@ const Index = ({
             ref={(el) => (photo.current = { ...photo.current, finalImg: el })}
           >
             {storeImg && <img alt="headShot" src={storeImg}></img>}
+
             <canvas
               style={storeImg ? { display: "none" } : { display: "block" }}
               ref={(el) =>

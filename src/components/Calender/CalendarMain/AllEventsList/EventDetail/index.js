@@ -237,6 +237,10 @@ const Index = () => {
           <p>{eventPlace}</p>
         </div>
         <div className="detailBar">
+          <h4>主辦人 :</h4>
+          <p>{userId}</p>
+        </div>
+        <div className="detailBar">
           <h4>時間：</h4>
           <p>{eventTime}</p>
         </div>

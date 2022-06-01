@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { getStorage, getDownloadURL, ref as sRef } from "firebase/storage";
 import { onValue, ref } from "firebase/database";
@@ -11,6 +11,7 @@ import "../../styles/Membership/index.css";
 
 const Index = () => {
   const location = useLocation();
+  const memberRef = useRef();
   const [memberHoldEventList, setMemberHoldEventList] = useState([]);
   const [memberJoinEventList, setMemberJoinEventList] = useState([]);
   const [showContactBox, setShowContactBox] = useState(false);
@@ -76,6 +77,7 @@ const Index = () => {
   }, [location.pathname]);
 
   useEffect(() => {
+    memberRef.current.scrollIntoView();
     //clean previous user data
     setMemberHoldEventList([]);
     setMemberJoinEventList([]);
@@ -86,7 +88,7 @@ const Index = () => {
 
   return (
     <>
-      <section className="memberContainer">
+      <section className="memberContainer" ref={memberRef}>
         <MemberInfo
           storeUserNameId={storeUserNameId}
           setStoreUserNameId={setStoreUserNameId}

@@ -4,7 +4,6 @@
 .eventDetail .detailBar {
   display: flex;
   justify-content: flex-start;
-  align-items: center;
   margin: 10px 0px;
 }
 .eventDetail .detailBar h4 {
