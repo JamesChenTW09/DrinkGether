@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ref, update, remove } from "firebase/database";
 import { v4 as uuidv4 } from "uuid";
 import { useSelector, useDispatch } from "react-redux";
@@ -35,6 +36,7 @@ const Index = () => {
   const { allEventList, eventDetail, dailyEventList, discussList } =
     useSelector((state) => state.eventList);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   let {
     eventDate,
     eventDescription,
@@ -238,7 +240,12 @@ const Index = () => {
         </div>
         <div className="detailBar">
           <h4>主辦人 :</h4>
-          <p>{userId}</p>
+          <p
+            className="eventHolderName"
+            onClick={() => navigate("/member/" + userId)}
+          >
+            {userId}
+          </p>
         </div>
         <div className="detailBar">
           <h4>時間：</h4>

@@ -73,7 +73,7 @@ footer {
         }
         textarea {
           font-size: 18px;
-          margin: 10px 0px;
+          margin: 10px 0px 0px 0px;
           resize: none;
           width: 300px;
           height: 100px;
@@ -85,12 +85,14 @@ footer {
             outline: 1px solid #fcfcd1;
           }
         }
+
         ::placeholder {
           letter-spacing: 3px;
           color: #fcfcd1;
           text-align: center;
         }
         button {
+          margin-top: 10px;
           cursor: pointer;
           width: 300px;
           border-radius: 5px;

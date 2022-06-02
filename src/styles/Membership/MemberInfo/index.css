@@ -86,13 +86,14 @@
 }
 .basicInfo .memberProfile .memberInputTitle {
   font-size: 1.2rem;
-  width: 20%;
+  text-align: center;
+  width: 25%;
 }
 .basicInfo .memberProfile .memberInput {
   resize: none;
   border: none;
   height: 30px;
-  width: 75%;
+  width: 70%;
   text-align: center;
   background-color: rgb(250, 250, 209);
   padding: 5px;
@@ -103,49 +104,10 @@
   outline: none;
 }
 .basicInfo .memberProfile .memberName {
-  width: 95%;
-  margin-top: 15px;
-  display: flex;
-  align-items: center;
-}
-.basicInfo .memberProfile .memberName h4 {
-  width: 25%;
-  text-align: left;
-  font-size: 1.2rem;
-}
-.basicInfo .memberProfile .memberName textarea {
-  resize: none;
-  width: 45%;
-  height: 30px;
-  border: none;
-  text-align: center;
-  background-color: rgb(250, 250, 209);
-  padding: 5px;
-  font-size: 15px;
-  border-radius: 10px;
-}
-.basicInfo .memberProfile .memberName textarea:focus {
-  outline: none;
-}
-.basicInfo .memberProfile .memberName .memberSex {
-  width: 30%;
-  padding: 8px 0px 8px 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.basicInfo .memberProfile .memberName .memberSex h4 {
-  width: 20%;
-  margin-right: 10px;
-}
-.basicInfo .memberProfile .memberName .memberSex textarea {
-  width: 60%;
-}
-.basicInfo .memberProfile .memberName .memberSex textarea:focus {
-  outline: none;
+  margin: 15px 0px;
 }
 .basicInfo .memberProfile .memberJob {
-  margin-top: 8px;
+  margin-top: 15px;
 }
 .basicInfo .memberProfile .memberPassion {
   margin-top: 15px;

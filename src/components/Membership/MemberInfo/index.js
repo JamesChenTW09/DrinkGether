@@ -270,18 +270,24 @@ const Index = ({
               infoPrivateOrPublic ? { display: "block" } : { display: "none" }
             }
           >
-            <div className="memberName">
-              <h4>Name</h4>
-              <textarea value={name} readOnly></textarea>
-              <div className="memberSex">
-                <h4>Sex</h4>
-                <textarea
-                  value={sex}
-                  name="sex"
-                  onChange={handleMemberUpdateData}
-                  readOnly={textEditable}
-                ></textarea>
-              </div>
+            <div className="memberName inputAndTitle">
+              <h4 className="memberInputTitle">Name</h4>
+              <textarea
+                className="memberInput"
+                value={name}
+                readOnly
+              ></textarea>
+            </div>
+            <div className="inputAndTitle">
+              <h4 className="memberInputTitle">Sex</h4>
+              <textarea
+                value={sex}
+                className="memberInput"
+                name="sex"
+                onChange={handleMemberUpdateData}
+                maxLength={1}
+                readOnly={textEditable}
+              ></textarea>
             </div>
             {lineIdAllOption && lineIdAllOption ? (
               <div className="memberLineId inputAndTitle">
@@ -303,6 +309,7 @@ const Index = ({
                 className="memberInput"
                 value={job}
                 name="job"
+                maxLength={20}
                 onChange={handleMemberUpdateData}
                 readOnly={textEditable}
               ></textarea>
@@ -314,6 +321,7 @@ const Index = ({
                 value={passion}
                 name="passion"
                 onChange={handleMemberUpdateData}
+                maxLength={30}
                 readOnly={textEditable}
               ></textarea>
             </div>
@@ -322,6 +330,7 @@ const Index = ({
               <textarea
                 value={about}
                 name="about"
+                maxLength={100}
                 onChange={handleMemberUpdateData}
                 readOnly={textEditable}
                 className="memberAboutMeContent memberInput"

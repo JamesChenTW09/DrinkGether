@@ -59,7 +59,8 @@ const Index = ({ scrollRef }) => {
               onBlur={handleKeyboardCover}
               placeholder="Feel free to leave any advice"
             ></textarea>
-            <button>Submit</button>
+
+            <button>Coming soon</button>
           </div>
           <p>COPYRIGHT 2022 DrinkGether</p>
         </div>

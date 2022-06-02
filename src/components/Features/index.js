@@ -1,7 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/Features/index.css";
-import icon from "../../styles/photos/beer.jpg";
+import memeber from "../../styles/photos/mainmember.png";
+import activity from "../../styles/photos/mainactivity.png";
+import account from "../../styles/photos/mainaccount.png";
 const Index = ({ scrollRef }) => {
   const navigate = useNavigate();
   const handleMoveToActivity = () => {
@@ -72,7 +74,7 @@ const Index = ({ scrollRef }) => {
       <section className="guideSteps">
         <div className="stepContainer">
           <div className="guideImgContainer">
-            <img src={icon} alt="" />
+            <img src={account} alt="" />
           </div>
           <h3>Create a Account</h3>
           <p>1.Click upper right Log in button</p>
@@ -84,7 +86,7 @@ const Index = ({ scrollRef }) => {
         </div>
         <div className="stepContainer">
           <div className="guideImgContainer">
-            <img src={icon} alt="" />
+            <img src={activity} alt="" />
           </div>
           <h3>Start / Join Activity</h3>
           <p>1.Start or Join activity</p>
@@ -93,7 +95,7 @@ const Index = ({ scrollRef }) => {
         </div>
         <div className="stepContainer">
           <div className="guideImgContainer">
-            <img src={icon} alt="" />
+            <img src={memeber} alt="" />
           </div>
           <h3>Check Member Page</h3>
           <p>1.Fill in your Basic Info</p>

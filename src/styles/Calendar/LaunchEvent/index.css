@@ -6,9 +6,9 @@
   color: #213d4e;
   border-radius: 10px;
   left: 38%;
-  top: 10%;
+  top: 0;
   z-index: 30;
-  position: fixed;
+  position: absolute;
   transition: 0.4s;
 }
 .launchEventBox .handleCancelEventBox {

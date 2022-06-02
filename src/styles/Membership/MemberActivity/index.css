@@ -47,7 +47,7 @@
   border-bottom: 1px solid gray;
   display: grid;
   grid-template-columns: 40% 25% 20% 15%;
-  grid-template-rows: 16px 40px 10px;
+  grid-template-rows: 30px 40px 10px;
   margin-top: 3px;
   padding: 4px 0px;
 }

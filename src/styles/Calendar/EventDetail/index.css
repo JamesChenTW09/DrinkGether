@@ -19,6 +19,12 @@
   text-decoration: underline;
   font-weight: bold;
 }
+.eventDetail .detailBar .eventHolderName {
+  cursor: pointer;
+  font-weight: bold;
+  color: #2f4858;
+  text-decoration: underline;
+}
 .eventDetail .detailBtn {
   margin: 0px auto;
   display: flex;
