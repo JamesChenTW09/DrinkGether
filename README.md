@@ -19,7 +19,7 @@ https://drinkgether.com/
 
 ## Schedule
 * 2022/06 
-Add UID into firebase realtime database User part, and add UID check before manipulation of database. Complete Contact feature.
+Add UID into firebase realtime database User part, and add UID check before manipulation of database. Complete Contact feature. Add custom hooks
 * 2022/07 
 Add member comment feature and auto-removed feature for passed activities. 
 
