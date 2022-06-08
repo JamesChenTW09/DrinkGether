@@ -1,17 +1,15 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import useToggle from "../../utils/customHook/useToggle";
 import "../../styles/Footer/index.css";
 
 const Index = ({ scrollRef }) => {
   const navigate = useNavigate();
-  const [showContact, setShowContact] = useState(false);
-  const [showKeyboard, setShowKeyBoard] = useState(false);
+  const [showContact, toggleShowContact] = useToggle(false);
+  const [showKeyboard, toggleShowKeyBoard] = useToggle(false);
   const footerContent = useRef();
   const handleShowContact = () => {
-    setShowContact((preState) => !preState);
-  };
-  const handleKeyboardCover = () => {
-    setShowKeyBoard((preState) => !preState);
+    toggleShowContact();
   };
 
   const handleScroll = (element) => {
@@ -55,8 +53,8 @@ const Index = ({ scrollRef }) => {
           >
             <input type="text" placeholder="Email" />
             <textarea
-              onFocus={handleKeyboardCover}
-              onBlur={handleKeyboardCover}
+              onFocus={toggleShowKeyBoard}
+              onBlur={toggleShowKeyBoard}
               placeholder="Feel free to leave any advice"
             ></textarea>
 

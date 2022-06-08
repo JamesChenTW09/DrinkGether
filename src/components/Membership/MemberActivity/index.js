@@ -9,6 +9,7 @@ import {
   updateCurrentPal,
   sendNotificationMessage,
 } from "../../../firebase";
+import useToggle from "../../../utils/customHook/useToggle";
 import "../../../styles/Membership/MemberActivity/index.css";
 const Index = ({
   memberHoldEventList,
@@ -19,12 +20,8 @@ const Index = ({
   showContactBox,
   storeUserNameId,
 }) => {
-  const [holdOrJoin, setHoldOrJoin] = useState(true);
+  const [holdOrJoin, toggleHoldOrJoin] = useToggle(true);
   const [participantContact, setParticipantContact] = useState([]);
-  const handleHoldOrJoin = () => {
-    setHoldOrJoin(!holdOrJoin);
-  };
-
   //delete the host event
   const handleDeleteMemberEvent = (item) => {
     const { memberEventDate, eventId, memberEventName } = item;
@@ -110,10 +107,6 @@ const Index = ({
     }
   };
 
-  const handleParticipantCross = () => {
-    setShowContactBox(!showContactBox);
-  };
-
   return (
     <div className="memberEvents">
       {auth.currentUser && auth.currentUser.displayName === storeUserNameId ? (
@@ -122,7 +115,10 @@ const Index = ({
             className="participantContact"
             style={showContactBox ? { display: "flex" } : { display: "none" }}
           >
-            <div onClick={handleParticipantCross} className="participantCross">
+            <div
+              onClick={() => setShowContactBox(!showContactBox)}
+              className="participantCross"
+            >
               ｘ
             </div>
             <div className="participantListTitleItem">
@@ -154,7 +150,7 @@ const Index = ({
           <div className="memberEventsContainer">
             <div className="eventHeader">
               <div
-                onClick={handleHoldOrJoin}
+                onClick={toggleHoldOrJoin}
                 style={
                   holdOrJoin
                     ? { backgroundColor: "#2f4858", color: "rgb(250,250,209)" }
@@ -165,7 +161,7 @@ const Index = ({
                 主辦的活動
               </div>
               <div
-                onClick={handleHoldOrJoin}
+                onClick={toggleHoldOrJoin}
                 style={
                   holdOrJoin
                     ? { backgroundColor: "rgb(250,250,209)", colo: "#2f4858" }

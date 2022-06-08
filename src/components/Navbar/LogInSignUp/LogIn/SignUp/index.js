@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import GlobalContext from "../../../../../context/GlobalContext.js";
 import Greeting from "./Greeting";
 import { writeUserData, auth, db, fetchData } from "../../../../../firebase.js";
+import useToggle from "../../../../../utils/customHook/useToggle.js";
 import "../../../../../styles/Navbar/LogInSignUp/index.css";
 import googleIcon from "../../../../../styles/icon/googleIcon.png";
 
@@ -14,7 +15,7 @@ const SignUp = ({ handleAccountBoxCross }) => {
 
   //store user signUp data
   const [signUpErrorMessage, setSignUpErrorMessage] = useState("");
-  const [passwordShowing, setPasswordShowing] = useState(false);
+  const [passwordShowing, togglePasswordShowing] = useToggle(false);
   const [signUpData, setSignUpData] = useState({
     name: "",
     email: "",
@@ -110,9 +111,6 @@ const SignUp = ({ handleAccountBoxCross }) => {
       }
     });
   };
-  const handleShowPassword = () => {
-    setPasswordShowing((preState) => !preState);
-  };
 
   const handleSignUpLogInChange = () => {
     setAccountProcessing({ ...accountProcessing, logIn: true, signUp: false });
@@ -161,13 +159,13 @@ const SignUp = ({ handleAccountBoxCross }) => {
             />
 
             <img
-              onClick={handleShowPassword}
+              onClick={togglePasswordShowing}
               className=" logInTogglePassword"
               src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/000000/external-transparency-marketing-agency-flaticons-lineal-color-flat-icons-2.png"
               alt="glasses"
             />
             <div
-              onClick={handleShowPassword}
+              onClick={togglePasswordShowing}
               style={{ display: passwordShowing ? "none" : "block" }}
               className="logInPasswordLine"
             ></div>

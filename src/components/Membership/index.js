@@ -50,6 +50,7 @@ const Index = () => {
         const pathReference = sRef(storage, decodeNameId);
         getDownloadURL(pathReference)
           .then((res) => {
+            console.log(res);
             setStoreImg(res);
           })
           .catch((err) => {});

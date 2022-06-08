@@ -1,7 +1,8 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { update, ref } from "firebase/database";
 import { getStorage, uploadBytes, ref as sRef } from "firebase/storage";
 import { auth, db } from "../../../firebase.js";
+import useToggle from "../../../utils/customHook/useToggle.js";
 import "../../../styles/Membership/MemberInfo/index.css";
 const Index = ({
   storeUserNameId,
@@ -14,6 +15,7 @@ const Index = ({
 }) => {
   //photo
   const photo = useRef({});
+  const headShot = useRef();
   const handleChangePhoto = () => {
     photo.current["imgInput"].click();
   };
@@ -21,15 +23,14 @@ const Index = ({
   const handleUploadImg = (e) => {
     const file = e.target.files[0];
     const blobURL = URL.createObjectURL(file);
-    const img = new Image();
-    img.src = blobURL;
-    img.onload = function () {
-      setStoreImg(null);
-      const canvas = photo.current["canvasPhoto"];
+    setStoreImg(blobURL);
+    headShot.current.onload = function () {
+      const [imgWidth, imgHeight] = getContainedSize(headShot.current);
+      const canvas = photo.current["imgCanvas"];
       const ctx = canvas.getContext("2d");
-      canvas.width = 250;
-      canvas.height = 300;
-      ctx.drawImage(img, 0, 0, 250, 300);
+      canvas.width = imgWidth;
+      canvas.height = imgHeight;
+      ctx.drawImage(headShot.current, 0, 0, imgWidth, imgHeight);
       canvas.toBlob(
         (blob) => {
           try {
@@ -45,22 +46,27 @@ const Index = ({
       );
     };
   };
+  function getContainedSize(img) {
+    var ratio = img.naturalWidth / img.naturalHeight;
+    var width = img.height * ratio;
+    var height = img.height;
+    if (width > img.width) {
+      width = img.width;
+      height = img.width / ratio;
+    }
+    return [width, height];
+  }
+
   //handle info is editable or not
-  const [textEditable, setTextEditable] = useState(true);
+  const [textEditable, toggleTextEditable] = useToggle(true);
   const handleTextEditable = () => {
-    setTextEditable((preState) => !preState);
-    setModifyInfo((preState) => !preState);
+    toggleTextEditable();
+    toggleModifyInfo();
   };
   //handle show privateInfo or publicInfo
-  const [infoPrivateOrPublic, setInfoPrivateOrPublic] = useState(true);
-  const handleSecretInfo = () => {
-    setInfoPrivateOrPublic((preState) => !preState);
-  };
 
-  const [showPassword, setShowPassword] = useState(false);
-  const handleShowPassword = () => {
-    setShowPassword((preState) => !preState);
-  };
+  const [infoPrivateOrPublic, toggleInfoPrivateOrPublic] = useToggle(true);
+  const [showPassword, toggleShowPassword] = useToggle(false);
 
   //handle line id circle for everyone
   const handleMoveAllLineIdCircle = () => {
@@ -80,7 +86,7 @@ const Index = ({
     });
   };
   //handle show pen or check
-  const [modifyInfo, setModifyInfo] = useState(false);
+  const [modifyInfo, toggleModifyInfo] = useToggle(false);
   const handleCompleteEdit = () => {
     try {
       update(ref(db, "user/" + auth.currentUser.displayName + "/info/"), {
@@ -93,8 +99,8 @@ const Index = ({
         lineId,
         lineIdForAll: lineIdAllOption,
       });
-      setTextEditable((preState) => !preState);
-      setModifyInfo((preState) => !preState);
+      toggleTextEditable();
+      toggleModifyInfo();
     } catch (err) {
       console.error(err);
     }
@@ -104,19 +110,11 @@ const Index = ({
     <>
       <div className="basicInfo">
         <div className="memberImg">
-          <div
-            className="headShot"
-            ref={(el) => (photo.current = { ...photo.current, finalImg: el })}
-          >
-            {storeImg && <img alt="headShot" src={storeImg}></img>}
-
-            <canvas
-              style={storeImg ? { display: "none" } : { display: "block" }}
-              ref={(el) =>
-                (photo.current = { ...photo.current, canvasPhoto: el })
-              }
-            ></canvas>
-          </div>
+          {storeImg && <img ref={headShot} alt="headShot" src={storeImg} />}
+          <canvas
+            style={{ display: "none" }}
+            ref={(el) => (photo.current = { ...photo.current, imgCanvas: el })}
+          ></canvas>
           {auth.currentUser &&
           storeUserNameId === auth.currentUser.displayName ? (
             <div className="cameraIconBox" onClick={handleChangePhoto}>
@@ -164,7 +162,7 @@ const Index = ({
             {auth.currentUser &&
             auth.currentUser.displayName === storeUserNameId ? (
               <div className="PrivatePublicBtn">
-                <button onClick={handleSecretInfo}>
+                <button onClick={toggleInfoPrivateOrPublic}>
                   {infoPrivateOrPublic ? "Public" : "Private"}
                   <i class="fa-solid fa-user-pen"></i>
                 </button>
@@ -223,13 +221,13 @@ const Index = ({
                       readOnly={textEditable}
                     ></input>
                     <img
-                      onClick={handleShowPassword}
+                      onClick={toggleShowPassword}
                       className=" memberTogglePassword"
                       src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/000000/external-transparency-marketing-agency-flaticons-lineal-color-flat-icons-2.png"
                       alt=""
                     />
                     <div
-                      onClick={handleShowPassword}
+                      onClick={toggleShowPassword}
                       className="memberPasswordLine"
                       style={
                         showPassword
