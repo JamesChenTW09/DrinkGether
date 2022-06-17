@@ -14,7 +14,6 @@ const Index = () => {
   const memberRef = useRef();
   const [memberHoldEventList, setMemberHoldEventList] = useState([]);
   const [memberJoinEventList, setMemberJoinEventList] = useState([]);
-  const [showContactBox, setShowContactBox] = useState(false);
   const [storeUserNameId, setStoreUserNameId] = useState("");
   const [barRecommendArr, setBarRecommendArr] = useState([]);
   const [lineIdAllOption, setLineIdAllOption] = useState(false);
@@ -113,8 +112,6 @@ const Index = () => {
           memberJoinEventList={memberJoinEventList}
           setMemberHoldEventList={setMemberHoldEventList}
           setMemberJoinEventList={setMemberJoinEventList}
-          setShowContactBox={setShowContactBox}
-          showContactBox={showContactBox}
         />
       </section>
     </>

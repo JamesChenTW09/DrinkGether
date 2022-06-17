@@ -10,7 +10,6 @@ import {
   writeNewParticipant,
   writeMemberHoldEvent,
 } from "../../../../firebase.js";
-// import { addAllEvent } from "../../../../redux_toolkit/slice/eventList";
 import "../../../../styles/Calendar/LaunchEvent/index.css";
 
 const Index = () => {
@@ -65,7 +64,6 @@ const Index = () => {
       writeNewEvent(uuid, eventInput, displayName);
       writeMemberHoldEvent(displayName, uuid, eventInput);
       writeNewParticipant(eventDate, uuid, "eventParticipants", displayName);
-      // dispatch(addAllEvent(eventInput));
       dispatch(notShowStartEventBox());
       dispatch(
         storeEventInput({

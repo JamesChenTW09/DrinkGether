@@ -16,11 +16,10 @@ const Index = ({
   memberJoinEventList,
   setMemberHoldEventList,
   setMemberJoinEventList,
-  setShowContactBox,
-  showContactBox,
   storeUserNameId,
 }) => {
   const [holdOrJoin, toggleHoldOrJoin] = useToggle(true);
+  const [showContactBox, toggleShowContactBox] = useToggle(false);
   const [participantContact, setParticipantContact] = useState([]);
   //delete the host event
   const handleDeleteMemberEvent = (item) => {
@@ -101,7 +100,7 @@ const Index = ({
           setParticipantContact(values);
         });
       });
-      setShowContactBox(!showContactBox);
+      toggleShowContactBox();
     } catch (err) {
       console.error(err);
     }
@@ -115,10 +114,7 @@ const Index = ({
             className="participantContact"
             style={showContactBox ? { display: "flex" } : { display: "none" }}
           >
-            <div
-              onClick={() => setShowContactBox(!showContactBox)}
-              className="participantCross"
-            >
+            <div onClick={toggleShowContactBox} className="participantCross">
               ｘ
             </div>
             <div className="participantListTitleItem">
