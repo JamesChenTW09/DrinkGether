@@ -10,19 +10,7 @@ import {
   remove,
 } from "firebase/database";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
-
-// TODO: Replace with your app's Firebase project configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyAisqS21dvneZVG2x35624HW6d_4nD6Rcs",
-  authDomain: "chat-686b7.firebaseapp.com",
-  databaseURL:
-    "https://chat-686b7-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "chat-686b7",
-  storageBucket: "chat-686b7.appspot.com",
-  messagingSenderId: "748002535005",
-  appId: "1:748002535005:web:ce7336ebd1d322a4d24fb4",
-  measurementId: "G-V1S769LR10",
-};
+import { firebaseConfig } from "./config";
 
 const app = initializeApp(firebaseConfig);
 export const provider = new GoogleAuthProvider();
