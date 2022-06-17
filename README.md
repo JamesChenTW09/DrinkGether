@@ -27,7 +27,7 @@ Add member comment feature and auto-removed feature for passed activities.
 
 ## Skills
 
-### React / hooks
+### React / hooks / Custom hooks
  
 ### React lazy
 Use React.lazy with suspense. Dynamic import Javascript when need it
